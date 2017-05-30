@@ -1,8 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using eCommerce.Web.Models
+@using eCommerce.Core.CommerceClasses.UserLogins
 
-@inject SignInManager<ApplicationUser> SignInManager
-@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<UserLogin> SignInManager
+@inject UserManager<UserLogin> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
