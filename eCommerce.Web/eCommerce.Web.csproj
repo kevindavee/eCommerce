@@ -34,6 +34,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\eCommerce.Commons\eCommerce.Commons.csproj" />
+    <ProjectReference Include="..\eCommerce.Core\eCommerce.Core.csproj" />
     <ProjectReference Include="..\eCommerce.DAL\eCommerce.DAL.csproj" />
   </ItemGroup>
 
