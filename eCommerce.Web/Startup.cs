@@ -13,6 +13,8 @@ using eCommerce.Web.Models;
 using eCommerce.Web.Services;
 using eCommerce.DAL;
 using eCommerce.Core.CommerceClasses.UserLogins;
+using eCommerce.DAL.Configuration;
+using Microsoft.AspNetCore.Identity;
 
 namespace eCommerce.Web
 {
@@ -53,8 +55,31 @@ namespace eCommerce.Web
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-        }
 
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = false;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+
+                // Cookie settings
+                options.Cookies.ApplicationCookie.CookieName = "YouAppCookieName";
+                options.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(150);
+                options.Cookies.ApplicationCookie.LoginPath = "/Account/LogIn";
+                options.Cookies.ApplicationCookie.LogoutPath = "/Account/LogOff";
+                options.Cookies.ApplicationCookie.AccessDeniedPath = "/Account/AccessDenied";
+                options.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
+                options.Cookies.ApplicationCookie.AuthenticationScheme = Microsoft.AspNetCore.Authentication.Cookies.CookieAuthenticationDefaults.AuthenticationScheme;
+            });
+        }
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -75,6 +100,8 @@ namespace eCommerce.Web
             app.UseStaticFiles();
 
             app.UseIdentity();
+
+            new UserRoleSeed(app.ApplicationServices.GetService<RoleManager<RolesMaster>>(), app.ApplicationServices.GetService<UserManager<UserLogin>>()).Seed();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

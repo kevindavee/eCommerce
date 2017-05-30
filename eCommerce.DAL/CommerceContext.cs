@@ -7,7 +7,7 @@ using System.Text;
 
 namespace eCommerce.DAL
 {
-    public class CommerceContext : IdentityDbContext<UserLogin>
+    public class CommerceContext : IdentityDbContext<UserLogin, RolesMaster, string>
     {
         public CommerceContext(DbContextOptions<CommerceContext> options)
             : base(options)
