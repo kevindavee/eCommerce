@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,11 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce.Web.Controllers
 {
-    public class HomeController : Controller
+    public class AdminTransactionController : Controller
     {
         public IActionResult Index()
         {
-            //Home Page
             return View();
         }
     }
