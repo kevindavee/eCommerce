@@ -1,6 +1,8 @@
 ﻿using eCommerce.Commons;
 using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
+using eCommerce.Core.CommerceClasses.The_Products.Product_Images;
+using eCommerce.Core.CommerceClasses.The_Products.Reviews;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,5 +20,8 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
 
         public virtual Category Category { get; set; }
         public virtual Brand Brand { get; set; }
+        public ICollection<ProductInstance> ProductInstance { get; set; }
+        public ICollection<Review> Review { get; set; }
+        public ICollection<ProductImage> ProductImage { get; set; }
     }
 }
