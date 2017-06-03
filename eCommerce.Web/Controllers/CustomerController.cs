@@ -3,11 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using eCommerce.DAL.Repositories.Customers;
+using eCommerce.Core.ICommerceRepositories.Customers;
+using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Customers;
 
 namespace eCommerce.Web.Controllers
 {
     public class CustomerController : Controller
     {
+        private CustomerRepo customerRepo;
+
+        public CustomerController(CustomerRepo _customerRepo)
+        {
+            this.customerRepo = _customerRepo;
+        }
+
         #region Profile
         public ActionResult Profile(long CustomerId)
         {

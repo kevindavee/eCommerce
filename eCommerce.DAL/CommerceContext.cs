@@ -1,4 +1,5 @@
-﻿using eCommerce.Core.CommerceClasses.UserLogins;
+﻿using eCommerce.Core.CommerceClasses.Customers;
+using eCommerce.Core.CommerceClasses.UserLogins;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -13,6 +14,8 @@ namespace eCommerce.DAL
             : base(options)
         {
         }
+
+        public DbSet<Customer> Customer { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
