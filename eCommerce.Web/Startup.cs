@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using eCommerce.Commons;
 using eCommerce.Core.ICommerceRepositories.Customers;
 using eCommerce.DAL.Repositories.Customers;
+using eCommerce.Core.CommerceClasses.Customers;
 
 namespace eCommerce.Web
 {
@@ -60,7 +61,7 @@ namespace eCommerce.Web
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Register Application Repository
-            services.AddScoped<ICustomerRepo, CustomerRepo>();
+            services.AddScoped<RepoBase<Customer>, CustomerRepo>();
 
             services.Configure<IdentityOptions>(options =>
             {
