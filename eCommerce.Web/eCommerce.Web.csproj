@@ -136,6 +136,7 @@
     <ProjectReference Include="..\eCommerce.Commons\eCommerce.Commons.csproj" />
     <ProjectReference Include="..\eCommerce.Core\eCommerce.Core.csproj" />
     <ProjectReference Include="..\eCommerce.DAL\eCommerce.DAL.csproj" />
+    <ProjectReference Include="..\eCommerce.Logic\eCommerce.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\AdminProduct\" />

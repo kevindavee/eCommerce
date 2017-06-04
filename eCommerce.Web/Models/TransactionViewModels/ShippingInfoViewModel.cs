@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.CommerceClasses.Alamats;
+using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,12 @@ namespace eCommerce.Web.Models.TransactionViewModels
 {
     public class ShippingInfoViewModel
     {
+        public ShippingInfoViewModel()
+        {
+            ShippingDetail = new ShippingDetails();
+        }
+
         public TransactionHeader Transaction { get; set; }
-        public List<Alamat> Alamat { get; set; }
+        public ShippingDetails ShippingDetail { get; set; }
     }
 }

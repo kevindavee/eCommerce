@@ -15,7 +15,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         }
 
         /// <summary>
-        /// Get customer's active cart
+        /// Get customer's active cart. Return null if no active cart
         /// </summary>
         /// <param name="CustomerId"></param>
         /// <returns></returns>
@@ -33,12 +33,68 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
                                   .Include(i => i.TransactionDetails)
                                   .FirstOrDefault();
 
-            if (checkedOut != null)
+            if (cart == null)
             {
-                cart = checkedOut;
+                return null;
+            }
+            else
+            {
+                if (checkedOut != null)
+                {
+                    cart = checkedOut;
+                }
             }
 
             return cart;
         }
+
+        /// <summary>
+        /// Change transaction header status
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <param name="TransactionStatus"></param>
+        /// <returns></returns>
+        public TransactionHeader ChangeStatus(long TransactionId, string TransactionStatus)
+        {
+            var transaction = GetById(TransactionId);
+
+            transaction.LastStatus = transaction.CurrentStatus;
+            transaction.CurrentStatus = TransactionStatus;
+
+            return transaction;
+        }
+
+        /// <summary>
+        /// Check if the transaction is waiting for payment confirmation. Return true if the state is waiting for payment confirmation
+        /// </summary>
+        /// <param name="TransactionId"></param>
+        /// <returns></returns>
+        public bool IsWaitingForConfirmation(long TransactionId)
+        {
+            var result = GetById(TransactionId);
+            if (result != null)
+            {
+                if (result.CurrentStatus == (TransactionStatus.PaymentConfirmation))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        public string GenerateTransactionCode()
+        {
+            string code = "";
+            var date = DateTime.Today.ToString("yyMMdd");
+            var zero = "000000";
+            var count = dbSet.Where(s => s.CreatedDate == DateTime.Today).Count();
+            count++;
+            zero = zero.Substring(count.ToString().Length);
+
+            code = "TR" + date + zero + count.ToString();
+            return code;
+        }
+
     }
 }

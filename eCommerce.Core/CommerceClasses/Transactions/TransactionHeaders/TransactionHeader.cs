@@ -14,7 +14,6 @@ namespace eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders
         public long CustomerId { get; set; } = 0;
         public string LastStatus { get; set; } = "";
         public string CurrentStatus { get; set; } = "";
-        public bool Cancelled { get; set; } = false;
         public decimal TotalPrice { get; set; } = 0;
         public decimal TotalDiscount { get; set; } = 0;
         public string Remarks { get; set; } = "";

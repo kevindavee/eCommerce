@@ -28,6 +28,7 @@ using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
 using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
 using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
 using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
+using eCommerce.Logic.Services;
 
 namespace eCommerce.Web
 {
@@ -85,6 +86,9 @@ namespace eCommerce.Web
             services.AddScoped<TransactionDetailsRepo, TransactionDetailsRepo>();
             services.AddScoped<ShippingDetailsRepo, ShippingDetailsRepo>();
             services.AddScoped<KonfirmasiPembayaranRepo, KonfirmasiPembayaranRepo>();
+
+
+            services.AddScoped<TransactionService, TransactionService>();
 
             services.Configure<IdentityOptions>(options =>
             {
