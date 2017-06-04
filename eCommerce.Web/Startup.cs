@@ -16,6 +16,8 @@ using eCommerce.Core.CommerceClasses.UserLogins;
 using eCommerce.DAL.Configuration;
 using Microsoft.AspNetCore.Identity;
 using eCommerce.Commons;
+using eCommerce.Core.ICommerceRepositories.Customers;
+using eCommerce.DAL.Repositories.Customers;
 
 namespace eCommerce.Web
 {
@@ -57,8 +59,8 @@ namespace eCommerce.Web
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            //Add Dependency Injection for Repos
-            services.AddScoped(typeof(IRepository<>), typeof(RepoBase<>));
+            //Register Application Repository
+            services.AddScoped<ICustomerRepo, CustomerRepo>();
 
             services.Configure<IdentityOptions>(options =>
             {
