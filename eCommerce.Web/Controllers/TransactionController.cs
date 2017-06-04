@@ -3,24 +3,61 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
+using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
 
 namespace eCommerce.Web.Controllers
 {
     public class TransactionController : Controller
     {
+        private TransactionHeaderRepo transactionHeaderRepo;
+        private TransactionDetailsRepo transactionDetailRepo;
+
+        public TransactionController(TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo)
+        {
+            this.transactionHeaderRepo = _transactionHeaderRepo;
+            this.transactionDetailRepo = _transactionDetailRepo;
+        }
         #region Shopping Cart
-        public ActionResult Cart()
+        public ActionResult Cart(long CustomerId)
         {
             //Page shopping cart
-            return View();
+            var model = transactionHeaderRepo.GetActiveCart(CustomerId);
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteFromCart()
+        public JsonResult UpdateQuantity(int Quantity, long TransactionDetailId)
+        {
+            //Action untuk update quantity item di cart
+            //Pake AJAX supaya tidak refresh page
+            var item = transactionDetailRepo.GetById(TransactionDetailId);
+            if (item != null)
+            {
+                item.Quantity = Quantity;
+
+                try
+                {
+                    transactionDetailRepo.Save(item);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            return Json();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult DeleteFromCart()
         {
             //Action untuk delete item dari cart
-            return View();
+            //Pake AJAX supaya tidak refresh page
+            return Json();
         }
         #endregion
 
