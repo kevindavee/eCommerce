@@ -12,8 +12,12 @@ namespace eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss
         public long TransactionHeaderId { get; set; } = 0;
         public string NamaPenerima { get; set; } = "";
         public string AlamatPengiriman { get; set; } = "";
+        public string Kota { get; set; } = "";
+        public string Provinsi { get; set; } = "";
+        public int KodePos { get; set; } = 0;
         public long ShipperId { get; set; } = 0;
         public string TrackingNumber { get; set; } = "";
+        public string ShippingStatus { get; set; } = "";
 
         public virtual TransactionHeader TransactionHeader { get; set; }
         public virtual Shipper Shipper { get; set; }

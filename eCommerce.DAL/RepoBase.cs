@@ -1,25 +1,22 @@
 ﻿using eCommerce.Commons;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace eCommerce.DAL
 {
     public class RepoBase<T> : IRepository<T> where T : EntityBase
     {
-        protected DbContextOptionsBuilder options = new DbContextOptionsBuilder();
-        protected IConfigurationRoot Configuration { get; }
         protected CommerceContext context;
         protected DbSet<T> dbSet;
 
-        public RepoBase()
+        public RepoBase(CommerceContext _context)
         {
-            context = new CommerceContext(options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")).Options);
+            context = _context;
             dbSet = context.Set<T>();
-        }
+        }    
+
         public void Delete(long id)
         {
             var entity = GetById(id);
@@ -34,7 +31,7 @@ namespace eCommerce.DAL
 
         public List<T> GetAll()
         {
-            return dbSet.OrderBy(o => o.Id).ToListAsync().Result;
+            return dbSet.ToListAsync().Result;
         }
 
         public T GetById(long id)
@@ -45,7 +42,9 @@ namespace eCommerce.DAL
         public void Save(T entity)
         {
             if (entity.Id == 0)
+            {
                 dbSet.Add(entity);
+            }
             else
             {
                 context.Entry(entity).State = EntityState.Modified;

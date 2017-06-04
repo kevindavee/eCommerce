@@ -12,7 +12,7 @@ namespace eCommerce.Core.CommerceClasses.Alamats
         public string TheAlamat { get; set; } = "";
         public string Kota { get; set; } = "";
         public string Provinsi { get; set; } = "";
-        public string KodePos { get; set; } = "";
+        public int KodePos { get; set; } = 0;
 
         public virtual Customer Customer { get; set; }
     }
