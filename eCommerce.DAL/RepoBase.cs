@@ -15,7 +15,7 @@ namespace eCommerce.DAL
         {
             context = _context;
             dbSet = context.Set<T>();
-        }    
+        }
 
         public void Delete(long id)
         {
