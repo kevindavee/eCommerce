@@ -12,9 +12,9 @@ namespace eCommerce.Web.Controllers
 {
     public class CustomerController : Controller
     {
-        private CustomerRepo customerRepo;
+        private ICustomerRepo customerRepo;
 
-        public CustomerController(CustomerRepo _customerRepo)
+        public CustomerController(ICustomerRepo _customerRepo)
         {
             this.customerRepo = _customerRepo;
         }

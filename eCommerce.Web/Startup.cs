@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Identity;
 using eCommerce.Commons;
 using eCommerce.Core.ICommerceRepositories.Customers;
 using eCommerce.DAL.Repositories.Customers;
+using eCommerce.Core.ICommerceRepositories.Brands;
+using eCommerce.DAL.KumpulanRepos.Brands;
 
 namespace eCommerce.Web
 {
@@ -61,6 +63,7 @@ namespace eCommerce.Web
 
             //Register Application Repository
             services.AddScoped<ICustomerRepo, CustomerRepo>();
+            services.AddScoped<IBrandRepo, BrandRepo>();
 
             services.Configure<IdentityOptions>(options =>
             {

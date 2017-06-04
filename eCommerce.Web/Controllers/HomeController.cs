@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using eCommerce.DAL.KumpulanRepos.Brands;
+using eCommerce.Core.ICommerceRepositories.Brands;
 
 namespace eCommerce.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private BrandRepo brandRepo;
+        private IBrandRepo brandRepo;
 
-        public HomeController(BrandRepo _brandRepo)
+        public HomeController(IBrandRepo _brandRepo)
         {
             brandRepo = _brandRepo;
         }
