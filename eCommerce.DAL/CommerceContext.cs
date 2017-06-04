@@ -1,4 +1,12 @@
-﻿using eCommerce.Core.CommerceClasses.UserLogins;
+﻿using eCommerce.Core.CommerceClasses.Alamats;
+using eCommerce.Core.CommerceClasses.Brands;
+using eCommerce.Core.CommerceClasses.BrandsAndCategories;
+using eCommerce.Core.CommerceClasses.Customers;
+using eCommerce.Core.CommerceClasses.The_Products.Categories;
+using eCommerce.Core.CommerceClasses.The_Products.Product_Images;
+using eCommerce.Core.CommerceClasses.The_Products.Products;
+using eCommerce.Core.CommerceClasses.The_Products.Reviews;
+using eCommerce.Core.CommerceClasses.UserLogins;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,11 +22,6 @@ namespace eCommerce.DAL
         {
         }
 
-        public CommerceContext(DbContextOptions options)
-            : base(options)
-        {
-        }
-
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -26,5 +29,18 @@ namespace eCommerce.DAL
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<Brand> Brand { get; set; }
+        public DbSet<Product> Product { get; set; }
+        public DbSet<Category> Category { get; set; }
+        public DbSet<BrandAndCategory> BrandAndCategory { get; set; }
+        public DbSet<ProductInstance> ProductInstance { get; set; }
+        public DbSet<ProductInstanceOptions> ProductInstanceOptions { get; set; }
+        public DbSet<OptionValue> OptionValue { get; set; }
+        public DbSet<Options> Options { get; set; }
+        public DbSet<ProductImage> ProductImage { get; set; }
+        public DbSet<Review> Review { get; set; }
+        public DbSet<Customer> Customer { get; set; }
+        public DbSet<Alamat> Alamat { get; set; }
     }
 }
