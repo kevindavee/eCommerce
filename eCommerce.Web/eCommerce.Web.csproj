@@ -11,6 +11,66 @@
   <PropertyGroup>
     <UserSecretsId>aspnet-eCommerce.Web-8506be19-8c93-458d-9673-c182a972bfe7</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\bootstrap-progressbar-3.3.4.css" />
+    <Content Include="wwwroot\css\bootstrap-progressbar-3.3.4.min.css" />
+    <Content Include="wwwroot\css\bootstrap-theme.css" />
+    <Content Include="wwwroot\css\bootstrap-theme.css.map" />
+    <Content Include="wwwroot\css\bootstrap-theme.min.css" />
+    <Content Include="wwwroot\css\bootstrap-theme.min.css.map" />
+    <Content Include="wwwroot\css\bootstrap.css" />
+    <Content Include="wwwroot\css\bootstrap.css.map" />
+    <Content Include="wwwroot\css\bootstrap.min.css" />
+    <Content Include="wwwroot\css\bootstrap.min.css.map" />
+    <Content Include="wwwroot\css\custom.css" />
+    <Content Include="wwwroot\css\custom.min.css" />
+    <Content Include="wwwroot\css\flat\aero%402x.png" />
+    <Content Include="wwwroot\css\flat\aero.css" />
+    <Content Include="wwwroot\css\flat\aero.png" />
+    <Content Include="wwwroot\css\flat\blue%402x.png" />
+    <Content Include="wwwroot\css\flat\blue.css" />
+    <Content Include="wwwroot\css\flat\blue.png" />
+    <Content Include="wwwroot\css\flat\flat%402x.png" />
+    <Content Include="wwwroot\css\flat\flat.css" />
+    <Content Include="wwwroot\css\flat\flat.png" />
+    <Content Include="wwwroot\css\flat\green%402x.png" />
+    <Content Include="wwwroot\css\flat\green.css" />
+    <Content Include="wwwroot\css\flat\green.png" />
+    <Content Include="wwwroot\css\flat\grey%402x.png" />
+    <Content Include="wwwroot\css\flat\grey.css" />
+    <Content Include="wwwroot\css\flat\grey.png" />
+    <Content Include="wwwroot\css\flat\orange%402x.png" />
+    <Content Include="wwwroot\css\flat\orange.css" />
+    <Content Include="wwwroot\css\flat\orange.png" />
+    <Content Include="wwwroot\css\flat\pink%402x.png" />
+    <Content Include="wwwroot\css\flat\pink.css" />
+    <Content Include="wwwroot\css\flat\pink.png" />
+    <Content Include="wwwroot\css\flat\purple%402x.png" />
+    <Content Include="wwwroot\css\flat\purple.css" />
+    <Content Include="wwwroot\css\flat\purple.png" />
+    <Content Include="wwwroot\css\flat\red%402x.png" />
+    <Content Include="wwwroot\css\flat\red.css" />
+    <Content Include="wwwroot\css\flat\red.png" />
+    <Content Include="wwwroot\css\flat\yellow%402x.png" />
+    <Content Include="wwwroot\css\flat\yellow.css" />
+    <Content Include="wwwroot\css\flat\yellow.png" />
+    <Content Include="wwwroot\css\flat\_all.css" />
+    <Content Include="wwwroot\css\font-awesome.css" />
+    <Content Include="wwwroot\css\font-awesome.css.map" />
+    <Content Include="wwwroot\css\font-awesome.min.css" />
+    <Content Include="wwwroot\css\green.css" />
+    <Content Include="wwwroot\css\nprogress.css" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.eot" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.svg" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.ttf" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.woff" />
+    <Content Include="wwwroot\fonts\fontawesome-webfont.woff2" />
+    <Content Include="wwwroot\fonts\FontAwesome.otf" />
+    <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
+    <Content Include="wwwroot\js\custom.min.js" />
+    <Content Include="wwwroot\js\nprogress.js" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
