@@ -1,4 +1,5 @@
-﻿using System;
+﻿using eCommerce.Commons;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.The_Products.Products
 {
-    public class ProductInstanceOptions
+    public class ProductInstanceOptions : EntityBase
     {
         [Key]
         [Column(Order = 0)]
