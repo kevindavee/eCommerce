@@ -18,10 +18,6 @@ namespace eCommerce.Web.Controllers
         }
         public IActionResult Index()
         {
-            //Home Page
-
-            var brandList = brandRepo.GetAll();
-
             return View();
         }
     }
