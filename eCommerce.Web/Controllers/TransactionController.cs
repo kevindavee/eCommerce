@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
 using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
+using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 
 namespace eCommerce.Web.Controllers
 {
@@ -24,6 +26,11 @@ namespace eCommerce.Web.Controllers
             //Page shopping cart
             var model = transactionHeaderRepo.GetActiveCart(CustomerId);
 
+            if (model.CurrentStatus == TransactionStatus.CheckedOut)
+            {
+                RedirectToAction("ShippingInformation", new { transaction = model});
+            }
+
             return View(model);
         }
 
@@ -42,36 +49,67 @@ namespace eCommerce.Web.Controllers
                 {
                     transactionDetailRepo.Save(item);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    throw;
+                    return Json(data: new { Status = false, ErrorMsg = ex.Message });
                 }
             }
 
-            return Json();
+            return Json(data: new { Status = true, ErrorMsg = ""});
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult DeleteFromCart()
+        public JsonResult DeleteFromCart(long TransactionDetailId)
         {
             //Action untuk delete item dari cart
             //Pake AJAX supaya tidak refresh page
-            return Json();
+            
+            try
+            {
+                transactionDetailRepo.Delete(TransactionDetailId);
+            }
+            catch (Exception ex)
+            {
+                return Json(data: new { Status = false, ErrorMsg = ex.Message });
+            }
+
+            return Json(data: new { Status = true, ErrorMsg = "" });
         }
         #endregion
 
         #region CheckOut
         [HttpPost]
-        public ActionResult CheckOut()
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOut(long TransactionHeaderId, long CustomerId)
         {
             //Action untuk checkout item dari cart
-            return RedirectToAction("ShippingInformation");
+            var transaction = transactionHeaderRepo.GetById(TransactionHeaderId);
+
+            if (transaction != null)
+            {
+                transaction.LastStatus = transaction.CurrentStatus;
+                transaction.CurrentStatus = TransactionStatus.CheckedOut;
+
+                try
+                {
+                    transactionHeaderRepo.Save(transaction);
+                    return RedirectToAction("ShippingInformation", new { transaction = transaction });
+
+                }
+                catch (Exception ex)
+                {
+                    TempData["Message"] = ex.Message;
+                }
+            }
+
+            return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
 
-        public ActionResult ShippingInformation()
+        public ActionResult ShippingInformation(TransactionHeader transaction)
         {
             //Page setelah klik button checkout. Untuk melakukan pembayaran dan melengkapi data pengiriman
+
             return View();
         }
 
