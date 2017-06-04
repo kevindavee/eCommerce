@@ -7,13 +7,9 @@ using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.The_Products.Products
 {
-    public class ProductInstanceOptions : EntityBase
+    public class ProductInstanceOptions
     {
-        //[Key]
-        //[Column(Order = 0)]
-        public long ProductInstanceId { get; set; }
-        //[Key]
-        //[Column(Order = 1)]
+        public long ProductInstanceId { get; set; }   
         public long OptionValueId { get; set; }
 
         public virtual ProductInstance ProductInstance { get; set; }
