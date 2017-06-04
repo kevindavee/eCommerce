@@ -1,12 +1,11 @@
 ﻿using eCommerce.Core.CommerceClasses.Brands;
-using eCommerce.Core.ICommerceRepositories.Brands;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace eCommerce.DAL.KumpulanRepos.Brands
+namespace eCommerce.DAL.Repositories.Brands
 {
-    public class BrandRepo : RepoBase<Brand>, IBrandRepo
+    public class BrandRepo : RepoBase<Brand>
     {
         public BrandRepo(CommerceContext _context) : base(_context)
         {

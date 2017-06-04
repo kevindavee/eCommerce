@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.CommerceClasses.Alamats;
+using eCommerce.Core.CommerceClasses.Banks;
 using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.BrandsAndCategories;
 using eCommerce.Core.CommerceClasses.Customers;
@@ -6,6 +7,10 @@ using eCommerce.Core.CommerceClasses.The_Products.Categories;
 using eCommerce.Core.CommerceClasses.The_Products.Product_Images;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using eCommerce.Core.CommerceClasses.The_Products.Reviews;
+using eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans;
+using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
+using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
+using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using eCommerce.Core.CommerceClasses.UserLogins;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -45,5 +50,10 @@ namespace eCommerce.DAL
         public DbSet<Review> Review { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<Alamat> Alamat { get; set; }
+        public DbSet<TransactionHeader> TransactionHeader { get; set; }
+        public DbSet<TransactionDetails> TransactionDetails { get; set; }
+        public DbSet<ShippingDetails> ShippingDetails { get; set; }
+        public DbSet<KonfirmasiPembayaran> KonfirmasiPembayaran { get; set; }
+        public DbSet<Bank> Bank { get; set; }
     }
 }

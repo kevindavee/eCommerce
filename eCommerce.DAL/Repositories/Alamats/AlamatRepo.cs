@@ -7,11 +7,8 @@ namespace eCommerce.DAL.Repositories.Alamats
 {
     public class AlamatRepo : RepoBase<Alamat>
     {
-        private CommerceContext context;
-
         public AlamatRepo(CommerceContext _context): base(_context)
         {
-            this.context = _context;
         }
     }
 }

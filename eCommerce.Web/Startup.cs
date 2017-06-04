@@ -16,10 +16,18 @@ using eCommerce.Core.CommerceClasses.UserLogins;
 using eCommerce.DAL.Configuration;
 using Microsoft.AspNetCore.Identity;
 using eCommerce.Commons;
-using eCommerce.Core.ICommerceRepositories.Customers;
 using eCommerce.DAL.Repositories.Customers;
-using eCommerce.Core.ICommerceRepositories.Brands;
-using eCommerce.DAL.KumpulanRepos.Brands;
+using eCommerce.DAL.Repositories.Brands;
+using eCommerce.DAL.Repositories.Alamats;
+using eCommerce.DAL.Repositories.The_Products.Products;
+using eCommerce.DAL.Repositories.The_Products.Reviews;
+using eCommerce.DAL.Repositories.Banks;
+using eCommerce.DAL.Repositories.BrandsAndCategories;
+using eCommerce.DAL.Repositories.Shippers;
+using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
+using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
+using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
+using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 
 namespace eCommerce.Web
 {
@@ -62,15 +70,28 @@ namespace eCommerce.Web
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Register Application Repository
-            services.AddScoped<ICustomerRepo, CustomerRepo>();
-            services.AddScoped<IBrandRepo, BrandRepo>();
+            services.AddScoped<CustomerRepo, CustomerRepo>();
+            services.AddScoped<BrandRepo, BrandRepo>();
+            services.AddScoped<AlamatRepo, AlamatRepo>();
+            services.AddScoped<ProductRepo, ProductRepo>();
+            services.AddScoped<ReviewRepo, ReviewRepo>();
+            services.AddScoped<OptionValueRepo, OptionValueRepo>();
+            services.AddScoped<ProductInstanceRepo, ProductInstanceRepo>();
+            services.AddScoped<OptionsRepo, OptionsRepo>();
+            services.AddScoped<BankRepo, BankRepo>();
+            services.AddScoped<BrandAndCategoryRepo, BrandAndCategoryRepo>();
+            services.AddScoped<ShipperRepo, ShipperRepo>();
+            services.AddScoped<TransactionHeaderRepo, TransactionHeaderRepo>();
+            services.AddScoped<TransactionDetailsRepo, TransactionDetailsRepo>();
+            services.AddScoped<ShippingDetailsRepo, ShippingDetailsRepo>();
+            services.AddScoped<KonfirmasiPembayaranRepo, KonfirmasiPembayaranRepo>();
 
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
-                options.Password.RequireNonAlphanumeric = false;
+                //options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
 
