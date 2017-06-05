@@ -4,9 +4,6 @@ using System.Text;
 
 namespace eCommerce.Commons
 {
-    public class Constant
-    {
-    }
     public static class UserRoles
     {
         public const string ProductAdmin = "ProductAdmin";
@@ -18,8 +15,12 @@ namespace eCommerce.Commons
     public static class TransactionStatus
     {
         public const string OnCart = "On Cart";
+        public const string CheckedOut = "Checked Out";
         public const string PaymentConfirmation = "Payment Confirmation";
-        public const string Shipping = "Shipping";
+        public const string Expired = "Expired";
+        public const string Canceled = "Canceled";
+        public const string OrderProcessed = "Order Processed";
+        public const string Shipped = "Order shipped";
         public const string Finished = "Finished";
     }
 

@@ -31,6 +31,8 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<string>("Kota");
 
+                    b.Property<string>("NamaAlamat");
+
                     b.Property<string>("Provinsi");
 
                     b.Property<string>("TheAlamat");
@@ -223,15 +225,11 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<string>("OptionName");
 
-                    b.Property<long>("ProductId");
-
                     b.Property<string>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Options");
                 });
@@ -452,7 +450,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<long>("ProductId");
+                    b.Property<long>("ProductInstanceId");
 
                     b.Property<int>("Quantity");
 
@@ -464,6 +462,8 @@ namespace eCommerce.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ProductInstanceId");
+
                     b.HasIndex("TransactionHeaderId");
 
                     b.ToTable("TransactionDetails");
@@ -474,17 +474,19 @@ namespace eCommerce.DAL.Migrations
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<bool>("Cancelled");
-
                     b.Property<string>("Code");
 
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<string>("CurrentStatus");
+
                     b.Property<long>("CustomerId");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("LastStatus");
+
+                    b.Property<string>("Remarks");
 
                     b.Property<DateTime>("TglTransaksi");
 
@@ -574,6 +576,9 @@ namespace eCommerce.DAL.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasName("UserNameIndex");
+
+                    b.HasIndex("ObjectId")
+                        .IsUnique();
 
                     b.ToTable("AspNetUsers");
                 });
@@ -691,14 +696,6 @@ namespace eCommerce.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Products.Options", b =>
-                {
-                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Products.OptionValue", b =>
                 {
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Options", "Options")
@@ -781,8 +778,13 @@ namespace eCommerce.DAL.Migrations
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss.TransactionDetails", b =>
                 {
+                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
+                        .WithMany("TransactionDetails")
+                        .HasForeignKey("ProductInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", "TransactionHeader")
-                        .WithMany()
+                        .WithMany("TransactionDetails")
                         .HasForeignKey("TransactionHeaderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -792,6 +794,14 @@ namespace eCommerce.DAL.Migrations
                     b.HasOne("eCommerce.Core.CommerceClasses.Customers.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.UserLogins.UserLogin", b =>
+                {
+                    b.HasOne("eCommerce.Core.CommerceClasses.Customers.Customer", "Customer")
+                        .WithOne("UserLogin")
+                        .HasForeignKey("eCommerce.Core.CommerceClasses.UserLogins.UserLogin", "ObjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

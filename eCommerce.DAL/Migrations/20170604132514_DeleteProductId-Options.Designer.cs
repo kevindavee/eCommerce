@@ -8,8 +8,8 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20170604092738_test1")]
-    partial class test1
+    [Migration("20170604132514_DeleteProductId-Options")]
+    partial class DeleteProductIdOptions
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -224,15 +224,11 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<string>("OptionName");
 
-                    b.Property<long>("ProductId");
-
                     b.Property<string>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Options");
                 });
@@ -453,7 +449,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<decimal>("Price");
 
-                    b.Property<long>("ProductId");
+                    b.Property<long>("ProductInstanceId");
 
                     b.Property<int>("Quantity");
 
@@ -464,6 +460,8 @@ namespace eCommerce.DAL.Migrations
                     b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductInstanceId");
 
                     b.HasIndex("TransactionHeaderId");
 
@@ -483,9 +481,13 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
+                    b.Property<string>("CurrentStatus");
+
                     b.Property<long>("CustomerId");
 
-                    b.Property<string>("Status");
+                    b.Property<string>("LastStatus");
+
+                    b.Property<string>("Remarks");
 
                     b.Property<DateTime>("TglTransaksi");
 
@@ -692,14 +694,6 @@ namespace eCommerce.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Products.Options", b =>
-                {
-                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Products.OptionValue", b =>
                 {
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Options", "Options")
@@ -782,8 +776,13 @@ namespace eCommerce.DAL.Migrations
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss.TransactionDetails", b =>
                 {
+                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
+                        .WithMany("TransactionDetails")
+                        .HasForeignKey("ProductInstanceId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", "TransactionHeader")
-                        .WithMany()
+                        .WithMany("TransactionDetails")
                         .HasForeignKey("TransactionHeaderId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

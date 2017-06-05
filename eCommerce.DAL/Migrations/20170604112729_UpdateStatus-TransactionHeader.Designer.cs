@@ -8,8 +8,8 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    [Migration("20170604081132_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20170604112729_UpdateStatus-TransactionHeader")]
+    partial class UpdateStatusTransactionHeader
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -45,6 +45,26 @@ namespace eCommerce.DAL.Migrations
                     b.HasIndex("CustomerId");
 
                     b.ToTable("Alamat");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Banks.Bank", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Nama");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Bank");
                 });
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.Brands.Brand", b =>
@@ -125,6 +145,26 @@ namespace eCommerce.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customer");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Shippers.Shipper", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Nama");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Shipper");
                 });
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Categories.Category", b =>
@@ -322,6 +362,150 @@ namespace eCommerce.DAL.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans.KonfirmasiPembayaran", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("BankId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("ImageBuktiTransfer");
+
+                    b.Property<string>("NamaPemilikRekening");
+
+                    b.Property<string>("NoRekening");
+
+                    b.Property<decimal>("NominalTransfer");
+
+                    b.Property<string>("Status");
+
+                    b.Property<long>("TransactionHeaderId");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BankId");
+
+                    b.HasIndex("TransactionHeaderId");
+
+                    b.ToTable("KonfirmasiPembayaran");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss.ShippingDetails", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AlamatPengiriman");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<int>("KodePos");
+
+                    b.Property<string>("Kota");
+
+                    b.Property<string>("NamaPenerima");
+
+                    b.Property<string>("Provinsi");
+
+                    b.Property<long>("ShipperId");
+
+                    b.Property<string>("ShippingStatus");
+
+                    b.Property<string>("TrackingNumber");
+
+                    b.Property<long>("TransactionHeaderId");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ShipperId");
+
+                    b.HasIndex("TransactionHeaderId");
+
+                    b.ToTable("ShippingDetails");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss.TransactionDetails", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<decimal>("Discount");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<long>("ProductId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<long>("TransactionHeaderId");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TransactionHeaderId");
+
+                    b.ToTable("TransactionDetails");
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<bool>("Cancelled");
+
+                    b.Property<string>("Code");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("CurrentStatus");
+
+                    b.Property<long>("CustomerId");
+
+                    b.Property<string>("LastStatus");
+
+                    b.Property<string>("Remarks");
+
+                    b.Property<DateTime>("TglTransaksi");
+
+                    b.Property<decimal>("TotalDiscount");
+
+                    b.Property<decimal>("TotalPrice");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.ToTable("TransactionHeader");
                 });
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.UserLogins.RolesMaster", b =>
@@ -571,6 +755,48 @@ namespace eCommerce.DAL.Migrations
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Product", "Product")
                         .WithMany("Review")
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans.KonfirmasiPembayaran", b =>
+                {
+                    b.HasOne("eCommerce.Core.CommerceClasses.Banks.Bank", "Bank")
+                        .WithMany()
+                        .HasForeignKey("BankId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", "TransactionHeader")
+                        .WithMany()
+                        .HasForeignKey("TransactionHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss.ShippingDetails", b =>
+                {
+                    b.HasOne("eCommerce.Core.CommerceClasses.Shippers.Shipper", "Shipper")
+                        .WithMany()
+                        .HasForeignKey("ShipperId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", "TransactionHeader")
+                        .WithMany()
+                        .HasForeignKey("TransactionHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss.TransactionDetails", b =>
+                {
+                    b.HasOne("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", "TransactionHeader")
+                        .WithMany()
+                        .HasForeignKey("TransactionHeaderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders.TransactionHeader", b =>
+                {
+                    b.HasOne("eCommerce.Core.CommerceClasses.Customers.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

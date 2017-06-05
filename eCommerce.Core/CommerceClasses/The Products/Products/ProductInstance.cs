@@ -1,4 +1,5 @@
 ﻿using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,5 +13,6 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
 
         public virtual Product Product { get; set; }
         public virtual ICollection<ProductInstanceOptions> ProductInstanceOptions { get; set; }
+        public virtual ICollection<TransactionDetails> TransactionDetails { get; set; }
     }
 }

@@ -20,5 +20,11 @@ namespace eCommerce.DAL.Repositories.UserLogins
             var roleId = currentUser.Roles.Where(i => i.UserId == currentUser.Id).FirstOrDefault().RoleId;
             return context.Roles.Where(i => i.Id == roleId).FirstOrDefault().Name;
         }
+
+        public long GetCustomerId(string userName)
+        {
+            var currentUser = context.Users.Where(i => i.UserName == userName).FirstOrDefault();
+            return currentUser.ObjectId;
+        }
     }
 }

@@ -3,49 +3,175 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
+using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
+using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
+using eCommerce.DAL.Repositories.Shippers;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using eCommerce.Web.Models.TransactionViewModels;
+using eCommerce.DAL.Repositories.Alamats;
+using eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans;
+using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
+using eCommerce.DAL.Repositories.Banks;
+using Microsoft.AspNetCore.Http;
+using eCommerce.DAL.Repositories.UserLogins;
+using eCommerce.DAL.Repositories.Customers;
+using eCommerce.Logic.Services;
 
 namespace eCommerce.Web.Controllers
 {
     public class TransactionController : Controller
     {
+        private AlamatRepo alamatRepo;
+        private BankRepo bankRepo;
+        private KonfirmasiPembayaranRepo konfirmasiPembayaranRepo;
+        private TransactionHeaderRepo transactionHeaderRepo;
+        private TransactionDetailsRepo transactionDetailRepo;
+        private ShipperRepo shipperRepo;
+        private UserManagementRepo userRepo;
+
+        private TransactionService transactionService;
+
+        public TransactionController(TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo, ShipperRepo _shipperRepo,
+                                     AlamatRepo _alamatRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo, BankRepo _bankRepo, UserManagementRepo _userRepo,
+                                     TransactionService _transactionService)
+        {
+            transactionHeaderRepo = _transactionHeaderRepo;
+            transactionDetailRepo = _transactionDetailRepo;
+            shipperRepo = _shipperRepo;
+            alamatRepo = _alamatRepo;
+            konfirmasiPembayaranRepo = _konfirmasiPembayaranRepo;
+            bankRepo = _bankRepo;
+            userRepo = _userRepo;
+            transactionService = _transactionService;
+        }
+
         #region Shopping Cart
-        public ActionResult Cart()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult AddToCart(long ProductInstanceId)
+        {
+            //Action untuk add Item ke shopping cart
+            bool result;
+            var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
+            var activeCart = transactionHeaderRepo.GetActiveCart(CustomerId);
+
+            if (activeCart == null)
+            {
+                result = transactionService.CreateTransaction(CustomerId, ProductInstanceId);
+            }
+            else
+            {
+                result = transactionService.AddItemToCart(activeCart, ProductInstanceId);
+            }
+
+            return Json(data: new { Status = result });
+        }
+
+        public ActionResult Cart(long CustomerId)
         {
             //Page shopping cart
-            return View();
+            var model = transactionHeaderRepo.GetActiveCart(CustomerId);
+
+            if (model.CurrentStatus == TransactionStatus.CheckedOut)
+            {
+                RedirectToAction("ShippingInformation", new { transaction = model});
+            }
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteFromCart()
+        public JsonResult UpdateQuantity(int Quantity, long TransactionDetailId)
+        {
+            //Action untuk update quantity item di cart
+            //Pake AJAX supaya tidak refresh page
+            var item = transactionDetailRepo.GetById(TransactionDetailId);
+            if (item != null)
+            {
+                item.Quantity = Quantity;
+
+                try
+                {
+                    transactionDetailRepo.Save(item);
+                }
+                catch (Exception ex)
+                {
+                    return Json(data: new { Status = false, ErrorMsg = ex.Message });
+                }
+            }
+
+            return Json(data: new { Status = true, ErrorMsg = ""});
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult DeleteFromCart(long TransactionDetailId)
         {
             //Action untuk delete item dari cart
-            return View();
+            //Pake AJAX supaya tidak refresh page
+            
+            try
+            {
+                transactionDetailRepo.Delete(TransactionDetailId);
+            }
+            catch (Exception ex)
+            {
+                return Json(data: new { Status = false, ErrorMsg = ex.Message });
+            }
+
+            return Json(data: new { Status = true, ErrorMsg = "" });
         }
         #endregion
 
         #region CheckOut
         [HttpPost]
-        public ActionResult CheckOut()
+        [ValidateAntiForgeryToken]
+        public ActionResult CheckOut(long TransactionHeaderId, long CustomerId)
         {
             //Action untuk checkout item dari cart
-            return RedirectToAction("ShippingInformation");
+            try
+            {
+                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.CheckedOut);
+
+                transactionHeaderRepo.Save(transaction);
+                return RedirectToAction("ShippingInformation", new { TransactionHeaderId = transaction.Id });
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = ex.Message;
+            }
+            
+
+            return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
 
-        public ActionResult ShippingInformation()
+        public ActionResult ShippingInformation(long TransactionHeaderId)
         {
             //Page setelah klik button checkout. Untuk melakukan pembayaran dan melengkapi data pengiriman
-            return View();
+            ShippingInfoViewModel viewmodel = new ShippingInfoViewModel();
+
+            ViewBag.Shipper = new SelectList(shipperRepo.GetAll(), "Id", "Nama");
+            ViewBag.Alamat = new SelectList(alamatRepo.GetAll(), "Id", "Nama");
+
+            viewmodel.Transaction = transactionHeaderRepo.GetById(TransactionHeaderId);
+
+            return View(viewmodel);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult ConfirmTransaction()
         {
             //Action untuk memfinalisasi transaksi
+
             return RedirectToAction("TransactionSubmitted");
         }
 
-        public ActionResult TransactionSubmitted()
+        public ActionResult TransactionSubmitted(long TransactionId)
         {
             //Page untuk menampilkan bahwa transaksi sudah berhasil. Menampilkan nomor rekening untuk customer bisa transfer
             return View();
@@ -54,18 +180,45 @@ namespace eCommerce.Web.Controllers
         #endregion
 
         #region Payment Confirmation
-        public ActionResult PaymentConfirmation(long CustomerI)
+        public ActionResult PaymentConfirmation(long TransactionHeaderId)
         {
             //Page untuk customer mengisi form konfirmasi pembayaran
-            return View();
+            KonfirmasiPembayaran model = new KonfirmasiPembayaran();
+            ViewBag.Bank = new SelectList(bankRepo.GetAll(), "Id", "Nama");
+
+            if (TransactionHeaderId > 0)
+            {
+                var isWaiting = transactionHeaderRepo.IsWaitingForConfirmation(TransactionHeaderId);
+                if (isWaiting == false)
+                {
+                    TempData["Message"] = "Invalid transaction. Cannot confirm payment";
+                    return RedirectToAction("Index", "Home");
+                }
+
+                model.TransactionHeaderId = TransactionHeaderId;
+            }
+
+            return View(model);
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PaymentConfirmation()
+        public ActionResult PaymentConfirmation(KonfirmasiPembayaran konfirmasipembayaran, IFormFile upload)
         {
-            //ACtion untuk submit konfirmasi pembayaran
-            return View();
+            //Action untuk submit konfirmasi pembayaran
+            try
+            {
+                konfirmasiPembayaranRepo.Save(konfirmasipembayaran);
+                //Upload image
+
+            }
+            catch (Exception ex)
+            {
+                TempData["Message"] = "Error" + ex.Message;
+                return View(konfirmasipembayaran);
+            }
+
+            return RedirectToAction("Transaction", "Customer", new { CustomerId = userRepo.GetCustomerId(User.Identity.Name)});
         }
         #endregion
     }

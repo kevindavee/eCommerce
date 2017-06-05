@@ -17,7 +17,7 @@ namespace eCommerce.DAL
             dbSet = context.Set<T>();
         }
 
-        public void Delete(long id)
+        public virtual void Delete(long id)
         {
             var entity = GetById(id);
             dbSet.Remove(entity);
@@ -29,17 +29,17 @@ namespace eCommerce.DAL
             context.Dispose();
         }
 
-        public List<T> GetAll()
+        public virtual List<T> GetAll()
         {
             return dbSet.ToListAsync().Result;
         }
 
-        public T GetById(long id)
+        public virtual T GetById(long id)
         {
             return dbSet.Find(id);
         }
 
-        public void Save(T entity)
+        public virtual void Save(T entity)
         {
             if (entity.Id == 0)
             {
