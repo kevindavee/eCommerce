@@ -100,6 +100,8 @@
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
     <Content Include="wwwroot\js\custom.min.js" />
+    <Content Include="wwwroot\js\CustomJQuery\transaction.jquery" />
+    <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
     <Content Include="wwwroot\js\jquery-1.9.1.min.js" />
     <Content Include="wwwroot\js\jquery.bxslider.js" />
     <Content Include="wwwroot\js\jquery.fitvids.js" />

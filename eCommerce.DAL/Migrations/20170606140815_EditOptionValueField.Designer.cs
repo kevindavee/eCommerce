@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170606140815_EditOptionValueField")]
+    partial class EditOptionValueField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -166,7 +167,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<string>("Nama");
 
-                    b.Property<long?>("ParentId");
+                    b.Property<long>("ParentId");
 
                     b.Property<string>("UpdatedBy");
 
@@ -312,9 +313,6 @@ namespace eCommerce.DAL.Migrations
                     b.HasKey("ProductInstanceId", "OptionValueId");
 
                     b.HasIndex("OptionValueId");
-
-                    b.HasIndex("ProductInstanceId")
-                        .IsUnique();
 
                     b.ToTable("ProductInstanceOptions");
                 });
@@ -721,8 +719,8 @@ namespace eCommerce.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
-                        .WithOne("ProductInstanceOptions")
-                        .HasForeignKey("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstanceOptions", "ProductInstanceId")
+                        .WithMany("ProductInstanceOptions")
+                        .HasForeignKey("ProductInstanceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

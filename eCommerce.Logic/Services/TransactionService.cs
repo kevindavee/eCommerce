@@ -116,6 +116,37 @@ namespace eCommerce.Logic.Services
             return true;
         }
 
+        public bool UpdateQuantity(int Quantity, long TransactionDetailId)
+        {
+            using (var contextTransaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var item = transactionDetailRepo.GetById(TransactionDetailId);
+
+                    if (item != null)
+                    {
+                        var oldQuantity = item.Quantity;
+                        item.Quantity = Quantity;
+                        item.Price = (item.Price / oldQuantity) * Quantity;
+
+                        transactionDetailRepo.Save(item);
+                        var totalPrice = transactionDetailRepo.CalculateTotalPrice(item.TransactionHeaderId);
+                        var header = transactionHeaderRepo.GetById(item.TransactionHeaderId);
+                        header.TotalPrice = totalPrice;
+                        transactionHeaderRepo.Save(header);
+                    }
+                    contextTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    contextTransaction.Rollback();
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public TransactionDetails CheckExistingItemInCart(long TransactionHeaderId, long ProductInstanceId)
         {
             var transactionItems = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
