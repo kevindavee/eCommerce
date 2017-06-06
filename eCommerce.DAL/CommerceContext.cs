@@ -36,6 +36,8 @@ namespace eCommerce.DAL
 
             builder.Entity<ProductInstanceOptions>()
                 .HasKey(c => new { c.ProductInstanceId, c.OptionValueId});
+            builder.Entity<BrandAndCategory>()
+                .HasKey(c => new { c.BrandId, c.CategoryId });
         }
 
         public DbSet<Brand> Brand { get; set; }

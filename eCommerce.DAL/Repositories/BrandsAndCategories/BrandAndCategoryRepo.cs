@@ -5,10 +5,12 @@ using System.Text;
 
 namespace eCommerce.DAL.Repositories.BrandsAndCategories
 {
-    public class BrandAndCategoryRepo : RepoBase<BrandAndCategory>
+    public class BrandAndCategoryRepo
     {
-        public BrandAndCategoryRepo(CommerceContext _context) : base(_context)
+        private CommerceContext context;
+        public BrandAndCategoryRepo(CommerceContext _context)
         {
+            context = _context;
         }
     }
 }

@@ -33,7 +33,7 @@ namespace eCommerce.Logic.Services
         /// <param name="CustomerId"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool CreateTransaction(long CustomerId, long ProductInstanceId)
+        public bool CreateTransaction(long CustomerId, long ProductInstanceId, int Quantity)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -48,7 +48,7 @@ namespace eCommerce.Logic.Services
                     TransactionDetails transactionDetail = new TransactionDetails();
                     transactionDetail.ProductInstanceId = ProductInstanceId;
                     transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
-                    transactionDetail.Quantity = 1;
+                    transactionDetail.Quantity = Quantity;
 
                     transactionHeaderRepo.Save(transactionHeader);
                     transactionDetailRepo.Save(transactionDetail);
@@ -74,7 +74,7 @@ namespace eCommerce.Logic.Services
         /// <param name="transactionHeader"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId)
+        public bool AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId, int Quantity)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -90,14 +90,14 @@ namespace eCommerce.Logic.Services
                     {
                         transactionDetail.ProductInstanceId = ProductInstanceId;
                         transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
-                        transactionDetail.Quantity = 1;
+                        transactionDetail.Quantity = Quantity;
 
                     }
                     //Ada item yang sama. Tambah Quantity nya
                     else
                     {
                         transactionDetail = existedDetailItem;
-                        transactionDetail.Quantity++;
+                        transactionDetail.Quantity += Quantity;
                     }
 
                     transactionDetailRepo.Save(transactionDetail);

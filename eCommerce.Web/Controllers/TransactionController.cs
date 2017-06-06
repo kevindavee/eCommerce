@@ -50,7 +50,7 @@ namespace eCommerce.Web.Controllers
         #region Shopping Cart
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult AddToCart(long ProductInstanceId)
+        public JsonResult AddToCart(long ProductInstanceId, int Quantity)
         {
             //Action untuk add Item ke shopping cart
             bool result;
@@ -59,11 +59,11 @@ namespace eCommerce.Web.Controllers
 
             if (activeCart == null)
             {
-                result = transactionService.CreateTransaction(CustomerId, ProductInstanceId);
+                result = transactionService.CreateTransaction(CustomerId, ProductInstanceId, Quantity);
             }
             else
             {
-                result = transactionService.AddItemToCart(activeCart, ProductInstanceId);
+                result = transactionService.AddItemToCart(activeCart, ProductInstanceId, Quantity);
             }
 
             return Json(data: new { Status = result });
@@ -72,14 +72,15 @@ namespace eCommerce.Web.Controllers
         public ActionResult Cart(long CustomerId)
         {
             //Page shopping cart
-            var model = transactionHeaderRepo.GetActiveCart(CustomerId);
+            ShoppingCartViewModel viewmodel = new ShoppingCartViewModel();
+            viewmodel.TransactionHeader = transactionHeaderRepo.GetActiveCart(CustomerId);
 
-            if (model.CurrentStatus == TransactionStatus.CheckedOut)
+            if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
             {
-                RedirectToAction("ShippingInformation", new { transaction = model});
+                RedirectToAction("ShippingInformation", new { transaction = viewmodel.TransactionHeader});
             }
 
-            return View(model);
+            return View(viewmodel);
         }
 
         [HttpPost]

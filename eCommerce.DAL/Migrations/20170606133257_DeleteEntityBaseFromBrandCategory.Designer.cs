@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170606133257_DeleteEntityBaseFromBrandCategory")]
+    partial class DeleteEntityBaseFromBrandCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
