@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,10 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionDetailss
 
         public List<TransactionDetails> GetByHeaderId(long TransactionHeaderId)
         {
-            return dbSet.Where(s => s.TransactionHeaderId == TransactionHeaderId).ToList();
+            return dbSet.Where(s => s.TransactionHeaderId == TransactionHeaderId)
+                        .Include(i => i.ProductInstance)
+                        .Include(i => i.ProductInstance.Product)
+                        .Include(i => i.ProductInstance.ProductInstanceOptions).ToList();
         }
     }
 }

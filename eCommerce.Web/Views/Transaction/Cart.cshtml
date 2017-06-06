@@ -35,50 +35,26 @@
                         {
                             <td>
                                 <div class="cart-item-title"><a href="#">@item.ProductInstance.Product.Nama</a></div>
-                                <div class="feature">
-                                    @foreach (var variant in item.ProductInstance.ProductInstanceOptions)
+                                    @foreach (var variant in Model.ProductInstanceOptions.Where(s => s.ProductInstanceId == item.ProductInstanceId))
                                     {
-                                        @Html.DisplayFor(variantName => variant.OptionValue.Options.OptionName) <text><b>@Html.DisplayFor(variantValue => variant.OptionValue.Value)</b></text>
-                                    }
-                                </div>
+                                        <div class="feature">
+                                            @Html.DisplayFor(variantName => variant.OptionValue.Options.OptionName) <text><b>@Html.DisplayFor(variantValue => variant.OptionValue.Value)</b></text>
+                                        </div>
+                                    } 
                             </td>
-                            
-                            @using (Html.BeginForm("UpdateQuantity", "Transaction", new { TransactionDetailId = item.TransactionHeaderId }, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
-                            {
                                 <td class="quantity">
-                                    @Html.TextBoxFor(modelItem => item.Quantity, htmlAttributes: new { @class = "form-control input-sm input-micro", type = "number", min = "1" })
+                                    @Html.TextBoxFor(modelItem => item.Quantity, htmlAttributes: new { @class = "form-control input-sm input-micro txt-quantity", type = "number", min = "1", id=item.Id })
                                 </td>
-                                <td class="price">Rp. @Html.DisplayFor(modelItem => item.Price)</td>
+                                <td class="price" id="item-@item.Id-total-price">Rp. @Html.DisplayFor(modelItem => item.Price)</td>
                                 <td class="actions">
-                                    <button type="submit" class="btn btn-group-xs btn-grey"><i class="glyphicon glyphicon-floppy-saved"></i>Update</button>
+                                    <button type="submit" class="btn btn-group-xs btn-grey btn-update-price" value="@item.Quantity" id="@item.Id"><i class="glyphicon glyphicon-floppy-saved"></i>Update</button>
                                 </td>
-                            }
+                            
                             <td class="actions">
                                 <a href="#" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-trash"></i></a>
                             </td>
 
                         }
-                        <!-- Shopping Cart Item Image -->
-                        <td class="image"><a href="page-product-details.html"><img src="img/product1.jpg" alt="Item Name"></a></td>
-                        <!-- Shopping Cart Item Description & Features -->
-                        <td>
-                            <div class="cart-item-title"><a href="page-product-details.html">LOREM IPSUM DOLOR</a></div>
-                            <div class="feature color">
-                                Color: <span class="color-white"></span>
-                            </div>
-                            <div class="feature">Size: <b>XXL</b></div>
-                        </td>
-                        <!-- Shopping Cart Item Quantity -->
-                        <td class="quantity">
-                            <input class="form-control input-sm input-micro" type="text" value="1">
-                        </td>
-                        <!-- Shopping Cart Item Price -->
-                        <td class="price">$999.99</td>
-                        <!-- Shopping Cart Item Actions -->
-                        <td class="actions">
-                            <a href="#" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-pencil"></i></a>
-                            <a href="#" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-trash"></i></a>
-                        </td>
                     </tr>
                     <!-- End Shopping Cart Item -->
                 </table>
@@ -91,7 +67,7 @@
                 <table class="cart-totals">
                     <tr class="cart-grand-total">
                         <td><b>Total</b></td>
-                        <td><b>Rp. @Model.TransactionHeader.TotalPrice</b></td>
+                        <td><b id="total-price">Rp. @Model.TransactionHeader.TotalPrice</b></td>
                     </tr>
                 </table>
                 <!-- Action Buttons -->
@@ -104,3 +80,4 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/js/Custom/transaction-jquery.js"></script>
