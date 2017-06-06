@@ -84,7 +84,7 @@ namespace eCommerce.Web.Controllers
 
             viewmodel.TransactionHeader = model;
             viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceId(InstanceIds);
-            
+
 
             if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
             {

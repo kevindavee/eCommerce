@@ -40,5 +40,19 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
 
             return ChoosenIdForProductInstance;
         }
+        public List<ProductInstanceOptions> GetOptionValueByInstanceId(List<long> ProductInstanceIds)
+        {
+            List<ProductInstanceOptions> list = new List<ProductInstanceOptions>();
+
+            foreach (var item in ProductInstanceIds)
+            {
+                list.AddRange(dbSet.Where(s => s.ProductInstanceId == item)
+                         .Include(i => i.OptionValue)
+                         .Include(i => i.OptionValue.Options)
+                         .ToList());
+            }
+
+            return list;
+        }
     }
 }
