@@ -15,13 +15,16 @@ namespace eCommerce.Web.Controllers
         private BrandRepo brandRepo;
         private ProductRepo productRepo;
         private ProductInstanceRepo productInstanceRepo;
+        private ProductInstanceOptionsRepo productInstanceOptionsRepo;
+
         string userName = "";
 
-        public HomeController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo)
+        public HomeController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
             this.productInstanceRepo = _productInstanceRepo;
+            this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
         }
         public IActionResult Index()
         {
@@ -78,11 +81,14 @@ namespace eCommerce.Web.Controllers
         //dengan ukuran dan warna tertentu bisa saja terjadi perubahan harga
         public JsonResult GetPriceByOptions(long ProductId = 0, string optValueWarna = "", string optValueUkuran = "")
         {
-            //var ProductInstanceObj = productInstanceRepo.GetAll()
-            //                                            .Where(j => j.ProductId == ProductId);
+
+            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(ProductId, optValueWarna, optValueUkuran);
+
+            var ProductInstance = productInstanceRepo.GetById(IdProdInstance);
 
 
-            return Json("");
+
+            return Json(ProductInstance.Price);
         }
     }
 }
