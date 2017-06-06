@@ -78,15 +78,29 @@ namespace eCommerce.Logic.Services
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
+                TransactionDetails transactionDetail = new TransactionDetails();
+
                 try
                 {
-                    TransactionDetails transactionDetail = new TransactionDetails();
-                    transactionDetail.ProductInstanceId = ProductInstanceId;
-                    transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
-                    transactionDetail.Quantity = 1;
+                    //Check apakah ada item yang sama di dalam cart
+                    var existedDetailItem = CheckExistingItemInCart(transactionHeader.Id, ProductInstanceId);
+                    
+                    //tidak ada item yang sama, buat object baru
+                    if (existedDetailItem != null)
+                    {
+                        transactionDetail.ProductInstanceId = ProductInstanceId;
+                        transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
+                        transactionDetail.Quantity = 1;
+
+                    }
+                    //Ada item yang sama. Tambah Quantity nya
+                    else
+                    {
+                        transactionDetail = existedDetailItem;
+                        transactionDetail.Quantity++;
+                    }
 
                     transactionDetailRepo.Save(transactionDetail);
-
                     transactionHeader.TotalPrice = transactionDetailRepo.CalculateTotalPrice(transactionHeader.Id);
 
                     transactionHeaderRepo.Save(transactionHeader);
@@ -100,6 +114,22 @@ namespace eCommerce.Logic.Services
             }
 
             return true;
+        }
+
+        public TransactionDetails CheckExistingItemInCart(long TransactionHeaderId, long ProductInstanceId)
+        {
+            var transactionItems = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
+            if (transactionItems != null)
+            {
+                foreach (var item in transactionItems)
+                {
+                    if (item.ProductInstanceId == ProductInstanceId)
+                    {
+                        return item;
+                    }
+                }
+            }
+            return null;
         }
     }
 }

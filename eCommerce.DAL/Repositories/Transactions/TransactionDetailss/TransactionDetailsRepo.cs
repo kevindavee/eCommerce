@@ -24,5 +24,10 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionDetailss
 
             return TotalPrice;
         }
+
+        public List<TransactionDetails> GetByHeaderId(long TransactionHeaderId)
+        {
+            return dbSet.Where(s => s.TransactionHeaderId == TransactionHeaderId).ToList();
+        }
     }
 }
