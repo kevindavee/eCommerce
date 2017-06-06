@@ -12,4 +12,8 @@ namespace eCommerce.Web.Models.HomeViewModels
         public List<Product> ProductList { get; set; }
         public List<Brand> BrandList { get; set; }
     }
+    public class ProductDetailsViewModel
+    {
+        public Product Product { get; set; }
+    }
 }
