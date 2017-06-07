@@ -88,7 +88,7 @@ namespace eCommerce.Web.Controllers
 
             if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
             {
-                RedirectToAction("ShippingInformation", new { transaction = viewmodel.TransactionHeader});
+                return RedirectToAction("CheckOutForm", new { transaction = viewmodel.TransactionHeader});
             }
 
             return View(viewmodel);
@@ -115,54 +115,58 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult DeleteFromCart(long TransactionDetailId)
+        public ActionResult DeleteFromCart(long TransactionDetailId, long TransactionHeaderId)
         {
             //Action untuk delete item dari cart
             //Pake AJAX supaya tidak refresh page
-            
-            try
+            var CustomerId = transactionHeaderRepo.GetById(TransactionHeaderId).CustomerId;
+
+            var result = transactionService.DeleteItem(TransactionDetailId, TransactionHeaderId);
+
+            if (!result)
             {
-                transactionDetailRepo.Delete(TransactionDetailId);
-            }
-            catch (Exception ex)
-            {
-                return Json(data: new { Status = false, ErrorMsg = ex.Message });
+                ViewData["Message"] = "Cannot delete item from cart !";
             }
 
-            return Json(data: new { Status = true, ErrorMsg = "" });
+            return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
         #endregion
 
         #region CheckOut
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CheckOut(long TransactionHeaderId, long CustomerId)
+        public ActionResult CheckOut(long TransactionHeaderId)
         {
+            long CustomerId = 1;
             //Action untuk checkout item dari cart
             try
             {
-                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.CheckedOut);
+                //TODO : Ganti customer dengan Username
+                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.CheckedOut, "Customer");
+
+                //Uncoment saat sudah bisa pakai username
+                //CustomerId = transaction.CustomerId;
 
                 transactionHeaderRepo.Save(transaction);
-                return RedirectToAction("ShippingInformation", new { TransactionHeaderId = transaction.Id });
+                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = transaction.Id });
 
             }
             catch (Exception ex)
             {
-                TempData["Message"] = ex.Message;
+                ViewData["Message"] = ex.Message;
             }
             
 
             return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
 
-        public ActionResult ShippingInformation(long TransactionHeaderId)
+        public ActionResult CheckOutForm(long TransactionHeaderId)
         {
             //Page setelah klik button checkout. Untuk melakukan pembayaran dan melengkapi data pengiriman
-            ShippingInfoViewModel viewmodel = new ShippingInfoViewModel();
-
             ViewBag.Shipper = new SelectList(shipperRepo.GetAll(), "Id", "Nama");
             ViewBag.Alamat = new SelectList(alamatRepo.GetAll(), "Id", "Nama");
+
+            CheckOutViewModel viewmodel = new CheckOutViewModel();
 
             viewmodel.Transaction = transactionHeaderRepo.GetById(TransactionHeaderId);
 
@@ -182,6 +186,30 @@ namespace eCommerce.Web.Controllers
         {
             //Page untuk menampilkan bahwa transaksi sudah berhasil. Menampilkan nomor rekening untuk customer bisa transfer
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CancelCheckOut(long TransactionHeaderId)
+        {
+            long CustomerId = 1;
+            try
+            {
+                //TODO : Ganti customer dengan Username
+                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.OnCart, "Customer");
+
+                //Uncoment saat sudah bisa pakai username
+                //CustomerId = transaction.CustomerId;
+
+                transactionHeaderRepo.Save(transaction);
+                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId })
+            }
+            catch (Exception ex)
+            {
+                ViewData["Message"] = ex.Message;
+            }
+
+            return RedirectToAction("Cart", new { CustomerId =  CustomerId});
         }
 
         #endregion
