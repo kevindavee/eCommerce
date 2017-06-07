@@ -29,10 +29,4 @@
             });
         }
     });
-
-    $('.btn-delete-item').on('click', function (e) {
-        if (!confirm("Are you sure want to remove this item from your cart ?")) {
-            e.preventDefault();
-        }
-    })
 });

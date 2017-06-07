@@ -4,13 +4,6 @@
     ViewData["Title"] = "Cart";
 }
 
-@if (ViewData["Message"] != null)
-{
-    <script type="text/javascript">
-        alert(@ViewData["Message"]);
-    </script>
-}
-
 <!-- Page Title -->
 <div class="section section-breadcrumbs">
     <div class="container">
@@ -37,35 +30,32 @@
                 <!-- Shopping Cart Items -->
                 <table class="shopping-cart">
                     <!-- Shopping Cart Item -->
-                    @foreach (var item in Model.TransactionHeader.TransactionDetails)
-                    {
-                        <tr>
+                    <tr>
+                        @foreach (var item in Model.TransactionHeader.TransactionDetails)
+                        {
                             <td>
                                 <div class="cart-item-title"><a href="#">@item.ProductInstance.Product.Nama</a></div>
-                                @foreach (var variant in Model.ProductInstanceOptions.Where(s => s.ProductInstanceId == item.ProductInstanceId))
-                                {
-                                    <div class="feature">
-                                        @Html.DisplayFor(variantName => variant.OptionValue.Options.OptionName) <text><b>@Html.DisplayFor(variantValue => variant.OptionValue.Value)</b></text>
-                                    </div>
-                                }
+                                    @foreach (var variant in Model.ProductInstanceOptions.Where(s => s.ProductInstanceId == item.ProductInstanceId))
+                                    {
+                                        <div class="feature">
+                                            @Html.DisplayFor(variantName => variant.OptionValue.Options.OptionName) <text><b>@Html.DisplayFor(variantValue => variant.OptionValue.Value)</b></text>
+                                        </div>
+                                    } 
                             </td>
-                            <td class="quantity">
-                                @Html.TextBoxFor(modelItem => item.Quantity, htmlAttributes: new { @class = "form-control input-sm input-micro txt-quantity", type = "number", min = "1", id = item.Id })
-                            </td>
-                            <td class="price" id="item-@item.Id-total-price">Rp. @Html.DisplayFor(modelItem => item.Price)</td>
+                                <td class="quantity">
+                                    @Html.TextBoxFor(modelItem => item.Quantity, htmlAttributes: new { @class = "form-control input-sm input-micro txt-quantity", type = "number", min = "1", id=item.Id })
+                                </td>
+                                <td class="price" id="item-@item.Id-total-price">Rp. @Html.DisplayFor(modelItem => item.Price)</td>
+                                <td class="actions">
+                                    <button type="submit" class="btn btn-group-xs btn-grey btn-update-price" value="@item.Quantity" id="@item.Id"><i class="glyphicon glyphicon-floppy-saved"></i>Update</button>
+                                </td>
+                            
                             <td class="actions">
-                                <button type="submit" class="btn btn-group-xs btn-grey btn-update-price" value="@item.Quantity" id="@item.Id"><i class="glyphicon glyphicon-floppy-saved"></i>Update</button>
+                                <a href="#" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-trash"></i></a>
                             </td>
 
-                            @using (Html.BeginForm("DeleteFromCart", "Transaction", new { TransactionDetailId = item.Id, TransactionHeaderId = item.TransactionHeaderId }, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
-                            {
-                                <td class="actions">
-                                    <button type="submit" class="btn btn-xs btn-grey btn-delete-item"><i class="glyphicon glyphicon-trash"></i></button>
-                                </td>
-                            }
-                        </tr>
-                    }
-                    
+                        }
+                    </tr>
                     <!-- End Shopping Cart Item -->
                 </table>
                 <!-- End Shopping Cart Items -->
@@ -82,10 +72,8 @@
                 </table>
                 <!-- Action Buttons -->
                 <div class="pull-right">
-                    @using (Html.BeginForm("CheckOut", "Transaction", new { TransactionHeaderId = Model.TransactionHeader.Id }, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
-                    {
-                        <button type="submit" class="btn"><i class="glyphicon glyphicon-shopping-cart icon-white"></i> CHECK OUT</button>
-                    }
+                    <a href="#" class="btn btn-grey"><i class="glyphicon glyphicon-refresh"></i> UPDATE</a>
+                    <a href="#" class="btn"><i class="glyphicon glyphicon-shopping-cart icon-white"></i> CHECK OUT</a>
                 </div>
             </div>
         </div>
