@@ -7,7 +7,7 @@ using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.BrandsAndCategories
 {
-    public class BrandAndCategory : EntityBase
+    public class BrandAndCategory
     {
         public long BrandId { get; set; } = 0;
         public long CategoryId { get; set; } = 0;

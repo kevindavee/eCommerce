@@ -9,9 +9,7 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
     public class Options: EntityBase
     {
         public string OptionName { get; set; } = "";
-        public long ProductId { get; set; } = 0;
 
-        public virtual Product Product { get; set; }
         public virtual ICollection<OptionValue> OptionValue { get; set; }
     }
 }

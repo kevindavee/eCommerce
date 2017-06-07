@@ -28,6 +28,8 @@ using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
 using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
 using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
 using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
+using eCommerce.Logic.Services;
+using eCommerce.DAL.Repositories.UserLogins;
 
 namespace eCommerce.Web
 {
@@ -77,6 +79,7 @@ namespace eCommerce.Web
             services.AddScoped<ReviewRepo, ReviewRepo>();
             services.AddScoped<OptionValueRepo, OptionValueRepo>();
             services.AddScoped<ProductInstanceRepo, ProductInstanceRepo>();
+            services.AddScoped<ProductInstanceOptionsRepo, ProductInstanceOptionsRepo>();
             services.AddScoped<OptionsRepo, OptionsRepo>();
             services.AddScoped<BankRepo, BankRepo>();
             services.AddScoped<BrandAndCategoryRepo, BrandAndCategoryRepo>();
@@ -85,6 +88,10 @@ namespace eCommerce.Web
             services.AddScoped<TransactionDetailsRepo, TransactionDetailsRepo>();
             services.AddScoped<ShippingDetailsRepo, ShippingDetailsRepo>();
             services.AddScoped<KonfirmasiPembayaranRepo, KonfirmasiPembayaranRepo>();
+            services.AddScoped<UserManagementRepo, UserManagementRepo>();
+
+
+            services.AddScoped<TransactionService, TransactionService>();
 
             services.Configure<IdentityOptions>(options =>
             {

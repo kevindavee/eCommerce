@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170604165621_EditFewFields")]
+    partial class EditFewFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -90,11 +91,24 @@ namespace eCommerce.DAL.Migrations
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.BrandsAndCategories.BrandAndCategory", b =>
                 {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
                     b.Property<long>("BrandId");
 
                     b.Property<long>("CategoryId");
 
-                    b.HasKey("BrandId", "CategoryId");
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BrandId");
 
                     b.HasIndex("CategoryId");
 
@@ -166,7 +180,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<string>("Nama");
 
-                    b.Property<long?>("ParentId");
+                    b.Property<long>("ParentId");
 
                     b.Property<string>("UpdatedBy");
 
@@ -230,7 +244,9 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<long>("OptionsId");
+                    b.Property<long>("OptionId");
+
+                    b.Property<long?>("OptionsId");
 
                     b.Property<string>("UpdatedBy");
 
@@ -312,9 +328,6 @@ namespace eCommerce.DAL.Migrations
                     b.HasKey("ProductInstanceId", "OptionValueId");
 
                     b.HasIndex("OptionValueId");
-
-                    b.HasIndex("ProductInstanceId")
-                        .IsUnique();
 
                     b.ToTable("ProductInstanceOptions");
                 });
@@ -688,8 +701,7 @@ namespace eCommerce.DAL.Migrations
                 {
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.Options", "Options")
                         .WithMany("OptionValue")
-                        .HasForeignKey("OptionsId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("OptionsId");
                 });
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Products.Product", b =>
@@ -721,8 +733,8 @@ namespace eCommerce.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
-                        .WithOne("ProductInstanceOptions")
-                        .HasForeignKey("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstanceOptions", "ProductInstanceId")
+                        .WithMany("ProductInstanceOptions")
+                        .HasForeignKey("ProductInstanceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
