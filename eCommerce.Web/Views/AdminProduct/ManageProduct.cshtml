@@ -65,6 +65,11 @@
                                     <a href="#tab_content4" role="tab" id="category-tab" data-toggle="tab" aria-expanded="false">Category List</a>
                                 </li>
                                 <!--tab4 end-->
+                                <!--tab5-->
+                                <li role="presentation" class="">
+                                    <a href="#tab_content4" role="tab" id="brand-tab" data-toggle="tab" aria-expanded="false">Brand List</a>
+                                </li>
+                                <!--tab5 end-->
                             </ul>
                             <div id="myTabContent" class="tab-content">
                                 <!--tab1 content-->
@@ -472,6 +477,129 @@
                                     </div>
                                 </div>
                                 <!--tab4 content end-->
+                                @*tab5 content*@
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content4" aria-labelledby="home-tab">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                            <div class="x_title">
+                                                <h2>Category List</h2>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="x_content">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Brand</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Samsung</td>
+                                                            <td>
+                                                                <a onclick="" class="btn btn-primary">Details/Edit</a>
+                                                                <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td><input type="text" /></td>
+                                                            <td><button type="submit" class="btn btn-success">Submit</button></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*brand list*@
+                                <div role="tabpanel" class="tab-pane fade" id="tab_content5" aria-labelledby="home-tab">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="x_panel">
+                                            <div class="x_title">
+                                                <h2>Category List</h2>
+                                                <div class="clearfix"></div>
+                                            </div>
+                                            <div class="x_content">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Category</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Elektronik</td>
+                                                            <td>
+                                                                <a onclick="detailsclick()" class="btn btn-primary">Details/Edit</a>
+                                                                <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Fashion</td>
+                                                            <td>
+                                                                <a onclick="detailsclick()" class="btn btn-primary">Details/Edit</a>
+                                                                <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td><input type="text" /></td>
+                                                            <td><button type="submit" class="btn btn-success">Submit</button></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                                <div class="clearfix"></div>
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Nama Subcategory</th>
+                                                            <th>Nama Category</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Handphone</td>
+                                                            <td>Elektronik</td>
+                                                            <td>
+                                                                <a onclick="detailsclick()" class="btn btn-primary">Details/Edit</a>
+                                                                <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Kemeja</td>
+                                                            <td>Fashion</td>
+                                                            <td>
+                                                                <a onclick="detailsclick()" class="btn btn-primary">Details/Edit</a>
+                                                                <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td class="col-md-2 col-sm-4 col-xs-12"><input type="text" /></td>
+                                                            <td class="col-md-2 col-sm-4 col-xs-12">
+                                                                <!-- ganti dropdown pake razor -->
+                                                                <select class="form-control">
+                                                                    <option>Choose option</option>
+                                                                    <option value="0">Category #1</option>
+                                                                    <option value="1">Category #2</option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="col-md-4 col-sm-4 col-xs-12"><button type="submit" class="btn btn-success">Submit</button></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*tab5 content end*@
                             </div>
                         </div>
                     </div>

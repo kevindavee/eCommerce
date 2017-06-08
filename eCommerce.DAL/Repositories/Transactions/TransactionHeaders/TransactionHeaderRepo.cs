@@ -35,13 +35,13 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
 
             if (cart == null)
             {
-                return null;
-            }
-            else
-            {
                 if (checkedOut != null)
                 {
                     cart = checkedOut;
+                }
+                else
+                {
+                    return null;
                 }
             }
 
@@ -54,12 +54,15 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         /// <param name="TransactionId"></param>
         /// <param name="TransactionStatus"></param>
         /// <returns></returns>
-        public TransactionHeader ChangeStatus(long TransactionId, string TransactionStatus)
+        public TransactionHeader ChangeStatus(long TransactionId, string TransactionStatus, string UserName)
         {
             var transaction = GetById(TransactionId);
 
             transaction.LastStatus = transaction.CurrentStatus;
             transaction.CurrentStatus = TransactionStatus;
+
+            transaction.UpdatedBy = UserName;
+            transaction.UpdatedDate = DateTime.Today;
 
             return transaction;
         }
