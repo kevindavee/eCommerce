@@ -1,12 +1,18 @@
 ﻿using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans;
+using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using eCommerce.DAL;
 using eCommerce.DAL.Repositories.The_Products.Products;
+using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
+using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
 using eCommerce.DAL.Repositories.Transactions.TransactionDetailss;
 using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace eCommerce.Logic.Services
@@ -14,17 +20,21 @@ namespace eCommerce.Logic.Services
     public class TransactionService
     {
         private CommerceContext context;
+        private KonfirmasiPembayaranRepo konfirmasiPembayaranRepo;
         private TransactionHeaderRepo transactionHeaderRepo;
         private TransactionDetailsRepo transactionDetailRepo;
         private ProductInstanceRepo productInstanceRepo;
+        private ShippingDetailsRepo shippingDetailsRepo;
 
         public TransactionService(CommerceContext _context, TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo, 
-                                  ProductInstanceRepo _productInstanceRepo)
+                                  ProductInstanceRepo _productInstanceRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo)
         {
             context = _context;
             transactionHeaderRepo = _transactionHeaderRepo;
             transactionDetailRepo = _transactionDetailRepo;
             productInstanceRepo = _productInstanceRepo;
+            shippingDetailsRepo = _shippingDetailsRepo;
+            konfirmasiPembayaranRepo = _konfirmasiPembayaranRepo;
         }
 
         /// <summary>
@@ -193,10 +203,38 @@ namespace eCommerce.Logic.Services
         }
 
         /// <summary>
+        /// Confirm transaction. After saved, this transaction is waiting for it's payment confirmation
+        /// </summary>
+        /// <param name="transactionHeaderId"></param>
+        /// <param name="shippingDetails"></param>
+        /// <returns></returns>
+        public bool ConfirmTransaction(long transactionHeaderId, ShippingDetails shippingDetails)
+        {
+            using (var contextTransaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    shippingDetailsRepo.Save(shippingDetails);
+
+                    //Ganti customer dengan username
+                    transactionHeaderRepo.ChangeStatus(transactionHeaderId, TransactionStatus.PaymentConfirmation, "Customer");
+
+                    contextTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    contextTransaction.Rollback();
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Recalculate Total Price
         /// </summary>
         /// <param name="TransactionHeaderId"></param>
-        public void UpdateTotalPrice(long TransactionHeaderId)
+        private void UpdateTotalPrice(long TransactionHeaderId)
         {
             var totalPrice = transactionDetailRepo.CalculateTotalPrice(TransactionHeaderId);
             var header = transactionHeaderRepo.GetById(TransactionHeaderId);
@@ -208,7 +246,7 @@ namespace eCommerce.Logic.Services
             transactionHeaderRepo.Save(header);
         }
 
-        public TransactionDetails CheckExistingItemInCart(long TransactionHeaderId, long ProductInstanceId)
+        private TransactionDetails CheckExistingItemInCart(long TransactionHeaderId, long ProductInstanceId)
         {
             var transactionItems = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
             if (transactionItems != null)

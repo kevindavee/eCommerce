@@ -22,7 +22,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         public TransactionHeader GetActiveCart(long CustomerId)
         {
             var cart = dbSet.Where(s => s.CurrentStatus == TransactionStatus.OnCart &&
-                                         s.LastStatus == TransactionStatus.OnCart &&
+                                         (s.LastStatus == TransactionStatus.OnCart || s.LastStatus == TransactionStatus.CheckedOut)  &&
                                          s.CustomerId == CustomerId)
                              .Include(i => i.TransactionDetails)
                              .FirstOrDefault();
@@ -49,12 +49,12 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         }
 
         /// <summary>
-        /// Change transaction header status
+        /// Change transaction header status and save it
         /// </summary>
         /// <param name="TransactionId"></param>
         /// <param name="TransactionStatus"></param>
         /// <returns></returns>
-        public TransactionHeader ChangeStatus(long TransactionId, string TransactionStatus, string UserName)
+        public void ChangeStatus(long TransactionId, string TransactionStatus, string UserName)
         {
             var transaction = GetById(TransactionId);
 
@@ -64,7 +64,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
             transaction.UpdatedBy = UserName;
             transaction.UpdatedDate = DateTime.Today;
 
-            return transaction;
+            Save(transaction);
         }
 
         /// <summary>
