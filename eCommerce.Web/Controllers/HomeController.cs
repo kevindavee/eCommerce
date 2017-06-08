@@ -50,45 +50,6 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
-        //Untuk Pilihan Per-Category Brand
-        public ActionResult HomePerCategoriesView(long CategoryId = 0)
-        {
-            var brandList = brandRepo.GetAll().ToList();
-            var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
-
-
-            var model = new HomeViewModel();
-            model.BrandList = brandList;
-            model.ProductList = productList;
-            return View();
-        }
-
-
-        //Jika Product di Click akan menuju details product
-        public ActionResult DetailsProductView(long ProductId = 0)
-        {
-            var productObj = productRepo.GetById(ProductId);
-
-
-            var model = new ProductDetailsViewModel();
-            model.Product = productObj;
-            return View();
-        }
-
-
-        //Get Product Per-Options
-        //Jadi method nya nanti akan diisi jika user milih sebuah product 
-        //dengan ukuran dan warna tertentu bisa saja terjadi perubahan harga
-        public JsonResult GetPriceByOptions(long ProductId = 0, string optValueWarna = "", string optValueUkuran = "")
-        {
-
-            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(ProductId, optValueWarna, optValueUkuran);
-
-            var ProductInstance = productInstanceRepo.GetById(IdProdInstance);
-
-
-
-            return Json(ProductInstance.Price);
-        }
+        
     }
 }
