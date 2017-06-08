@@ -7,6 +7,7 @@ using eCommerce.DAL;
 using eCommerce.DAL.Repositories.Brands;
 using eCommerce.DAL.Repositories.The_Products.Products;
 using eCommerce.Web.Models.ProductViewModels;
+using eCommerce.Core.CommerceClasses.The_Products.Products;
 
 namespace eCommerce.Web.Controllers
 {
@@ -29,7 +30,9 @@ namespace eCommerce.Web.Controllers
         public ActionResult Index()
         {
             //Page product index
-            return View();
+            var model = new ProductViewModel();
+            model.ProductList = ProductList(0);
+            return View(model);
         }
 
         public ActionResult ProductIndex()
@@ -44,16 +47,12 @@ namespace eCommerce.Web.Controllers
         }
 
         //Untuk Pilihan Per-Category Brand
-        public ActionResult HomePerCategoriesView(long CategoryId = 0)
+        public List<Product> ProductList(long CategoryId = 0)
         {
             var brandList = brandRepo.GetAll().ToList();
             var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
-
-
-            var model = new ProductViewModel();
-            model.BrandList = brandList;
-            model.ProductList = productList;
-            return View();
+            
+            return productList;
         }
 
 
@@ -72,10 +71,10 @@ namespace eCommerce.Web.Controllers
         //Get Product Per-Options
         //Jadi method nya nanti akan diisi jika user milih sebuah product 
         //dengan ukuran dan warna tertentu bisa saja terjadi perubahan harga
-        public JsonResult GetPriceByOptions(long ProductId = 0, string optValueWarna = "", string optValueUkuran = "")
+        public JsonResult GetPriceByOptions(long ProductId = 6, string optValueWarna = "Black", string optValueUkuran = "S")
         {
 
-            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(ProductId, optValueWarna, optValueUkuran);
+            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(6, optValueWarna, "XS");
 
             var ProductInstance = productInstanceRepo.GetById(IdProdInstance);
 

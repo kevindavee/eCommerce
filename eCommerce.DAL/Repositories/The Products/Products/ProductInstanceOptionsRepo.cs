@@ -29,10 +29,10 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
             long ChoosenIdForProductInstance = 0;
             foreach (var itemId in listProductInstanceId)
             {
-                var InstanceOptions = dbSet.Where(j => j.ProductInstanceId == itemId);
-                var InstanceOptionsUkuran = InstanceOptions.Where(j => j.OptionValue.Value == optValueWarna);
-                var InstanceOptionsWarna = InstanceOptions.Where(j => j.OptionValue.Value == optValueUkuran);
-                if (InstanceOptionsUkuran != null && InstanceOptionsWarna != null)
+                //var InstanceOptions = dbSet.Where(j => j.ProductInstanceId == itemId).ToList();
+                var InstanceOptionsUkuran = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueWarna).ToList();
+                var InstanceOptionsWarna = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueUkuran).ToList();
+                if (InstanceOptionsUkuran.Count() > 0 && InstanceOptionsWarna.Count() > 0)
                 {
                     ChoosenIdForProductInstance = itemId;
                     break;
