@@ -18,6 +18,5 @@ namespace eCommerce.Web.Models.TransactionViewModels
 
         public TransactionHeader Transaction { get; set; }
         public ShippingDetails ShippingDetail { get; set; }
-        public Alamat Alamat { get; set; }
     }
 }
