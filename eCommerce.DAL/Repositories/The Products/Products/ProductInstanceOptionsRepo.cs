@@ -10,6 +10,7 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
     public class ProductInstanceOptionsRepo
     {
         private CommerceContext context;
+        //private DbSet<ProductInstanceOptions> dbSet;
         protected DbSet<ProductInstanceOptions> dbSet;
 
         public ProductInstanceOptionsRepo(CommerceContext _context)

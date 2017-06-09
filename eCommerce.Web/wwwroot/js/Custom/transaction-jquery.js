@@ -14,7 +14,7 @@
                 data: { Quantity: quantity, TransactionDetailId: itemId },
                 dataType: 'json',
                 success: function (data) {
-                    if (data.status == true) {
+                    if (data.status === true) {
                         alert("Success");
 
                         var priceDOM = '#item-' + itemId + '-total-price';
@@ -34,5 +34,5 @@
         if (!confirm("Are you sure want to remove this item from your cart ?")) {
             e.preventDefault();
         }
-    })
+    });
 });

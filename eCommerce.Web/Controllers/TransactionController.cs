@@ -19,6 +19,11 @@ using eCommerce.DAL.Repositories.UserLogins;
 using eCommerce.DAL.Repositories.Customers;
 using eCommerce.Logic.Services;
 using eCommerce.DAL.Repositories.The_Products.Products;
+using eCommerce.Core.CommerceClasses.Banks;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using eCommerce.Core.CommerceClasses.Shippers;
+using eCommerce.Core.CommerceClasses.Alamats;
 
 namespace eCommerce.Web.Controllers
 {
@@ -34,10 +39,11 @@ namespace eCommerce.Web.Controllers
         private UserManagementRepo userRepo;
 
         private TransactionService transactionService;
+        private IHostingEnvironment environment;
 
         public TransactionController(TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo, ShipperRepo _shipperRepo,
                                      AlamatRepo _alamatRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo, BankRepo _bankRepo, UserManagementRepo _userRepo,
-                                     TransactionService _transactionService, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
+                                     TransactionService _transactionService, ProductInstanceOptionsRepo _productInstanceOptionsRepo, IHostingEnvironment _environment)
         {
             transactionHeaderRepo = _transactionHeaderRepo;
             transactionDetailRepo = _transactionDetailRepo;
@@ -48,6 +54,7 @@ namespace eCommerce.Web.Controllers
             userRepo = _userRepo;
             transactionService = _transactionService;
             productInstanceOptionsRepo = _productInstanceOptionsRepo;
+            environment = _environment;
         }
 
         #region Shopping Cart
@@ -142,13 +149,12 @@ namespace eCommerce.Web.Controllers
             try
             {
                 //TODO : Ganti customer dengan Username
-                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.CheckedOut, "Customer");
+                transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.CheckedOut, "Customer");
 
                 //Uncoment saat sudah bisa pakai username
                 //CustomerId = transaction.CustomerId;
 
-                transactionHeaderRepo.Save(transaction);
-                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = transaction.Id });
+                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId });
 
             }
             catch (Exception ex)
@@ -163,21 +169,76 @@ namespace eCommerce.Web.Controllers
         public ActionResult CheckOutForm(long TransactionHeaderId)
         {
             //Page setelah klik button checkout. Untuk melakukan pembayaran dan melengkapi data pengiriman
-            ViewBag.Shipper = new SelectList(shipperRepo.GetAll(), "Id", "Nama");
-            ViewBag.Alamat = new SelectList(alamatRepo.GetAll(), "Id", "Nama");
+            var shipper = new List<Shipper>();
+            shipper = shipperRepo.GetAll();
+            shipper.Insert(0, new Shipper { Id = 0, Nama = "Choose shipper" });
+
+            var alamat = new List<Alamat>();
+            alamat = alamatRepo.GetAll();
+            alamat.Insert(0, new Alamat { Id = 0, NamaAlamat = "Choose Address" });
+
+            ViewBag.Shipper = shipper;
+            ViewBag.Alamat = alamat;
 
             CheckOutViewModel viewmodel = new CheckOutViewModel();
 
             viewmodel.Transaction = transactionHeaderRepo.GetById(TransactionHeaderId);
+
+            if (viewmodel.Transaction == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            if (viewmodel.Transaction.CurrentStatus != TransactionStatus.CheckedOut)
+            {
+                if (viewmodel.Transaction.CurrentStatus == TransactionStatus.OnCart)
+                {
+                    return RedirectToAction("Cart", new { CustomerId = viewmodel.Transaction.CustomerId });
+                }
+                else if(viewmodel.Transaction.CurrentStatus == TransactionStatus.PaymentConfirmation)
+                {
+                    return RedirectToAction("PaymentConfirmation", new { TransactionHeaderId = viewmodel.Transaction.Id });
+                }
+                else
+                {
+                    return RedirectToAction("Home", "Index");
+                }
+            }
 
             return View(viewmodel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ConfirmTransaction()
+        public ActionResult ConfirmTransaction(CheckOutViewModel checkOutViewModel, long TransactionHeaderId)
         {
             //Action untuk memfinalisasi transaksi
+            var shipping = checkOutViewModel.ShippingDetail;
+            shipping.TransactionHeaderId = TransactionHeaderId;
+
+            //Hapus jika dropdown sudah berfungsi
+            shipping.CreatedBy = shipping.UpdatedBy = "Customer";
+            shipping.CreatedDate = shipping.UpdatedDate = DateTime.Today;
+
+            var result = transactionService.ConfirmTransaction(TransactionHeaderId, shipping);
+
+            if (!result)
+            {
+                ViewData["Message"] = "Cannot process order !";
+
+                var shipper = new List<Shipper>();
+                shipper = shipperRepo.GetAll();
+                shipper.Insert(0, new Shipper { Id = 0, Nama = "Choose shipper" });
+
+                var alamat = new List<Alamat>();
+                alamat = alamatRepo.GetAll();
+                alamat.Insert(0, new Alamat { Id = 0, NamaAlamat = "Choose Address" });
+
+                ViewBag.Shipper = shipper;
+                ViewBag.Alamat = alamat;
+
+                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId });
+            }
 
             return RedirectToAction("TransactionSubmitted");
         }
@@ -196,17 +257,16 @@ namespace eCommerce.Web.Controllers
             try
             {
                 //TODO : Ganti customer dengan Username
-                var transaction = transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.OnCart, "Customer");
+                transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.OnCart, "Customer");
 
                 //Uncoment saat sudah bisa pakai username
                 //CustomerId = transaction.CustomerId;
 
-                transactionHeaderRepo.Save(transaction);
-                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId });
             }
             catch (Exception ex)
             {
                 ViewData["Message"] = ex.Message;
+                return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId });
             }
 
             return RedirectToAction("Cart", new { CustomerId =  CustomerId});
@@ -219,7 +279,11 @@ namespace eCommerce.Web.Controllers
         {
             //Page untuk customer mengisi form konfirmasi pembayaran
             KonfirmasiPembayaran model = new KonfirmasiPembayaran();
-            ViewBag.Bank = new SelectList(bankRepo.GetAll(), "Id", "Nama");
+
+            var bank = new List<Bank>();
+            bank = bankRepo.GetAll();
+            bank.Insert(0, new Bank { Id = 0, Nama = "Choose bank" });
+            ViewBag.Bank = bank;
 
             if (TransactionHeaderId > 0)
             {
@@ -238,22 +302,40 @@ namespace eCommerce.Web.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PaymentConfirmation(KonfirmasiPembayaran konfirmasipembayaran, IFormFile upload)
+        public ActionResult PaymentConfirmation(KonfirmasiPembayaran konfirmasiPembayaran, IFormFile upload)
         {
             //Action untuk submit konfirmasi pembayaran
             try
             {
-                konfirmasiPembayaranRepo.Save(konfirmasipembayaran);
-                //Upload image
+                var filePathAndName = Path.Combine(environment.WebRootPath, "BuktiTransfer", upload.FileName);
+                if (upload != null)
+                {
+                    using (var stream = new FileStream(filePathAndName, FileMode.Create))
+                    {
+                        upload.CopyTo(stream);
+                    }
+                    konfirmasiPembayaran.ImageBuktiTransfer = filePathAndName;
+                }
 
+                //TODO : Ganti customer dengan username
+                konfirmasiPembayaran.CreatedBy = konfirmasiPembayaran.UpdatedBy = "Customer";
+                konfirmasiPembayaranRepo.Save(konfirmasiPembayaran);
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Error" + ex.Message;
-                return View(konfirmasipembayaran);
+                ViewData["Message"] = "Cannot save this data !\nError: "+ ex.Message;
+
+                var bank = new List<Bank>();
+                bank = bankRepo.GetAll();
+                bank.Insert(0, new Bank { Id = 0, Nama = "Choose bank" });
+                ViewBag.Bank = bank;
+
+                return View(konfirmasiPembayaran);
             }
 
-            return RedirectToAction("Transaction", "Customer", new { CustomerId = userRepo.GetCustomerId(User.Identity.Name)});
+            //Nanti customerId ganti dengan get customer id
+            //return RedirectToAction("Transaction", "Customer", new { CustomerId = 1});
+            return RedirectToAction("Index", "Home");
         }
         #endregion
     }
