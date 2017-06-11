@@ -27,17 +27,21 @@ namespace eCommerce.Web.Controllers
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
         }
-        public ActionResult Index()
+        public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000)
         {
             //Page product index
             var model = new ProductViewModel();
-            model.ProductList = ProductList(0);
+            model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
+            //model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
+
             return View(model);
         }
 
-        public ActionResult ProductIndex()
+        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000)
         {
             //Partial view untuk refresh list of product
+            var model = new ProductViewModel();
+
             return PartialView();
         }
 
@@ -47,24 +51,42 @@ namespace eCommerce.Web.Controllers
         }
 
         //Untuk Pilihan Per-Category Brand
-        public List<Product> ProductList(long CategoryId = 0)
+        public IEnumerable<ProductListViewModel> ProductList(long CategoryId = 0, string sort = "")
         {
-            var brandList = brandRepo.GetAll().ToList();
+            var listProduct = new List<ProductListViewModel>();
             var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
-            
-            return productList;
+            switch (sort)
+            {
+                case "Top Rating":
+                    productList.OrderByDescending(j => j.Rating);
+                    break;
+                default:
+                    break;
+            }
+
+
+            foreach (var item in productList)
+            {
+                listProduct.Add(new ProductListViewModel
+                {
+                    Product = item,
+                    Price = productInstanceRepo.GetPriceForProductList(item.Id)
+                });
+            }
+
+            return listProduct;
         }
 
 
         //Jika Product di Click akan menuju details product
-        public ActionResult DetailsProductView(long ProductId = 0)
+        public ActionResult DetailsProduct(long ProductId = 0)
         {
             var productObj = productRepo.GetById(ProductId);
 
 
             var model = new ProductDetailsViewModel();
             model.Product = productObj;
-            return View();
+            return View(model);
         }
 
 
