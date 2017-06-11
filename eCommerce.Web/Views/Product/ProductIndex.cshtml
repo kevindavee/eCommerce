@@ -1,0 +1,44 @@
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model List<eCommerce.Web.Models.ProductViewModels.ProductListViewModel>
+
+@foreach (var item in Model)
+            {
+    <div class="col-md-3 col-sm-6">
+        <!-- Product -->
+        <div class="shop-item">
+            <!-- Product Image -->
+            <div class="shop-item-image">
+                <a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">
+                    <img src="@if (item.Product.ProductImage != null)
+	                                    {
+		                                     @item.Product.ProductImage.FirstOrDefault()
+	                                    }" alt="@item.Product.Nama">
+                </a>
+            </div>
+            <!-- Product Title -->
+            <div class="title">
+                <h3><a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">@item.Product.Nama</a></h3>
+            </div>
+            <!-- Product Available Colors-->
+            @*<div class="colors">
+                    <span class="color-white"></span>
+                    <span class="color-black"></span>
+                    <span class="color-blue"></span>
+                    <span class="color-orange"></span>
+                    <span class="color-green"></span>
+                </div>*@
+            <!-- Product Price-->
+            <div class="price">
+                from @item.Price
+            </div>
+            <!-- Add to Cart Button -->
+            <div class="actions">
+                <a href="page-product-details.html" class="btn btn-small"><i class="icon-shopping-cart icon-white"></i> Add to Cart</a>
+            </div>
+        </div>
+        <!-- End Product -->
+    </div>
+}
