@@ -3,6 +3,7 @@ using eCommerce.Core.CommerceClasses.The_Products.Products;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss
@@ -11,7 +12,10 @@ namespace eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss
     {
         public long TransactionHeaderId { get; set; } = 0;
         public long ProductInstanceId { get; set; } = 0;
+
+        [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal Price { get; set; } = 0;
+
         public int Quantity { get; set; } = 0;
         public decimal Discount { get; set; } = 0;
 
