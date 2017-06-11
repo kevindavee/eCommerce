@@ -41,6 +41,9 @@ namespace eCommerce.Web.Controllers
         private TransactionService transactionService;
         private IHostingEnvironment environment;
 
+        string UserName = "";
+        long CustomerId = 0;
+
         public TransactionController(TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo, ShipperRepo _shipperRepo,
                                      AlamatRepo _alamatRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo, BankRepo _bankRepo, UserManagementRepo _userRepo,
                                      TransactionService _transactionService, ProductInstanceOptionsRepo _productInstanceOptionsRepo, IHostingEnvironment _environment)
@@ -55,6 +58,8 @@ namespace eCommerce.Web.Controllers
             transactionService = _transactionService;
             productInstanceOptionsRepo = _productInstanceOptionsRepo;
             environment = _environment;
+            //UserName = User.Identity.Name;
+            //CustomerId = _userRepo.GetCustomerId(UserName);
         }
 
         #region Shopping Cart
@@ -79,10 +84,11 @@ namespace eCommerce.Web.Controllers
             return Json(data: new { Status = result });
         }
 
-        public ActionResult Cart(long CustomerId)
+        public ActionResult Cart()
         {
             //Page shopping cart
             ShoppingCartViewModel viewmodel = new ShoppingCartViewModel();
+
             CustomerId = 1;
             var model = transactionHeaderRepo.GetActiveCart(CustomerId);
             model.TransactionDetails = transactionDetailRepo.GetByHeaderId(model.Id);
@@ -144,7 +150,7 @@ namespace eCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult CheckOut(long TransactionHeaderId)
         {
-            long CustomerId = 1;
+            CustomerId = 1;
             //Action untuk checkout item dari cart
             try
             {
@@ -204,7 +210,6 @@ namespace eCommerce.Web.Controllers
                     return RedirectToAction("Home", "Index");
                 }
             }
-
             return View(viewmodel);
         }
 
@@ -222,6 +227,9 @@ namespace eCommerce.Web.Controllers
 
             var result = transactionService.ConfirmTransaction(TransactionHeaderId, shipping);
 
+            //Hapus saat sudah bisa login
+            CustomerId = 1;
+
             if (!result)
             {
                 ViewData["Message"] = "Cannot process order !";
@@ -231,7 +239,7 @@ namespace eCommerce.Web.Controllers
                 shipper.Insert(0, new Shipper { Id = 0, Nama = "Choose shipper" });
 
                 var alamat = new List<Alamat>();
-                alamat = alamatRepo.GetAll();
+                alamat = alamatRepo.GetAll().Where(s => s.CustomerId == CustomerId).ToList();
                 alamat.Insert(0, new Alamat { Id = 0, NamaAlamat = "Choose Address" });
 
                 ViewBag.Shipper = shipper;
@@ -270,6 +278,13 @@ namespace eCommerce.Web.Controllers
             }
 
             return RedirectToAction("Cart", new { CustomerId =  CustomerId});
+        }
+
+        public JsonResult GetAlamatDetail(long AlamatId)
+        {
+            var result = alamatRepo.GetById(AlamatId);
+
+            return Json(data: new { TheAlamat = result.TheAlamat, Kota = result.Kota, Provinsi = result.Provinsi, KodePos = result.KodePos });
         }
 
         #endregion

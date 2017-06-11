@@ -42,7 +42,7 @@
                         <label class="control-label">Receiver Name</label>
                     </div>
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.ShippingDetail.NamaPenerima, htmlAttributes: new { @class = "form-control"})
+                        @Html.TextBoxFor(model => model.ShippingDetail.NamaPenerima, htmlAttributes: new { @class = "form-control required-field"})
                     </div>
                 </div>
                 <div class="row">
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-md-8">
                         <!--View Bag Alamat-->
-                        <select class="form-control" asp-items="@(new SelectList(ViewBag.Alamat, "Id", "NamaAlamat"))"></select>
+                        <select id="dropdown-alamat" class="form-control required-field required-dropdown" asp-items="@(new SelectList(ViewBag.Alamat, "Id", "NamaAlamat"))"></select>
                     </div>
                 </div>
                 <hr />
@@ -60,7 +60,7 @@
                         <label class="control-label">Address</label>
                     </div>
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.ShippingDetail.AlamatPengiriman, htmlAttributes: new { @class = "form-control"@*, @readonly = "readonly"*@})
+                        @Html.TextBoxFor(model => model.ShippingDetail.AlamatPengiriman, htmlAttributes: new { @class = "form-control", @readonly = "readonly"})
                     </div>
                 </div>
                 <div class="row">
@@ -68,7 +68,7 @@
                         <label class="control-label">City</label>
                     </div>
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.ShippingDetail.Kota, htmlAttributes: new { @class = "form-control"@*, @readonly = "readonly"*@ })
+                        @Html.TextBoxFor(model => model.ShippingDetail.Kota, htmlAttributes: new { @class = "form-control", @readonly = "readonly" })
                     </div>
                 </div>
                 <div class="row">
@@ -76,7 +76,7 @@
                         <label class="control-label">Province</label>
                     </div>
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.ShippingDetail.Provinsi, htmlAttributes: new { @class = "form-control"@*, @readonly = "readonly"*@ })
+                        @Html.TextBoxFor(model => model.ShippingDetail.Provinsi, htmlAttributes: new { @class = "form-control", @readonly = "readonly" })
                     </div>
                 </div>
                 <div class="row">
@@ -84,7 +84,7 @@
                         <label class="control-label">Postal Code</label>
                     </div>
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.ShippingDetail.KodePos, htmlAttributes: new { @class = "form-control"@*, @readonly = "readonly"*@ })
+                        @Html.TextBoxFor(model => model.ShippingDetail.KodePos, htmlAttributes: new { @class = "form-control", @readonly = "readonly" })
                     </div>
                 </div>
                 <hr />
@@ -94,7 +94,7 @@
                     </div>
                     <div class="col-md-8">
                         <!--Drop down shipper-->
-                        <select asp-for="ShippingDetail.ShipperId" class="form-control" asp-items="@(new SelectList(ViewBag.Shipper, "Id", "Nama"))"></select>
+                        <select asp-for="ShippingDetail.ShipperId" class="form-control  required-field required-dropdown" asp-items="@(new SelectList(ViewBag.Shipper, "Id", "Nama"))"></select>
                     </div>
                 </div>
                 <hr />
@@ -103,7 +103,7 @@
         
         <div class="row">
             <div class="col-md-8">
-                <button type="submit" class="btn btn-primary pull-right">Submit Order</button>
+                <button type="submit" class="btn btn-primary pull-right" disabled="disabled" id="btn-submit-order">Submit Order</button>
             </div>
         </div>
     </div>
@@ -111,6 +111,7 @@
 }
 <br />
 
+<script type="text/javascript" src="~/js/Custom/transaction-jquery.js"></script>
 
 
 

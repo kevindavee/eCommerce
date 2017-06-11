@@ -96,11 +96,8 @@
     <Content Include="wwwroot\css\user\main-orange.css" />
     <Content Include="wwwroot\css\user\main-red.css" />
     <Content Include="wwwroot\css\user\main.css" />
-    <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
-    <Content Include="wwwroot\js\custom.min.js" />
-    <Content Include="wwwroot\js\CustomJQuery\transaction.jquery" />
     <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
     <Content Include="wwwroot\js\jquery-1.9.1.min.js" />
     <Content Include="wwwroot\js\jquery.bxslider.js" />
@@ -109,7 +106,6 @@
     <Content Include="wwwroot\js\jquery.sequence.js" />
     <Content Include="wwwroot\js\main-menu.js" />
     <Content Include="wwwroot\js\modernizr-2.6.2-respond-1.1.0.min.js" />
-    <Content Include="wwwroot\js\nprogress.js" />
     <Content Include="wwwroot\js\template.js" />
   </ItemGroup>
   <ItemGroup>
