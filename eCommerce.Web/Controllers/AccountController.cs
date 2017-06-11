@@ -13,6 +13,9 @@ using eCommerce.Web.Models;
 using eCommerce.Web.Models.AccountViewModels;
 using eCommerce.Web.Services;
 using eCommerce.Core.CommerceClasses.UserLogins;
+using eCommerce.Commons;
+using eCommerce.DAL.Repositories.Customers;
+using eCommerce.Core.CommerceClasses.Customers;
 
 namespace eCommerce.Web.Controllers
 {
@@ -21,6 +24,7 @@ namespace eCommerce.Web.Controllers
     {
         private readonly UserManager<UserLogin> _userManager;
         private readonly SignInManager<UserLogin> _signInManager;
+        private CustomerRepo _customerRepo;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -29,6 +33,7 @@ namespace eCommerce.Web.Controllers
         public AccountController(
             UserManager<UserLogin> userManager,
             SignInManager<UserLogin> signInManager,
+            CustomerRepo customerRepo,
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
@@ -39,6 +44,7 @@ namespace eCommerce.Web.Controllers
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            _customerRepo = customerRepo;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
@@ -113,7 +119,9 @@ namespace eCommerce.Web.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new UserLogin { UserName = model.Email, Email = model.Email };
+                var customer = new Customer();
+                _customerRepo.Save(customer);
+                var user = new UserLogin { UserName = model.Username, Email = model.Email, ObjectId = customer.Id };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -123,6 +131,7 @@ namespace eCommerce.Web.Controllers
                     //var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                    var results = _userManager.AddToRoleAsync(user, UserRoles.Customer);
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
                     return RedirectToLocal(returnUrl);

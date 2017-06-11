@@ -98,7 +98,7 @@ namespace eCommerce.Web
                 // Password settings
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 6;
-                //options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
 
@@ -138,7 +138,7 @@ namespace eCommerce.Web
 
             app.UseIdentity();
 
-            new UserRoleSeed(app.ApplicationServices.GetService<RoleManager<RolesMaster>>(), app.ApplicationServices.GetService<UserManager<UserLogin>>()).Seed();
+            //new UserRoleSeed(app.ApplicationServices.GetService<RoleManager<RolesMaster>>(), app.ApplicationServices.GetService<UserManager<UserLogin>>()).Seed();
 
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 

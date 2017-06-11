@@ -16,7 +16,5 @@ namespace eCommerce.Core.CommerceClasses.Customers
         public string NoTelepon { get; set; } = "";
         public string Email { get; set; } = "";
         public string Foto { get; set; } = "";
-
-        public virtual UserLogin UserLogin { get; set; }
     }
 }

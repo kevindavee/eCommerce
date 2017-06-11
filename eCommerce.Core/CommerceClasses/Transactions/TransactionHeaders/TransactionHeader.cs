@@ -3,6 +3,7 @@ using eCommerce.Core.CommerceClasses.Customers;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders
@@ -14,6 +15,8 @@ namespace eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders
         public long CustomerId { get; set; } = 0;
         public string LastStatus { get; set; } = "";
         public string CurrentStatus { get; set; } = "";
+
+        [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal TotalPrice { get; set; } = 0;
         public decimal TotalDiscount { get; set; } = 0;
         public string Remarks { get; set; } = "";
