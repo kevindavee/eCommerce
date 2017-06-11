@@ -98,7 +98,7 @@ namespace eCommerce.Web.Controllers
                 var InstanceIds = model.TransactionDetails.Select(s => s.ProductInstanceId).ToList();
 
                 viewmodel.TransactionHeader = model;
-                viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceId(InstanceIds);
+                viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceIdAsync(InstanceIds).Result;
 
 
                 if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
