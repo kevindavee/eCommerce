@@ -69,3 +69,13 @@ function GetFilterFieldValue() {
 
     return arr;
 }
+
+
+function GetPriceByOptions(ProductId, Warna, Ukuran, ParentCategory) {
+    alert("test");
+    var url = "/Product/GetPriceByOptions";
+    $.get("/Product/GetPriceByOptions?ProductId=" + ProductId + "&optValueWarna=" + Warna + "&optValueUkuran=" + Ukuran + "&parentCategory=" + ParentCategory, function (data) {
+        $('#lblPrice').empty();
+        $('#lblPrice').append(data);
+    })
+}

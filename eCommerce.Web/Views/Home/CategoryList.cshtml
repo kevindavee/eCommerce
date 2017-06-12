@@ -1,0 +1,27 @@
+@model List<eCommerce.Core.CommerceClasses.The_Products.Categories.Category>
+
+
+@foreach (var item in Model)
+{
+    <h4>@if (item.ParentId == null)
+    {
+        var test = item.Nama;
+        @test
+    }
+    </h4>
+    <ul>
+        @foreach (var item1 in Model.Where(j => j.ParentId == item.Id))
+        {
+            <li><a href="~/Product/Index?CategoryId=@item1.Id">@item1.Nama</a></li>
+        }
+        @*<li><a href="page-homepage-sample.html">Homepage (Sample 2)</a></li>*@
+    </ul>
+}
+
+
+
+
+
+
+
+

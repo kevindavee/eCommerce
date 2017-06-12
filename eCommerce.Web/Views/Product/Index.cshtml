@@ -1,8 +1,6 @@
-
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
-
 }
 
 @model eCommerce.Web.Models.ProductViewModels.ProductViewModel
@@ -68,7 +66,6 @@
     <div class="container">
         <div class="row" id="div-product-list">
            @{ Html.RenderPartial("ProductIndex", Model.ProductList);}
-            
         </div>
     </div>
 </div>

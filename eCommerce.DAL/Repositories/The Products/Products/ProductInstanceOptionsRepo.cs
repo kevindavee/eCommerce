@@ -13,14 +13,17 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         private CommerceContext context;
         //private DbSet<ProductInstanceOptions> dbSet;
         protected DbSet<ProductInstanceOptions> dbSet;
+        protected DbSet<OptionValue> dbSetOptValue;
+
 
         public ProductInstanceOptionsRepo(CommerceContext _context)
         {
             context = _context;
             dbSet = context.Set<ProductInstanceOptions>();
+            dbSetOptValue = context.Set<OptionValue>();
         }
 
-        public long GetPriceByFilter(long productId, string optValueWarna, string optValueUkuran)
+        public long GetPriceByFilter(long productId, string optValueWarna, string optValueUkuran, string parentCategory)
         {
             var listProductInstanceId = dbSet.Where(j => j.ProductInstance.ProductId == productId)
                                                     .Select(j => j.ProductInstanceId)
@@ -31,13 +34,28 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
             foreach (var itemId in listProductInstanceId)
             {
                 //var InstanceOptions = dbSet.Where(j => j.ProductInstanceId == itemId).ToList();
-                var InstanceOptionsUkuran = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueWarna).ToList();
-                var InstanceOptionsWarna = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueUkuran).ToList();
-                if (InstanceOptionsUkuran.Count() > 0 && InstanceOptionsWarna.Count() > 0)
+                var InstanceOptionsUkuran = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueUkuran).ToList();
+                var InstanceOptionsWarna = dbSet.Where(j => j.ProductInstanceId == itemId && j.OptionValue.Value == optValueWarna).ToList();
+
+                //untuk product yang non-elektronik
+                if (parentCategory != "Elektronik")
                 {
-                    ChoosenIdForProductInstance = itemId;
-                    break;
+                    if (InstanceOptionsUkuran.Count() > 0 && InstanceOptionsWarna.Count() > 0)
+                    {
+                        ChoosenIdForProductInstance = itemId;
+                        break;
+                    }
                 }
+                //untuk product yang elektronik
+                else
+                {
+                    if (InstanceOptionsWarna.Count() > 0)
+                    {
+                        ChoosenIdForProductInstance = itemId;
+                        break;
+                    }
+                }
+                
             }
 
             return ChoosenIdForProductInstance;
@@ -54,6 +72,25 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
             }
 
             return list;
+        }
+
+        public string GetWarnaByProductInstanceId(long ProductInstanceId)
+        {
+            string warna = "";
+            var InstanceOptionsWarna = dbSet.Where(j => j.ProductInstanceId == ProductInstanceId && j.OptionValue.Options.OptionName == "Warna").FirstOrDefault();
+            warna = dbSetOptValue.Find(InstanceOptionsWarna.OptionValueId).Value;
+
+            return warna;
+        }
+
+
+        public string GetUkuranByProductInstanceId(long ProductInstanceId)
+        {
+            string ukuran = "";
+            var InstanceOptionsUkuran = dbSet.Where(j => j.ProductInstanceId == ProductInstanceId && j.OptionValue.Options.OptionName == "Ukuran").FirstOrDefault();
+            ukuran = dbSetOptValue.Find(InstanceOptionsUkuran.OptionValueId).Value;
+
+            return ukuran;
         }
     }
 }

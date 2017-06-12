@@ -1,5 +1,6 @@
 ﻿using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,13 @@ namespace eCommerce.Web.Models.ProductViewModels
     public class ProductDetailsViewModel
     {
         public Product Product { get; set; }
+        public string ParentCategory { get; set; }
+
+
+        public string selectedColor { get; set; }
+        public List<string> colorList { get; set; }
+
+        public string selectedUkuran { get; set; }
+        public List<string> ukuranList { get; set; }
     }
 }

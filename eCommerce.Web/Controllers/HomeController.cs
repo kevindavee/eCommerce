@@ -7,6 +7,7 @@ using eCommerce.DAL.Repositories.Brands;
 using Microsoft.AspNetCore.Authorization;
 using eCommerce.DAL.Repositories.The_Products.Products;
 using eCommerce.Web.Models.HomeViewModels;
+using eCommerce.DAL.Repositories.The_Products.Categories;
 
 namespace eCommerce.Web.Controllers
 {
@@ -14,23 +15,37 @@ namespace eCommerce.Web.Controllers
     {
         private BrandRepo brandRepo;
         private ProductRepo productRepo;
+        private CategoryRepo categoryRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
 
         string userName = "";
 
-        public HomeController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
+        public HomeController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo, CategoryRepo _categoryRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
+            this.categoryRepo = _categoryRepo;
         }
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            return View();
+            var categoryList = categoryRepo.GetAll();
+
+            var model = new HomeViewModel();
+            model.CategoryList = categoryList.ToList();
+
+            return View(model);
         }
 
+
+        public PartialViewResult CategoryList()
+        {
+            var categoryList = categoryRepo.GetAll();
+
+            return PartialView(categoryList.ToList());
+        }
         public ActionResult HomeView(long brandId = 0, decimal minPrice = 0, decimal maxPrice = 0)
         {
             var brandList = brandRepo.GetAll().ToList();

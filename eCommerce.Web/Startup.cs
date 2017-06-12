@@ -30,6 +30,7 @@ using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
 using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 using eCommerce.Logic.Services;
 using eCommerce.DAL.Repositories.UserLogins;
+using eCommerce.DAL.Repositories.The_Products.Categories;
 
 namespace eCommerce.Web
 {
@@ -74,6 +75,7 @@ namespace eCommerce.Web
             //Register Application Repository
             services.AddScoped<CustomerRepo, CustomerRepo>();
             services.AddScoped<BrandRepo, BrandRepo>();
+            services.AddScoped<CategoryRepo, CategoryRepo>();
             services.AddScoped<AlamatRepo, AlamatRepo>();
             services.AddScoped<ProductRepo, ProductRepo>();
             services.AddScoped<ReviewRepo, ReviewRepo>();
