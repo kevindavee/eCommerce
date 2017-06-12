@@ -22,6 +22,10 @@ namespace eCommerce.Web.Controllers
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
         }
+        public ActionResult Index()
+        {
+            return View();
+        }
         public ActionResult ManageProduct()
         {
             //Page untuk melihat list of product
