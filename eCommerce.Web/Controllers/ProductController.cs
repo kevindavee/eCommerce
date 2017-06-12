@@ -37,12 +37,12 @@ namespace eCommerce.Web.Controllers
             return View(model);
         }
 
-        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000)
+        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 0)
         {
             //Partial view untuk refresh list of product
-            var model = new ProductViewModel();
+            var list = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
 
-            return PartialView();
+            return PartialView(list);
         }
 
         public ActionResult Detail(long ProductId)

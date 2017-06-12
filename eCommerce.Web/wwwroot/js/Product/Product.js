@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     $('#btn-search').on('click', function () {
         var arr = GetFilterFieldValue();
-        var url = "/Product/Index";
+        var url = "/Product/ProductIndex";
         $.get(url, { MaxHarga: arr[0].MaxHarga, MinHarga: arr[0].MinHarga, sort: arr[0].sort }, function (data) {
             $('div#div-product-list').empty();
             $('div#div-product-list').append(data);
