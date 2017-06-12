@@ -64,12 +64,12 @@ namespace eCommerce.Web.Controllers
 
         #region Shopping Cart
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult AddToCart(long ProductInstanceId, int Quantity)
         {
             //Action untuk add Item ke shopping cart
             bool result;
-            var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
+            CustomerId = 1;
+            //var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
             var activeCart = transactionHeaderRepo.GetActiveCart(CustomerId);
 
             if (activeCart == null)
@@ -79,6 +79,11 @@ namespace eCommerce.Web.Controllers
             else
             {
                 result = transactionService.AddItemToCart(activeCart, ProductInstanceId, Quantity);
+            }
+
+            if (!result)
+            {
+                return Json(data: new { Status = result });
             }
 
             return Json(data: new { Status = result });
@@ -91,17 +96,24 @@ namespace eCommerce.Web.Controllers
 
             CustomerId = 1;
             var model = transactionHeaderRepo.GetActiveCart(CustomerId);
-            model.TransactionDetails = transactionDetailRepo.GetByHeaderId(model.Id);
-
-            var InstanceIds = model.TransactionDetails.Select(s => s.ProductInstanceId).ToList();
-
-            viewmodel.TransactionHeader = model;
-            viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceId(InstanceIds);
-
-
-            if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
+            if (model != null)
             {
-                return RedirectToAction("CheckOutForm", new { transaction = viewmodel.TransactionHeader});
+                model.TransactionDetails = transactionDetailRepo.GetByHeaderId(model.Id);
+
+                var InstanceIds = model.TransactionDetails.Select(s => s.ProductInstanceId).ToList();
+
+                viewmodel.TransactionHeader = model;
+                viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceIdAsync(InstanceIds).Result;
+
+
+                if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
+                {
+                    return RedirectToAction("CheckOutForm", new { transaction = viewmodel.TransactionHeader });
+                }
+            }
+            else
+            {
+                viewmodel = null;
             }
 
             return View(viewmodel);
@@ -123,7 +135,7 @@ namespace eCommerce.Web.Controllers
             var itemPrice = detail.Price;
             var TotalPrice = transactionHeaderRepo.GetById(detail.TransactionHeaderId).TotalPrice;
 
-            return Json(data: new { Status = true, ErrorMsg = "", itemPrice = itemPrice, TotalPrice = TotalPrice});
+            return Json(data: new { Status = true, ErrorMsg = "", itemPrice = itemPrice, TotalPrice = TotalPrice });
         }
 
         [HttpPost]
@@ -167,7 +179,7 @@ namespace eCommerce.Web.Controllers
             {
                 ViewData["Message"] = ex.Message;
             }
-            
+
 
             return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
@@ -201,7 +213,7 @@ namespace eCommerce.Web.Controllers
                 {
                     return RedirectToAction("Cart", new { CustomerId = viewmodel.Transaction.CustomerId });
                 }
-                else if(viewmodel.Transaction.CurrentStatus == TransactionStatus.PaymentConfirmation)
+                else if (viewmodel.Transaction.CurrentStatus == TransactionStatus.PaymentConfirmation)
                 {
                     return RedirectToAction("PaymentConfirmation", new { TransactionHeaderId = viewmodel.Transaction.Id });
                 }
@@ -277,7 +289,7 @@ namespace eCommerce.Web.Controllers
                 return RedirectToAction("CheckOutForm", new { TransactionHeaderId = TransactionHeaderId });
             }
 
-            return RedirectToAction("Cart", new { CustomerId =  CustomerId});
+            return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
 
         public JsonResult GetAlamatDetail(long AlamatId)
@@ -314,7 +326,7 @@ namespace eCommerce.Web.Controllers
 
             return View(model);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PaymentConfirmation(KonfirmasiPembayaran konfirmasiPembayaran, IFormFile upload)
@@ -338,7 +350,7 @@ namespace eCommerce.Web.Controllers
             }
             catch (Exception ex)
             {
-                ViewData["Message"] = "Cannot save this data !\nError: "+ ex.Message;
+                ViewData["Message"] = "Cannot save this data !\nError: " + ex.Message;
 
                 var bank = new List<Bank>();
                 bank = bankRepo.GetAll();

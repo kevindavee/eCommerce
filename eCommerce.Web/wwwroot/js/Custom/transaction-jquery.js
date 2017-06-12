@@ -1,11 +1,12 @@
 ﻿$(document).ready(function () {
+    //Cart Page
     $('.btn-update-price').on('click', function () {
         var itemId = parseInt($(this).attr('id'));
         var textboxQuantity = '.txt-quantity#' + itemId;
         var quantity = parseInt($(textboxQuantity).val());
 
         if (quantity < 1) {
-            alert("Insert minimal 1 item !");
+            alert("Insert minimum 1 item !");
         }
         else {
             $.ajax({
@@ -18,8 +19,8 @@
                         alert("Success");
 
                         var priceDOM = '#item-' + itemId + '-total-price';
-                        $(priceDOM).html('Rp. ' + data.itemPrice);
-                        $('#total-price').html('Rp.' + data.totalPrice);
+                        $(priceDOM).html('Rp. ' + ThousandSeparator(data.itemPrice));
+                        $('#total-price').html('Rp.' + ThousandSeparator(data.totalPrice));
 
                     }
                     else {
