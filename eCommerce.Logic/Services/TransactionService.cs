@@ -56,14 +56,16 @@ namespace eCommerce.Logic.Services
                     transactionHeader.CustomerId = CustomerId;
                     transactionHeader.LastStatus = transactionHeader.CurrentStatus = TransactionStatus.OnCart;
 
+                    transactionHeaderRepo.Save(transactionHeader);
+
                     TransactionDetails transactionDetail = new TransactionDetails();
                     //TODO: Ganti customer dengan username
+                    transactionDetail.TransactionHeaderId = transactionHeader.Id;
                     transactionDetail.CreatedBy = transactionDetail.UpdatedBy=  "Customer";
                     transactionDetail.ProductInstanceId = ProductInstanceId;
                     transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
                     transactionDetail.Quantity = Quantity;
 
-                    transactionHeaderRepo.Save(transactionHeader);
                     transactionDetailRepo.Save(transactionDetail);
 
                     transactionHeader.TotalPrice = transactionDetailRepo.CalculateTotalPrice(transactionHeader.Id);
@@ -99,8 +101,9 @@ namespace eCommerce.Logic.Services
                     var existedDetailItem = CheckExistingItemInCart(transactionHeader.Id, ProductInstanceId);
                     
                     //tidak ada item yang sama, buat object baru
-                    if (existedDetailItem != null)
+                    if (existedDetailItem == null)
                     {
+                        transactionDetail.TransactionHeaderId = transactionHeader.Id;
                         transactionDetail.CreatedBy = transactionDetail.UpdatedBy = "Customer";
                         transactionDetail.ProductInstanceId = ProductInstanceId;
                         transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
@@ -110,10 +113,11 @@ namespace eCommerce.Logic.Services
                     //Ada item yang sama. Tambah Quantity nya
                     else
                     {
+                        transactionDetail = existedDetailItem;
+
                         //TODO: Ganti customer dengan username
                         transactionDetail.UpdatedBy = "Customer";
                         transactionDetail.UpdatedDate = DateTime.Today;
-                        transactionDetail = existedDetailItem;
                         transactionDetail.Quantity += Quantity;
                     }
 

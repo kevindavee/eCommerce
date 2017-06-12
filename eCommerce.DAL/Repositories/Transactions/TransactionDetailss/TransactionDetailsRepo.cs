@@ -20,7 +20,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionDetailss
 
             foreach (var item in Items)
             {
-                TotalPrice += item.Price;
+                TotalPrice += item.Price * item.Quantity;
             }
 
             return TotalPrice;

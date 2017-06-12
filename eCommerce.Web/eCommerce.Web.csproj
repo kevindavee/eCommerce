@@ -101,6 +101,7 @@
     <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
+    <Content Include="wwwroot\js\Custom\product-jquery.js" />
     <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
     <Content Include="wwwroot\js\jquery-1.9.1.min.js" />
     <Content Include="wwwroot\js\jquery.bxslider.js" />
