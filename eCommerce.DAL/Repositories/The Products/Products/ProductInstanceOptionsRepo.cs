@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace eCommerce.DAL.Repositories.The_Products.Products
 {
@@ -41,16 +42,15 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
 
             return ChoosenIdForProductInstance;
         }
-        public List<ProductInstanceOptions> GetOptionValueByInstanceId(List<long> ProductInstanceIds)
+        public async Task<List<ProductInstanceOptions>> GetOptionValueByInstanceIdAsync(List<long> ProductInstanceIds)
         {
             List<ProductInstanceOptions> list = new List<ProductInstanceOptions>();
 
+            var instancesList = await dbSet.Include(i => i.OptionValue).Include(i => i.OptionValue.Options).ToListAsync();
+
             foreach (var item in ProductInstanceIds)
             {
-                list.AddRange(dbSet.Where(s => s.ProductInstanceId == item)
-                         .Include(i => i.OptionValue)
-                         .Include(i => i.OptionValue.Options)
-                         .ToList());
+                list.AddRange(instancesList.Where(s => s.ProductInstanceId == item).ToList());
             }
 
             return list;

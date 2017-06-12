@@ -86,6 +86,19 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
             return false;
         }
 
+        /// <summary>
+        /// Get list of transactions to be approved by admin. This include details item, each item's Product, product instance options and option value. 
+        /// </summary>
+        /// <returns></returns>
+        public List<TransactionHeader> GetTransactionsWaitingForApproval()
+        {
+            var result = dbSet.Where(s => s.CurrentStatus == TransactionStatus.PaymentConfirmation && s.LastStatus == TransactionStatus.CheckedOut)
+                              .Include(i => i.TransactionDetails.Select(x => new { Product = x.ProductInstance.Product, ProductInstanceOptions = x.ProductInstance.ProductInstanceOptions.Select(s => s.OptionValue.Options) }))
+                              .ToList();
+
+            return result;
+        }
+
         public string GenerateTransactionCode()
         {
             string code = "";

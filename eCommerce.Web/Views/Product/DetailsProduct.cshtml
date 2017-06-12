@@ -83,14 +83,14 @@
                     <tr>
                         <td><b>Quantity:</b></td>
                         <td>
-                            <input type="text" class="form-control input-sm input-micro" value="1">
+                            <input id="txt-quantity" type="number" class="form-control input-sm input-micro" value="1" min="1">
                         </td>
                     </tr>
                     <!-- Add to Cart Button -->
                     <tr>
                         <td>&nbsp;</td>
                         <td>
-                            <a href="#" class="btn btn"><i class="icon-shopping-cart icon-white"></i> Add to Cart</a>
+                            <button id="btn-add-to-cart" class="btn btn"><i class="icon-shopping-cart icon-white" ></i> Add to Cart</button>
                         </td>
                     </tr>
                 </table>
@@ -169,3 +169,5 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/js/Custom/product-jquery.js"></script>

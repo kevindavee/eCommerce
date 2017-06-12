@@ -64,12 +64,12 @@ namespace eCommerce.Web.Controllers
 
         #region Shopping Cart
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public JsonResult AddToCart(long ProductInstanceId, int Quantity)
         {
             //Action untuk add Item ke shopping cart
             bool result;
-            var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
+            CustomerId = 1;
+            //var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
             var activeCart = transactionHeaderRepo.GetActiveCart(CustomerId);
 
             if (activeCart == null)
@@ -79,6 +79,11 @@ namespace eCommerce.Web.Controllers
             else
             {
                 result = transactionService.AddItemToCart(activeCart, ProductInstanceId, Quantity);
+            }
+
+            if (!result)
+            {
+                return Json(data: new { Status = result });
             }
 
             return Json(data: new { Status = result });
@@ -98,7 +103,7 @@ namespace eCommerce.Web.Controllers
                 var InstanceIds = model.TransactionDetails.Select(s => s.ProductInstanceId).ToList();
 
                 viewmodel.TransactionHeader = model;
-                viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceId(InstanceIds);
+                viewmodel.ProductInstanceOptions = productInstanceOptionsRepo.GetOptionValueByInstanceIdAsync(InstanceIds).Result;
 
 
                 if (viewmodel.TransactionHeader.CurrentStatus == TransactionStatus.CheckedOut)
@@ -108,7 +113,7 @@ namespace eCommerce.Web.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                viewmodel = null;
             }
 
             return View(viewmodel);
