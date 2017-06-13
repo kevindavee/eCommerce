@@ -16,6 +16,7 @@ using eCommerce.Core.CommerceClasses.UserLogins;
 using eCommerce.Commons;
 using eCommerce.DAL.Repositories.Customers;
 using eCommerce.Core.CommerceClasses.Customers;
+using eCommerce.DAL.Repositories.UserLogins;
 
 namespace eCommerce.Web.Controllers
 {
@@ -24,6 +25,7 @@ namespace eCommerce.Web.Controllers
     {
         private readonly UserManager<UserLogin> _userManager;
         private readonly SignInManager<UserLogin> _signInManager;
+        private UserManagementRepo userManageRepo;
         private CustomerRepo _customerRepo;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
@@ -33,6 +35,7 @@ namespace eCommerce.Web.Controllers
         public AccountController(
             UserManager<UserLogin> userManager,
             SignInManager<UserLogin> signInManager,
+            UserManagementRepo _userManageRepo,
             CustomerRepo customerRepo,
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
@@ -44,6 +47,7 @@ namespace eCommerce.Web.Controllers
             _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _emailSender = emailSender;
             _smsSender = smsSender;
+            userManageRepo = _userManageRepo;
             _customerRepo = customerRepo;
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
@@ -77,7 +81,13 @@ namespace eCommerce.Web.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    var user = await _userManager.FindByNameAsync(model.Username);
+                    var role = await _userManager.GetRolesAsync(user);
+                    if(role.FirstOrDefault() == "Customer")
+                    {
+                        return RedirectToLocal(returnUrl);
+                    }
+                    return RedirectToAction("Index", "AdminProduct");
                 }
                 if (result.RequiresTwoFactor)
                 {

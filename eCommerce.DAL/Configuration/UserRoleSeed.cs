@@ -25,7 +25,7 @@ namespace eCommerce.DAL.Configuration
 
                 var user = new UserLogin
                 {
-                    UserName = "admin@gmail.com",
+                    UserName = "admin",
                     Email = "admin@gmail.com",
                     ObjectId = 0
                 };
