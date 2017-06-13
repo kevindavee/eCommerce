@@ -39,13 +39,6 @@ namespace eCommerce.Web.Controllers
             return View(model);
         }
 
-
-        public PartialViewResult CategoryList()
-        {
-            var categoryList = categoryRepo.GetAll();
-
-            return PartialView(categoryList.ToList());
-        }
         public ActionResult HomeView(long brandId = 0, decimal minPrice = 0, decimal maxPrice = 0)
         {
             var brandList = brandRepo.GetAll().ToList();

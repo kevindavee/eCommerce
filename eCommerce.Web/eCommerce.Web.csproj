@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\AdminProduct\" />
+    <Folder Include="Views\Shared\Components\CategoryList\" />
     <Folder Include="wwwroot\BuktiTransfer\" />
   </ItemGroup>
 
