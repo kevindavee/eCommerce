@@ -43,15 +43,14 @@ namespace eCommerce.Logic.Services
         /// <param name="CustomerId"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool CreateTransaction(long CustomerId, long ProductInstanceId, int Quantity)
+        public bool CreateTransaction(long CustomerId, long ProductInstanceId, int Quantity, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
                 try
                 {
                     TransactionHeader transactionHeader = new TransactionHeader();
-                    //TODO: Ganti Customer dengan username
-                    transactionHeader.CreatedBy = transactionHeader.UpdatedBy = "Customer";
+                    transactionHeader.CreatedBy = transactionHeader.UpdatedBy = Username;
                     transactionHeader.Code = transactionHeaderRepo.GenerateTransactionCode();
                     transactionHeader.CustomerId = CustomerId;
                     transactionHeader.LastStatus = transactionHeader.CurrentStatus = TransactionStatus.OnCart;
@@ -59,9 +58,8 @@ namespace eCommerce.Logic.Services
                     transactionHeaderRepo.Save(transactionHeader);
 
                     TransactionDetails transactionDetail = new TransactionDetails();
-                    //TODO: Ganti customer dengan username
                     transactionDetail.TransactionHeaderId = transactionHeader.Id;
-                    transactionDetail.CreatedBy = transactionDetail.UpdatedBy=  "Customer";
+                    transactionDetail.CreatedBy = transactionDetail.UpdatedBy= Username;
                     transactionDetail.ProductInstanceId = ProductInstanceId;
                     transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
                     transactionDetail.Quantity = Quantity;
@@ -89,7 +87,7 @@ namespace eCommerce.Logic.Services
         /// <param name="transactionHeader"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId, int Quantity)
+        public bool AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId, int Quantity, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -104,7 +102,7 @@ namespace eCommerce.Logic.Services
                     if (existedDetailItem == null)
                     {
                         transactionDetail.TransactionHeaderId = transactionHeader.Id;
-                        transactionDetail.CreatedBy = transactionDetail.UpdatedBy = "Customer";
+                        transactionDetail.CreatedBy = transactionDetail.UpdatedBy = Username;
                         transactionDetail.ProductInstanceId = ProductInstanceId;
                         transactionDetail.Price = productInstanceRepo.GetById(ProductInstanceId).Price;
                         transactionDetail.Quantity = Quantity;
@@ -115,16 +113,14 @@ namespace eCommerce.Logic.Services
                     {
                         transactionDetail = existedDetailItem;
 
-                        //TODO: Ganti customer dengan username
-                        transactionDetail.UpdatedBy = "Customer";
+                        transactionDetail.UpdatedBy = Username;
                         transactionDetail.UpdatedDate = DateTime.Today;
                         transactionDetail.Quantity += Quantity;
                     }
 
                     transactionDetailRepo.Save(transactionDetail);
 
-                    //TODO: Ganti customer dengan username
-                    transactionHeader.UpdatedBy = "Customer";
+                    transactionHeader.UpdatedBy = Username;
                     transactionHeader.UpdatedDate = DateTime.Today;
                     transactionHeader.TotalPrice = transactionDetailRepo.CalculateTotalPrice(transactionHeader.Id);
 
@@ -148,7 +144,7 @@ namespace eCommerce.Logic.Services
         /// <param name="Quantity"></param>
         /// <param name="TransactionDetailId"></param>
         /// <returns></returns>
-        public bool UpdateQuantity(int Quantity, long TransactionDetailId)
+        public bool UpdateQuantity(int Quantity, long TransactionDetailId, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -160,13 +156,11 @@ namespace eCommerce.Logic.Services
                     {
                         var oldQuantity = item.Quantity;
                         item.Quantity = Quantity;
-                        item.Price = (item.Price / oldQuantity) * Quantity;
-                        //TODO: Ganti Customer dengan username
-                        item.UpdatedBy = "Customer";
+                        item.UpdatedBy = Username;
                         item.UpdatedDate = DateTime.Today;
 
                         transactionDetailRepo.Save(item);
-                        UpdateTotalPrice(item.TransactionHeaderId);
+                        UpdateTotalPrice(item.TransactionHeaderId, Username);
                     }
                     contextTransaction.Commit();
                 }
@@ -185,7 +179,7 @@ namespace eCommerce.Logic.Services
         /// <param name="TransactionDetailId"></param>
         /// <param name="TransactionHeaderId"></param>
         /// <returns></returns>
-        public bool DeleteItem(long TransactionDetailId, long TransactionHeaderId)
+        public bool DeleteItem(long TransactionDetailId, long TransactionHeaderId, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -193,7 +187,7 @@ namespace eCommerce.Logic.Services
                 {
                     transactionDetailRepo.Delete(TransactionDetailId);
 
-                    UpdateTotalPrice(TransactionHeaderId);
+                    UpdateTotalPrice(TransactionHeaderId, Username);
                     contextTransaction.Commit();
                 }
                 catch (Exception)
@@ -212,7 +206,7 @@ namespace eCommerce.Logic.Services
         /// <param name="transactionHeaderId"></param>
         /// <param name="shippingDetails"></param>
         /// <returns></returns>
-        public bool ConfirmTransaction(long transactionHeaderId, ShippingDetails shippingDetails)
+        public bool ConfirmTransaction(long transactionHeaderId, ShippingDetails shippingDetails, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
@@ -221,7 +215,7 @@ namespace eCommerce.Logic.Services
                     shippingDetailsRepo.Save(shippingDetails);
 
                     //Ganti customer dengan username
-                    transactionHeaderRepo.ChangeStatus(transactionHeaderId, TransactionStatus.PaymentConfirmation, "Customer");
+                    transactionHeaderRepo.ChangeStatus(transactionHeaderId, TransactionStatus.PaymentConfirmation, Username);
 
                     contextTransaction.Commit();
                 }
@@ -238,13 +232,13 @@ namespace eCommerce.Logic.Services
         /// Recalculate Total Price
         /// </summary>
         /// <param name="TransactionHeaderId"></param>
-        private void UpdateTotalPrice(long TransactionHeaderId)
+        private void UpdateTotalPrice(long TransactionHeaderId, string Username)
         {
             var totalPrice = transactionDetailRepo.CalculateTotalPrice(TransactionHeaderId);
             var header = transactionHeaderRepo.GetById(TransactionHeaderId);
             header.TotalPrice = totalPrice;
             //TODO: Ganti dengan username
-            header.UpdatedBy = "Customer";
+            header.UpdatedBy = Username;
             header.UpdatedDate = DateTime.Today;
 
             transactionHeaderRepo.Save(header);

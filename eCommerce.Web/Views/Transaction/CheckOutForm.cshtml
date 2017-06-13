@@ -99,6 +99,39 @@
                 </div>
                 <hr />
             </div>
+            <div class="col-md-4">
+                <h3 class="pull-right">Item Summary</h3>
+                <br /><br /><br /><br />
+                
+                @foreach (var item in Model.Transaction.TransactionDetails)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <b>@Html.DisplayFor(model => item.ProductInstance.Product.Nama)</b><br />
+                            @if (item.ProductInstance.ProductInstanceOptions != null)
+                            {
+                                foreach (var itemdetails in item.ProductInstance.ProductInstanceOptions)
+                                {
+                                    @Html.DisplayFor(modelItem => itemdetails.OptionValue.Options.OptionName) <text>: </text> @Html.DisplayFor(modelItem => itemdetails.OptionValue.Value)<br />
+                                }
+                            }
+                        </div>
+                        <div class="col-md-6">
+                            <p class="pull-right">@Html.DisplayFor(model => item.Quantity) x Rp. @Html.DisplayFor(model => item.Price)</p>
+                        </div>
+                    </div>
+                    <br />
+                }
+                <div class="row">
+                    <h2></h2>
+                    <div class="col-md-6">
+                        <b>Total</b>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="pull-right">Rp. @Html.DisplayFor(modelItem => Model.Transaction.TotalPrice)</p>
+                    </div>
+                </div>
+            </div>
         </div>
         
         <div class="row">

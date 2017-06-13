@@ -33,19 +33,15 @@
             <div class="menuextras">
                 <div class="extras">
                     <ul>
-                        <li class="shopping-cart-items"><i class="glyphicon glyphicon-shopping-cart icon-white"></i> <a href="page-shopping-cart.html"><b>3 items</b></a></li>
-                        <li><a href="page-login.html">Login</a></li>
+                        @{Html.RenderPartial("_LoginPartial");}
                     </ul>
                 </div>
             </div>
             <nav id="mainmenu" class="mainmenu">
                 <ul>
-                    <li class="logo-wrapper"><a href="index.html">Company Name</a></li>
+                    <li class="logo-wrapper"><a href="index.html">e-Komers</a></li>
                     <li class="active">
                         <a href="index.html">Home</a>
-                    </li>
-                    <li>
-                        <a href="features.html">Features</a>
                     </li>
                     <li class="has-submenu">
                         <a href="#">Pages +</a>
