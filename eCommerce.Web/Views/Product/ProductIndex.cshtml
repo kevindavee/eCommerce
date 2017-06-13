@@ -5,7 +5,7 @@
 @model List<eCommerce.Web.Models.ProductViewModels.ProductListViewModel>
 
 @foreach (var item in Model)
-            {
+{
     <div class="col-md-3 col-sm-6">
         <!-- Product -->
         <div class="shop-item">
@@ -32,7 +32,7 @@
                 </div>*@
             <!-- Product Price-->
             <div class="price">
-                from @item.Price
+                from Rp. @Html.DisplayFor(model => item.Price)
             </div>
             <!-- Add to Cart Button -->
             <div class="actions">
