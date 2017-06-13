@@ -228,6 +228,12 @@ namespace eCommerce.Logic.Services
             return true;
         }
 
+        public bool ProcessTransaction(long TransactionHeaderId)
+        {
+
+            return true;
+        }
+
         /// <summary>
         /// Recalculate Total Price
         /// </summary>

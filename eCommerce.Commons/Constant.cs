@@ -17,11 +17,15 @@ namespace eCommerce.Commons
         public const string OnCart = "On Cart";
         public const string CheckedOut = "Checked Out";
         public const string PaymentConfirmation = "Payment Confirmation";
+        public const string ProcessTransaction = "Process Transaction";
+        public const string Finished = "Finished";
         public const string Expired = "Expired";
-        public const string Canceled = "Canceled";
+    }
+
+    public static class ShippingStatus
+    {
         public const string OrderProcessed = "Order Processed";
         public const string Shipped = "Order shipped";
-        public const string Finished = "Finished";
     }
 
 }

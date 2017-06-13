@@ -18,6 +18,7 @@ namespace eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss
 
         public int Quantity { get; set; } = 0;
         public decimal Discount { get; set; } = 0;
+        public bool? IsProcessed { get; set; } = null;
 
         public virtual TransactionHeader TransactionHeader { get; set; }
         public virtual ProductInstance ProductInstance { get; set; }
