@@ -4,6 +4,7 @@
 }
 
 @model eCommerce.Web.Models.ProductViewModels.ProductDetailsViewModel
+<script src="~/js/Product/Product.js"></script>
 
 <!-- Page Title -->
 <div class="section section-breadcrumbs">
@@ -27,58 +28,70 @@
 		                                     @Model.Product.ProductImage.FirstOrDefault()
 	                                    }" alt="@Model.Product.Nama">
                 </div>
-                <div class="colors">
-                    <span class="color-white"></span>
-                    <span class="color-black"></span>
-                    <span class="color-blue"></span>
-                    <span class="color-orange"></span>
-                    <span class="color-green"></span>
-                </div>
+                @*<div class="colors">
+                        <span class="color-white"></span>
+                        <span class="color-black"></span>
+                        <span class="color-blue"></span>
+                        <span class="color-orange"></span>
+                        <span class="color-green"></span>
+                    </div>*@
             </div>
             <!-- End Product Image & Available Colors -->
             <!-- Product Summary & Options -->
             <div class="col-sm-6 product-details">
                 <h4>@Model.Product.Nama</h4>
+                @Html.HiddenFor(j => j.Product.Id, new { @id = "hiddenProductId" })
+                @Html.HiddenFor(j => j.ParentCategory, new { @id = "hiddenParentCategory" })
                 <div class="price">
-                    <span class="price-was">$959.99</span> $999.99
+                    @*@Model.ProductPrice*@
+                    <label id="lblPrice">0</label>
                 </div>
-                <h5>Quick Overview</h5>
-                <p>
-                    Morbi eleifend congue elit nec sagittis. Praesent aliquam lobortis tellus, nec consequat massa ornare vitae. Ut fermentum justo vel venenatis eleifend. Fusce id magna eros.
-                </p>
                 <table class="shop-item-selections">
                     <!-- Color Selector -->
                     <tr>
                         <td><b>Color:</b></td>
                         <td>
-                            <div class="dropdown choose-item-color">
-                                <a class="btn btn-sm btn-grey" data-toggle="dropdown" href="#"><span class="color-orange"></span> Orange <b class="caret"></b></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem"><a href="#"><span class="color-white"></span> White</a></li>
-                                    <li role="menuitem"><a href="#"><span class="color-black"></span> Black</a></li>
-                                    <li role="menuitem"><a href="#"><span class="color-blue"></span> Blue</a></li>
-                                    <li role="menuitem"><a href="#"><span class="color-orange"></span> Orange</a></li>
-                                    <li role="menuitem"><a href="#"><span class="color-green"></span> Green</a></li>
-                                </ul>
-                            </div>
+                            @*<div class="dropdown choose-item-color">
+                                    <a class="btn btn-sm btn-grey" data-toggle="dropdown" href="#"><span class="color-orange"></span> Orange <b class="caret"></b></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li role="menuitem"><a href="#"><span class="color-white"></span> White</a></li>
+                                        <li role="menuitem"><a href="#"><span class="color-black"></span> Black</a></li>
+                                        <li role="menuitem"><a href="#"><span class="color-blue"></span> Blue</a></li>
+                                        <li role="menuitem"><a href="#"><span class="color-orange"></span> Orange</a></li>
+                                        <li role="menuitem"><a href="#"><span class="color-green"></span> Green</a></li>
+                                    </ul>
+                                </div>*@
+                            @{
+                                var lstColor = new List<SelectListItem>();
+
+                                foreach (var item in Model.colorList.Distinct())
+                                {
+                                    lstColor.Add(new SelectListItem { Value = item, Text = item });
+                                }
+                            }
+                            @Html.DropDownListFor(j => j.selectedColor, lstColor, new { @onchange = "GetPriceByOptions(hiddenProductId.value, ddlColorProductDetails.value, ddlUkuranProductDetails.value, hiddenParentCategory.value)", @id = "ddlColorProductDetails" })
                         </td>
                     </tr>
                     <!-- Size Selector -->
-                    <tr>
+                    @{var cls = "hide";
+                        if (Model.ParentCategory != "Elektronik")
+                        {  cls = ""; } }
+                    <tr class="@cls">
                         <td><b>Size:</b></td>
                         <td>
-                            <div class="dropdown">
-                                <a class="btn btn-sm btn-grey" data-toggle="dropdown" href="#">XXL <b class="caret"></b></a>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem"><a href="#">XS</a></li>
-                                    <li role="menuitem"><a href="#">S</a></li>
-                                    <li role="menuitem"><a href="#">M</a></li>
-                                    <li role="menuitem"><a href="#">L</a></li>
-                                    <li role="menuitem"><a href="#">XXL</a></li>
-                                </ul>
-                            </div>
+                            @{
+                                var lstUkuran = new List<SelectListItem>();
+
+                                foreach (var item in Model.ukuranList.Distinct())
+                                {
+                                    lstUkuran.Add(new SelectListItem { Value = item, Text = item });
+                                }
+                            }
+                            @Html.DropDownListFor(j => j.selectedUkuran, lstUkuran, new { @onchange = "GetPriceByOptions(hiddenProductId.value, ddlColorProductDetails.value, ddlUkuranProductDetails.value, hiddenParentCategory.value)", @id = "ddlUkuranProductDetails" })
                         </td>
                     </tr>
+
+
                     <!-- Quantity -->
                     <tr>
                         <td><b>Quantity:</b></td>
@@ -90,7 +103,7 @@
                     <tr>
                         <td>&nbsp;</td>
                         <td>
-                            <button id="btn-add-to-cart" class="btn btn"><i class="icon-shopping-cart icon-white" ></i> Add to Cart</button>
+                            <button id="btn-add-to-cart" class="btn btn"><i class="icon-shopping-cart icon-white"></i> Add to Cart</button>
                         </td>
                     </tr>
                 </table>
@@ -102,27 +115,14 @@
                     <!-- Tabs -->
                     <ul class="nav nav-tabs product-details-nav">
                         <li class="active"><a href="#tab1" data-toggle="tab">Description</a></li>
-                        <li><a href="#tab2" data-toggle="tab">Specification</a></li>
+                        <li>@*<a href="#tab2" data-toggle="tab">Specification</a>*@</li>
                     </ul>
                     <!-- Tab Content (Full Description) -->
                     <div class="tab-content product-detail-info">
                         <div class="tab-pane active" id="tab1">
                             <h4>Product Description</h4>
                             <p>
-                                Donec hendrerit massa metus, a ultrices elit iaculis eu. Pellentesque ullamcorper augue lacus. Phasellus et est quis diam iaculis fringilla id nec sapien. Sed tempor ornare felis, non vulputate dolor. Etiam ornare diam vitae ligula malesuada tempor. Vestibulum nec odio vel libero ullamcorper euismod et in sapien. Suspendisse potenti.
-                            </p>
-                            <h4>Product Highlights</h4>
-                            <ul>
-                                <li>Nullam dictum augue nec iaculis rhoncus. Aenean lobortis fringilla orci, vitae varius purus eleifend vitae.</li>
-                                <li>Nunc ornare, dolor a ultrices ultricies, magna dolor convallis enim, sed volutpat quam sem sed tellus.</li>
-                                <li>Aliquam malesuada cursus urna a rutrum. Ut ultricies facilisis suscipit.</li>
-                                <li>Duis a magna iaculis, aliquam metus in, luctus eros.</li>
-                                <li>Aenean nisi nibh, imperdiet sit amet eleifend et, gravida vitae sem.</li>
-                                <li>Donec quis nisi congue, ultricies massa ut, bibendum velit.</li>
-                            </ul>
-                            <h4>Usage Information</h4>
-                            <p>
-                                Donec hendrerit massa metus, a ultrices elit iaculis eu. Pellentesque ullamcorper augue lacus. Phasellus et est quis diam iaculis fringilla id nec sapien. Sed tempor ornare felis, non vulputate dolor. Etiam ornare diam vitae ligula malesuada tempor. Vestibulum nec odio vel libero ullamcorper euismod et in sapien. Suspendisse potenti.
+                                @Model.Product.Deskripsi
                             </p>
                         </div>
                         <!-- Tab Content (Specification) -->

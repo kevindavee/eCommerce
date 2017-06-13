@@ -8,24 +8,29 @@ using eCommerce.DAL.Repositories.Brands;
 using eCommerce.DAL.Repositories.The_Products.Products;
 using eCommerce.Web.Models.ProductViewModels;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using eCommerce.DAL.Repositories.The_Products.Categories;
 
 namespace eCommerce.Web.Controllers
 {
     public class ProductController : Controller
     {
         private BrandRepo brandRepo;
+        private CategoryRepo categoryRepo;
         private ProductRepo productRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
 
         string userName = "";
 
-        public ProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
+        public ProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo, CategoryRepo _categoryRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
+            this.categoryRepo = _categoryRepo;
+
         }
         public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000)
         {
@@ -82,10 +87,34 @@ namespace eCommerce.Web.Controllers
         public ActionResult DetailsProduct(long ProductId = 0)
         {
             var productObj = productRepo.GetById(ProductId);
+            var productInstance = productInstanceRepo.GetAll().Where(j => j.ProductId == ProductId);
+            var Category = categoryRepo.GetById((long)productObj.CategoryId);
+            var ParentCategory = categoryRepo.GetById((long)Category.ParentId).Nama;
+
+            var colorList = new List<string>();
+            var ukuranList = new List<string>();
+
+            foreach (var item in productInstance)
+            {
+                colorList.Add(productInstanceOptionsRepo.GetWarnaByProductInstanceId(item.Id));
+                if (ParentCategory != "Elektronik")
+                {
+                    ukuranList.Add(productInstanceOptionsRepo.GetUkuranByProductInstanceId(item.Id));
+                }
+            }
+
+            colorList.Insert(0, "-Pilih Warna-");
+            ukuranList.Insert(0, "-Pilih Ukuran-");
 
 
             var model = new ProductDetailsViewModel();
             model.Product = productObj;
+            model.ParentCategory = ParentCategory;
+            model.colorList = colorList;
+            model.ukuranList = ukuranList;
+            //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
+
+
             return View(model);
         }
 
@@ -93,16 +122,15 @@ namespace eCommerce.Web.Controllers
         //Get Product Per-Options
         //Jadi method nya nanti akan diisi jika user milih sebuah product 
         //dengan ukuran dan warna tertentu bisa saja terjadi perubahan harga
-        public JsonResult GetPriceByOptions(long ProductId = 6, string optValueWarna = "Black", string optValueUkuran = "S")
+        public JsonResult GetPriceByOptions(long ProductId = 0, string optValueWarna = "", string optValueUkuran = "", string parentCategory = "")
         {
 
-            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(6, optValueWarna, "XS");
+            var IdProdInstance = productInstanceOptionsRepo.GetPriceByFilter(ProductId, optValueWarna, optValueUkuran, parentCategory);
 
             var ProductInstance = productInstanceRepo.GetById(IdProdInstance);
 
 
-
-            return Json(ProductInstance.Price);
+            return Json(ProductInstance != null? ProductInstance.Price : 0);
         }
     }
 }
