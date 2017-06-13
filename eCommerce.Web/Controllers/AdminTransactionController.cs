@@ -15,6 +15,7 @@ using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 using eCommerce.Web.Models.AdminTransaction;
 using eCommerce.Commons;
 using Microsoft.AspNetCore.Http;
+using eCommerce.Logic.Services;
 
 namespace eCommerce.Web.Controllers
 {
@@ -27,6 +28,7 @@ namespace eCommerce.Web.Controllers
         private ShipperRepo shipperRepo;
         private ShippingDetailsRepo shippingDetailsRepo;
 
+        private TransactionService transactionService;
         private IHttpContextAccessor context;
 
         string Username = "";
@@ -34,7 +36,7 @@ namespace eCommerce.Web.Controllers
 
         public AdminTransactionController(BankRepo _bankRepo, TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailsRepo,
                                             ShipperRepo _shipperRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaran,
-                                            IHttpContextAccessor _context)
+                                            IHttpContextAccessor _context, TransactionService _transactionService)
         {
             bankRepo = _bankRepo;
             transactionHeaderRepo = _transactionHeaderRepo;
@@ -42,6 +44,7 @@ namespace eCommerce.Web.Controllers
             shipperRepo = _shipperRepo;
             shippingDetailsRepo = _shippingDetailsRepo;
             konfirmasiPembayaranRepo = _konfirmasiPembayaran;
+            transactionService = _transactionService;
             context = _context;
             Username = context.HttpContext.User.Identity.Name;
         }
@@ -63,16 +66,9 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ProcessOrder(long TransactionHeaderId)
+        public ActionResult ProcessOrder(long TransactionHeaderId, List<long> RejectedItems, string Remarks)
         {
-            try
-            {
-                transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.ProcessTransaction, Username);
-            }
-            catch (Exception)
-            {
-                ViewData["Message"] = "Cannot reject order !";
-            }
+            var result = transactionService.ProcessTransaction(TransactionHeaderId, RejectedItems, Remarks, Username);
 
             return RedirectToAction("ManagePayment");
         }

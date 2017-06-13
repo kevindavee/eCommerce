@@ -228,9 +228,8 @@ namespace eCommerce.Logic.Services
             return true;
         }
 
-        public bool ProcessTransaction(long TransactionHeaderId)
+        public bool ProcessTransaction(long TransactionHeaderId, List<long> RejectedItems, string Remarks, string Username)
         {
-
             return true;
         }
 

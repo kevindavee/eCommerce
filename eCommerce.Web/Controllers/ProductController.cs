@@ -10,6 +10,10 @@ using eCommerce.Web.Models.ProductViewModels;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using eCommerce.DAL.Repositories.The_Products.Categories;
+using Microsoft.AspNetCore.Http;
+using eCommerce.Core.CommerceClasses.The_Products.Reviews;
+using eCommerce.DAL.Repositories.UserLogins;
+using eCommerce.DAL.Repositories.The_Products.Reviews;
 
 namespace eCommerce.Web.Controllers
 {
@@ -20,17 +24,25 @@ namespace eCommerce.Web.Controllers
         private ProductRepo productRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
+        private ReviewRepo reviewRepo;
+        private UserManagementRepo userRepo;
+
+        private IHttpContextAccessor context;
 
         string userName = "";
 
-        public ProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo, CategoryRepo _categoryRepo)
+        public ProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, 
+                                 ProductInstanceOptionsRepo _productInstanceOptionsRepo, CategoryRepo _categoryRepo, IHttpContextAccessor _context,
+                                 UserManagementRepo _userRepo, ReviewRepo _reviewRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
             this.categoryRepo = _categoryRepo;
-
+            context = _context;
+            userRepo = _userRepo;
+            reviewRepo = _reviewRepo;
         }
         public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000)
         {
@@ -118,6 +130,16 @@ namespace eCommerce.Web.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddReview(Review review)
+        {
+            review.CustomerId = userRepo.GetCustomerId(context.HttpContext.User.Identity.Name);
+
+            reviewRepo.Save(review);
+
+            return RedirectToAction("DetailsProduct", new { ProductId = review.ProductId });
+        }
 
         //Get Product Per-Options
         //Jadi method nya nanti akan diisi jika user milih sebuah product 
