@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 using eCommerce.Core.CommerceClasses.The_Products.Reviews;
 using eCommerce.DAL.Repositories.UserLogins;
 using eCommerce.DAL.Repositories.The_Products.Reviews;
+using eCommerce.Core.CommerceClasses.Brands;
 
 namespace eCommerce.Web.Controllers
 {
@@ -44,20 +45,28 @@ namespace eCommerce.Web.Controllers
             userRepo = _userRepo;
             reviewRepo = _reviewRepo;
         }
-        public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000)
+        public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0)
         {
             //Page product index
             var model = new ProductViewModel();
-            model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
+            model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga && brandId != 0 ? j.Product.BrandId == brandId : true).ToList();
             //model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
+            var listBrand = new List<Brand>();
+            foreach (var item in model.ProductList)
+            {
+                listBrand.Add(brandRepo.GetById(item.Product.BrandId));
+            }
+            listBrand.Insert(0, new Brand { Id = 0, Nama = "-All-"});
+            model.BrandList = listBrand;
+            model.CategoryId = CategoryId;
 
             return View(model);
         }
 
-        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 0)
+        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0)
         {
             //Partial view untuk refresh list of product
-            var list = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
+            var list = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga && (brandId != 0 ? j.Product.BrandId == brandId : true)).ToList();
 
             return PartialView(list);
         }
@@ -151,8 +160,9 @@ namespace eCommerce.Web.Controllers
 
             var ProductInstance = productInstanceRepo.GetById(IdProdInstance);
 
+            var result = new { Price = (ProductInstance != null ? ProductInstance.Price : 0), IdProductInstance = IdProdInstance };
 
-            return Json(ProductInstance != null? ProductInstance.Price : 0);
+            return Json(result);
         }
     }
 }

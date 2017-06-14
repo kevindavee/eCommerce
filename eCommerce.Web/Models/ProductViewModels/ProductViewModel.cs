@@ -12,6 +12,7 @@ namespace eCommerce.Web.Models.ProductViewModels
 {
     public class ProductViewModel
     {
+        public long CategoryId { get; set; }
         public List<ProductListViewModel> ProductList { get; set; }
         public List<Brand> BrandList { get; set; }
     }
@@ -28,6 +29,7 @@ namespace eCommerce.Web.Models.ProductViewModels
     {
         public Product Product { get; set; }
         public string ParentCategory { get; set; }
+        public long ProductInstanceId { get; set; } = 0;
 
 
         public string selectedColor { get; set; }

@@ -2,7 +2,7 @@
     $('#btn-search').on('click', function () {
         var arr = GetFilterFieldValue();
         var url = "/Product/ProductIndex";
-        $.get(url, { MaxHarga: arr[0].MaxHarga, MinHarga: arr[0].MinHarga, sort: arr[0].sort }, function (data) {
+        $.get(url, { MaxHarga: arr[0].MaxHarga, MinHarga: arr[0].MinHarga, sort: arr[0].sort, brandId: arr[0].BrandId, CategoryId: arr[0].CategoryId }, function (data) {
             $('div#div-product-list').empty();
             $('div#div-product-list').append(data);
         })
@@ -45,7 +45,8 @@ function GetFilterFieldValue() {
     var sort = parseInt($('#dropdown-sort').val());
     var MinHarga = null;
     var MaxHarga = null;
-    //var BrandId = parseInt($('#BrandId').val());
+    var brandId = parseInt($('#dropdown-brand').val());
+    var categoryId = parseInt($('#hiddenCategoryIdBrandList').val());
     //var PageIndex = parseInt($('#PageIndex').val());
     var arr = [];
 
@@ -61,8 +62,9 @@ function GetFilterFieldValue() {
         //PageIndex: PageIndex,
         MinHarga: MinHarga,
         MaxHarga: MaxHarga,
-        //BrandId: BrandId,
-        sort: sort
+        sort: sort,
+        BrandId: brandId,
+        CategoryId : categoryId
     };
 
     arr.push(items);
@@ -74,8 +76,13 @@ function GetFilterFieldValue() {
 function GetPriceByOptions(ProductId, Warna, Ukuran, ParentCategory) {
     alert("test");
     var url = "/Product/GetPriceByOptions";
-    $.get("/Product/GetPriceByOptions?ProductId=" + ProductId + "&optValueWarna=" + Warna + "&optValueUkuran=" + Ukuran + "&parentCategory=" + ParentCategory, function (data) {
+    $.getJSON("/Product/GetPriceByOptions?ProductId=" + ProductId + "&optValueWarna=" + Warna + "&optValueUkuran=" + Ukuran + "&parentCategory=" + ParentCategory, function (data) {
+        alert(data.toSource());
+        //alert(data.price);
+        //alert(data.idProductInstance);
+
         $('#lblPrice').empty();
-        $('#lblPrice').append(data);
+        $('#lblPrice').append(data.price);
+        $('#hiddenProductInstanceId').val(data.idProductInstance);
     })
 }
