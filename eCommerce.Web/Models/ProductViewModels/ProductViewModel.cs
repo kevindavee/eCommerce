@@ -1,8 +1,10 @@
 ﻿using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
+using eCommerce.Core.CommerceClasses.The_Products.Reviews;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +19,8 @@ namespace eCommerce.Web.Models.ProductViewModels
     public class ProductListViewModel
     {
         public Product Product { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal Price { get; set; }
     }
 
@@ -31,5 +35,7 @@ namespace eCommerce.Web.Models.ProductViewModels
 
         public string selectedUkuran { get; set; }
         public List<string> ukuranList { get; set; }
+
+        public List<Review> Review { get; set; }
     }
 }

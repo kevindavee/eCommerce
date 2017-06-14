@@ -10,8 +10,5 @@ namespace eCommerce.Core.CommerceClasses.UserLogins
     public class UserLogin : IdentityUser
     {
         public long ObjectId { get; set; }
-
-        [ForeignKey("ObjectId")]
-        public virtual Customer Customer { get; set; }
     }
 }

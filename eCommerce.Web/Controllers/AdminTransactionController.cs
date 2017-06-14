@@ -13,6 +13,9 @@ using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans;
 using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 using eCommerce.Web.Models.AdminTransaction;
+using eCommerce.Commons;
+using Microsoft.AspNetCore.Http;
+using eCommerce.Logic.Services;
 
 namespace eCommerce.Web.Controllers
 {
@@ -25,8 +28,15 @@ namespace eCommerce.Web.Controllers
         private ShipperRepo shipperRepo;
         private ShippingDetailsRepo shippingDetailsRepo;
 
+        private TransactionService transactionService;
+        private IHttpContextAccessor context;
+
+        string Username = "";
+
+
         public AdminTransactionController(BankRepo _bankRepo, TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailsRepo,
-                                            ShipperRepo _shipperRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaran)
+                                            ShipperRepo _shipperRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaran,
+                                            IHttpContextAccessor _context, TransactionService _transactionService)
         {
             bankRepo = _bankRepo;
             transactionHeaderRepo = _transactionHeaderRepo;
@@ -34,6 +44,9 @@ namespace eCommerce.Web.Controllers
             shipperRepo = _shipperRepo;
             shippingDetailsRepo = _shippingDetailsRepo;
             konfirmasiPembayaranRepo = _konfirmasiPembayaran;
+            transactionService = _transactionService;
+            context = _context;
+            Username = context.HttpContext.User.Identity.Name;
         }
 
         public ActionResult ManagePayment()
@@ -53,15 +66,10 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ApproveOrder()
+        public ActionResult ProcessOrder(long TransactionHeaderId, List<long> RejectedItems, string Remarks)
         {
-            return RedirectToAction("PaymentList");
-        }
+            var result = transactionService.ProcessTransaction(TransactionHeaderId, RejectedItems, Remarks, Username);
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult RejectOrder()
-        {
             return RedirectToAction("ManagePayment");
         }
 

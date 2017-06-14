@@ -3,7 +3,7 @@
     $('.btn-update-price').on('click', function () {
         var itemId = parseInt($(this).attr('id'));
         var textboxQuantity = '.txt-quantity#' + itemId;
-        var quantity = parseInt($(textboxQuantity).val());
+        var quantity = parseInt($(textboxQuantity).val().split(".", 1));
 
         if (quantity < 1) {
             alert("Insert minimum 1 item !");
@@ -19,7 +19,8 @@
                         alert("Success");
 
                         var priceDOM = '#item-' + itemId + '-total-price';
-                        $(priceDOM).html('Rp. ' + ThousandSeparator(data.itemPrice));
+                        var quantityDOM = '.txt-quantity#' + itemId;
+                        $(quantityDOM).val(quantity);
                         $('#total-price').html('Rp.' + ThousandSeparator(data.totalPrice));
 
                     }

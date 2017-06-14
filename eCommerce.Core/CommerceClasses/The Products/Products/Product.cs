@@ -17,6 +17,7 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
         public long BrandId { get; set; } = 0;
         public float Rating { get; set; } = 0;
         public long RatingCount { get; set; } = 0;
+        public bool IsAvailable { get; set; } = true;
 
         public virtual Category Category { get; set; }
         public virtual Brand Brand { get; set; }

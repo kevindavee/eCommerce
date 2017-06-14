@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170613153159_IsRejected-TransactionDetails")]
+    partial class IsRejectedTransactionDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -435,7 +436,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<decimal>("Discount");
 
-                    b.Property<bool?>("IsProcessed");
+                    b.Property<bool>("IsRejected");
 
                     b.Property<decimal>("Price");
 

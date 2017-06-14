@@ -10,6 +10,9 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             <li>
+                <a href="@Url.Action("Cart", "Transaction")"><i class="glyphicon glyphicon-shopping-cart icon-white"></i><b>Cart</b></a>
+            </li>
+            <li>
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
             <li>
