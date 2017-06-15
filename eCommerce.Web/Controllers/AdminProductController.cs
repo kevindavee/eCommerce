@@ -40,6 +40,13 @@ namespace eCommerce.Web.Controllers
 
             return View(productList);
         }
+        public ActionResult ProductDetails(long id = 0)
+        {
+            var product = productRepo.GetById(id);
+
+            //Form untuk input product baru atau edit product
+            return View(product);
+        }
 
         public PartialViewResult ProductList()
         {
