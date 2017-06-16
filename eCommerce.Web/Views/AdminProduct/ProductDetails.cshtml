@@ -1,6 +1,6 @@
-@using eCommerce.Core.CommerceClasses.The_Products.Products
+@using eCommerce.Web.Models.AdminProduct
 
-@model Product
+@model DetailsProductViewModel
 
 <div class="col-md-12 col-sm-12 col-xs-12">
     <div class="x_panel">
@@ -19,7 +19,7 @@
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         @*<input type="text" id="nama-barang" class="form-control col-md-6 col-xs-12">*@
-                        @Html.TextBoxFor(e => e.Nama, new { @id="nama-barangDetails", @class= "form-control col-md-6 col-xs-12" })
+                        @Html.TextBoxFor(e => e.Product.Nama, new { @id="namabarangDetails", @class= "form-control col-md-6 col-xs-12" })
                     </div>
                 </div>
                 <!--nama barang end-->
@@ -30,23 +30,31 @@
                     </label>
                     <div class="col-md-3 col-sm-3 col-xs-12" id="dropdown-category">
                         <!-- ganti dropdown pake razor -->
-                        <select class="form-control">
-                            <option>Choose option</option>
-                            <option>Option one</option>
-                            <option>Option two</option>
-                            <option>Option three</option>
-                            <option>Option four</option>
-                        </select>
+                        @{
+                            var ListBoxCategory = new List<SelectListItem>();
+                            ListBoxCategory.Insert(0, new SelectListItem { Text = "Pilih Category", Value = "", Selected = true });
+                            foreach (var item in Model.listCategory)
+                            {
+                                ListBoxCategory.Add(
+                                    new SelectListItem { Text = item.Nama, Value = item.Id.ToString() }
+                                );
+                            }
+                        }
+                        @Html.DropDownListFor(e => e.Product.CategoryId, ListBoxCategory, new { @id = "DDLCategoryDetails", @class = "form-control" })
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12" id="dropdown-subcategory">
                         <!-- ganti dropdown pake razor -->
-                        <select class="form-control">
-                            <option>Choose option</option>
-                            <option>Option one</option>
-                            <option>Option two</option>
-                            <option>Option three</option>
-                            <option>Option four</option>
-                        </select>
+                        @{
+                            var ListBoxSubCategory = new List<SelectListItem>();
+                            ListBoxSubCategory.Insert(0, new SelectListItem { Text = "Pilih Sub Category", Value = "", Selected = true });
+                            foreach (var item in Model.listSubCategory)
+                            {
+                                ListBoxSubCategory.Add(
+                                    new SelectListItem { Text = item.Nama, Value = item.Id.ToString() }
+                                );
+                            }
+                        }
+                        @Html.DropDownListFor(e => e.Product.CategoryId, ListBoxSubCategory, new { @id = "DDLSubCategoryDetails", @class = "form-control" })
                     </div>
                 </div>
                 <!--kategori end-->
@@ -57,13 +65,17 @@
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         <!-- ganti dropdown pake razor -->
-                        <select class="form-control">
-                            <option>Choose option</option>
-                            <option>Option one</option>
-                            <option>Option two</option>
-                            <option>Option three</option>
-                            <option>Option four</option>
-                        </select>
+                        @{
+                            var ListBoxBrand = new List<SelectListItem>();
+                            ListBoxBrand.Insert(0, new SelectListItem { Text = "Pilih Brand", Value = "", Selected = true });
+                            foreach (var item in Model.listBrand)
+                            {
+                                ListBoxBrand.Add(
+                                    new SelectListItem { Text = item.Nama, Value = item.Id.ToString() }
+                                );
+                            }
+                        }
+                        @Html.DropDownListFor(e => e.Product.BrandId, ListBoxBrand, new { @id = "DDLBrandDetails", @class = "form-control" })
                     </div>
                 </div>
                 <!--brand end-->

@@ -130,6 +130,9 @@ namespace eCommerce.Web.Controllers
             if (ModelState.IsValid)
             {
                 var customer = new Customer();
+                customer.Email = model.Email;
+                customer.CreatedBy = "System";
+                customer.UpdatedBy = "System";
                 _customerRepo.Save(customer);
                 var user = new UserLogin { UserName = model.Username, Email = model.Email, ObjectId = customer.Id };
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -141,10 +144,13 @@ namespace eCommerce.Web.Controllers
                     //var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
                     //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
                     //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
-                    var results = _userManager.AddToRoleAsync(user, UserRoles.Customer);
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    result = await _userManager.AddToRoleAsync(user, UserRoles.Customer);
+                    if(result.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        _logger.LogInformation(3, "User created a new account with password.");
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
                 AddErrors(result);
             }
@@ -234,16 +240,25 @@ namespace eCommerce.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new UserLogin { UserName = model.Email, Email = model.Email };
+                var customer = new Customer();
+                customer.Email = model.Email;
+                customer.CreatedBy = "System";
+                customer.UpdatedBy = "System";
+                _customerRepo.Save(customer);
+                var user = new UserLogin { UserName = model.Username, Email = model.Email, ObjectId = customer.Id };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
+                    result = await _userManager.AddToRoleAsync(user, UserRoles.Customer);
+                    if(result.Succeeded)
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
+                        result = await _userManager.AddLoginAsync(user, info);
+                        if (result.Succeeded)
+                        {
+                            await _signInManager.SignInAsync(user, isPersistent: false);
+                            _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
+                            return RedirectToLocal(returnUrl);
+                        }
                     }
                 }
                 AddErrors(result);

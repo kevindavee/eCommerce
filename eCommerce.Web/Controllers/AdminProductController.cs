@@ -7,6 +7,7 @@ using eCommerce.DAL.Repositories.Brands;
 using eCommerce.DAL.Repositories.The_Products.Products;
 using Microsoft.AspNetCore.Authorization;
 using eCommerce.Web.Models.AdminProduct;
+using eCommerce.DAL.Repositories.The_Products.Categories;
 
 namespace eCommerce.Web.Controllers
 {
@@ -14,16 +15,18 @@ namespace eCommerce.Web.Controllers
     public class AdminProductController : Controller
     {
         private BrandRepo brandRepo;
+        private CategoryRepo categoryRepo;
         private ProductRepo productRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
 
-        public AdminProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
+        public AdminProductController(BrandRepo _brandRepo, CategoryRepo _categoryRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
             this.productInstanceRepo = _productInstanceRepo;
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
+            categoryRepo = _categoryRepo;
         }
         public ActionResult Index()
         {
@@ -31,6 +34,7 @@ namespace eCommerce.Web.Controllers
             var productList = productRepo.GetAllProduct().ToList();
 
             viewModel.listProduct = productList;
+            viewModel.DetailsProduct.listCategory = categoryRepo.GetAll().Where(i => i.ParentId == null).ToList();
             return View(viewModel);
         }
         public ActionResult ManageProduct()
@@ -42,10 +46,12 @@ namespace eCommerce.Web.Controllers
         }
         public ActionResult ProductDetails(long id = 0)
         {
+            var viewModel = new DetailsProductViewModel();
             var product = productRepo.GetById(id);
-
+            viewModel.Product = product;
+            viewModel.listCategory = categoryRepo.GetAll().Where(i => i.ParentId == null).ToList();
             //Form untuk input product baru atau edit product
-            return View(product);
+            return View(viewModel);
         }
 
         public PartialViewResult ProductList()

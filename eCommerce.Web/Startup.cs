@@ -31,6 +31,7 @@ using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 using eCommerce.Logic.Services;
 using eCommerce.DAL.Repositories.UserLogins;
 using eCommerce.DAL.Repositories.The_Products.Categories;
+using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce.Web
 {
@@ -66,7 +67,11 @@ namespace eCommerce.Web
                 .AddEntityFrameworkStores<CommerceContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.SslPort = 44343;
+                options.Filters.Add(new RequireHttpsAttribute());
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -139,6 +144,11 @@ namespace eCommerce.Web
             app.UseStaticFiles();
 
             app.UseIdentity();
+            app.UseFacebookAuthentication(new FacebookOptions()
+            {
+                AppId = Configuration["Authentication:Facebook:AppId"],
+                AppSecret = Configuration["Authentication:Facebook:AppSecret"]
+            });
 
             //new UserRoleSeed(app.ApplicationServices.GetService<RoleManager<RolesMaster>>(), app.ApplicationServices.GetService<UserManager<UserLogin>>()).Seed();
 
