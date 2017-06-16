@@ -12,9 +12,13 @@ namespace eCommerce.Web.Models.ProductViewModels
 {
     public class ProductViewModel
     {
+        public ProductViewModel()
+        {
+            ProductList = new ProductPartialPagingViewModel();
+        }
         public long CategoryId { get; set; }
-        public List<ProductListViewModel> ProductList { get; set; }
         public List<Brand> BrandList { get; set; }
+        public ProductPartialPagingViewModel ProductList { get; set; }
     }
 
     public class ProductListViewModel
@@ -23,6 +27,14 @@ namespace eCommerce.Web.Models.ProductViewModels
 
         [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal Price { get; set; }
+    }
+
+    public class ProductPartialPagingViewModel
+    {
+        public List<ProductListViewModel> ProductList{ get; set; }
+        public int PageIndex { get; set; }
+        public int TotalPage { get; set; }
+        public int PageSize { get; set; }
     }
 
     public class ProductDetailsViewModel
