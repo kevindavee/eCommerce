@@ -1,4 +1,5 @@
 ﻿using eCommerce.Commons;
+using eCommerce.Core.CommerceClasses.Stocks;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using System;
 using System.Collections.Generic;
@@ -14,5 +15,6 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
         public virtual Product Product { get; set; }
         public virtual ICollection<ProductInstanceOptions> ProductInstanceOptions { get; set; }
         public virtual ICollection<TransactionDetails> TransactionDetails { get; set; }
+        public virtual Stock Stock { get; set; }
     }
 }

@@ -22,7 +22,17 @@
     </div>
 </div>
 
-@if (Model != null)
+@if (Model == null || Model.TransactionHeader.TransactionDetails.Count == 0)
+{
+    <div class="section">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h1>You have no item in cart. Start shopping !</h1>
+            </div>
+        </div>
+    </div>
+}
+else
 {
     <div class="section">
         <div class="container">
@@ -100,16 +110,7 @@
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="section">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <h1>You have no item in cart. Start shopping !</h1>
-            </div>
-        </div>
-    </div>
+
 }
 
 <script type="text/javascript" src="~/js/Custom/transaction-jquery.js"></script>

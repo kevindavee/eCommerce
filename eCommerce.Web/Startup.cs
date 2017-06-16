@@ -32,6 +32,8 @@ using eCommerce.Logic.Services;
 using eCommerce.DAL.Repositories.UserLogins;
 using eCommerce.DAL.Repositories.The_Products.Categories;
 using Microsoft.AspNetCore.Mvc;
+using eCommerce.DAL.Repositories.Stocks;
+using eCommerce.DAL.Repositories.InventoryJournals;
 
 namespace eCommerce.Web
 {
@@ -96,6 +98,9 @@ namespace eCommerce.Web
             services.AddScoped<ShippingDetailsRepo, ShippingDetailsRepo>();
             services.AddScoped<KonfirmasiPembayaranRepo, KonfirmasiPembayaranRepo>();
             services.AddScoped<UserManagementRepo, UserManagementRepo>();
+            services.AddScoped<StockRepo, StockRepo>();
+            services.AddScoped<InventoryJournalRepo, InventoryJournalRepo>();
+            services.AddScoped<InventoryJournalItemRepo, InventoryJournalItemRepo>();
 
 
             services.AddScoped<TransactionService, TransactionService>();

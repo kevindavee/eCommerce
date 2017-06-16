@@ -49,24 +49,42 @@ namespace eCommerce.Web.Controllers
         {
             //Page product index
             var model = new ProductViewModel();
-            model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga && brandId != 0 ? j.Product.BrandId == brandId : true).ToList();
+            var productList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga && brandId != 0 ? j.Product.BrandId == brandId : true).ToList();
             //model.ProductList = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga).ToList();
             var listBrand = new List<Brand>();
-            foreach (var item in model.ProductList)
+
+            foreach (var item in productList)
             {
                 listBrand.Add(brandRepo.GetById(item.Product.BrandId));
             }
+
+            
             listBrand.Insert(0, new Brand { Id = 0, Nama = "-All-"});
             model.BrandList = listBrand;
             model.CategoryId = CategoryId;
+            model.ProductList.PageSize = 16;
+            model.ProductList.PageIndex = 0;
+
+            decimal TotalPage = (decimal)productList.Count / model.ProductList.PageSize;
+            model.ProductList.TotalPage = (int)Math.Ceiling(TotalPage);
+            model.ProductList.ProductList = productList.Skip(model.ProductList.PageIndex * model.ProductList.PageSize).Take(model.ProductList.PageSize).ToList();
 
             return View(model);
         }
 
-        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0)
+        public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0,
+                                              int PageIndex = 0, int TotalPage = 0, int PageSize = 16)
         {
+            ProductPartialPagingViewModel model = new ProductPartialPagingViewModel();
             //Partial view untuk refresh list of product
             var list = ProductList(CategoryId, sort).Where(j => j.Price >= MinHarga && j.Price <= MaxHarga && (brandId != 0 ? j.Product.BrandId == brandId : true)).ToList();
+
+            model.PageIndex = PageIndex;
+            model.PageSize = PageSize;
+
+            decimal totalPage = (decimal)list.Count / PageSize;
+            model.TotalPage = (int)Math.Ceiling(totalPage);
+            model.ProductList = list.Skip(PageIndex * PageSize).Take(PageSize).ToList();
 
             return PartialView(list);
         }
@@ -111,6 +129,8 @@ namespace eCommerce.Web.Controllers
             var productInstance = productInstanceRepo.GetAll().Where(j => j.ProductId == ProductId);
             var Category = categoryRepo.GetById((long)productObj.CategoryId);
             var ParentCategory = categoryRepo.GetById((long)Category.ParentId).Nama;
+            var reviewList = reviewRepo.GetListReviewByProductId(ProductId);
+
 
             var colorList = new List<string>();
             var ukuranList = new List<string>();
@@ -133,6 +153,7 @@ namespace eCommerce.Web.Controllers
             model.ParentCategory = ParentCategory;
             model.colorList = colorList;
             model.ukuranList = ukuranList;
+            model.ReviewList = reviewList;
             //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
 
 
@@ -141,9 +162,12 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddReview(Review review)
+        public ActionResult AddReview(Review review, long ProductId)
         {
             review.CustomerId = userRepo.GetCustomerId(context.HttpContext.User.Identity.Name);
+            review.TheReview = review.TheReview;
+            review.ProductId = ProductId;
+
 
             reviewRepo.Save(review);
 

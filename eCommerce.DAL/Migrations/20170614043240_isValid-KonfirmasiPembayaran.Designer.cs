@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170614043240_isValid-KonfirmasiPembayaran")]
+    partial class isValidKonfirmasiPembayaran
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -135,58 +136,6 @@ namespace eCommerce.DAL.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.InventoryJournals.InventoryJournal", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("JournalCode");
-
-                    b.Property<string>("JournalType");
-
-                    b.Property<string>("Remarks");
-
-                    b.Property<string>("UpdatedBy");
-
-                    b.Property<DateTime>("UpdatedDate");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("InventoryJournal");
-                });
-
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.InventoryJournals.InventoryJournalItem", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<long>("InventoryJournalId");
-
-                    b.Property<long>("ProductInstanceId");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("UpdatedBy");
-
-                    b.Property<DateTime>("UpdatedDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryJournalId");
-
-                    b.HasIndex("ProductInstanceId");
-
-                    b.ToTable("InventoryJournalItem");
-                });
-
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.Shippers.Shipper", b =>
                 {
                     b.Property<long>("Id")
@@ -205,33 +154,6 @@ namespace eCommerce.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Shipper");
-                });
-
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Stocks.Stock", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<int>("OnCart");
-
-                    b.Property<long>("ProductInstanceId");
-
-                    b.Property<int>("Quantity");
-
-                    b.Property<string>("UpdatedBy");
-
-                    b.Property<DateTime>("UpdatedDate");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductInstanceId")
-                        .IsUnique();
-
-                    b.ToTable("Stock");
                 });
 
             modelBuilder.Entity("eCommerce.Core.CommerceClasses.The_Products.Categories.Category", b =>
@@ -514,6 +436,8 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<decimal>("Discount");
 
+                    b.Property<bool?>("IsProcessed");
+
                     b.Property<decimal>("Price");
 
                     b.Property<long>("ProductInstanceId");
@@ -748,27 +672,6 @@ namespace eCommerce.DAL.Migrations
                     b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Categories.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.InventoryJournals.InventoryJournalItem", b =>
-                {
-                    b.HasOne("eCommerce.Core.CommerceClasses.InventoryJournals.InventoryJournal", "InventoryJournal")
-                        .WithMany("InventoryJournalItem")
-                        .HasForeignKey("InventoryJournalId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
-                        .WithMany()
-                        .HasForeignKey("ProductInstanceId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("eCommerce.Core.CommerceClasses.Stocks.Stock", b =>
-                {
-                    b.HasOne("eCommerce.Core.CommerceClasses.The_Products.Products.ProductInstance", "ProductInstance")
-                        .WithOne("Stock")
-                        .HasForeignKey("eCommerce.Core.CommerceClasses.Stocks.Stock", "ProductInstanceId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

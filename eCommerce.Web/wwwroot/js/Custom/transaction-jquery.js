@@ -25,9 +25,20 @@
 
                     }
                     else {
-                        console.log(data.errorMsg);
+                        if (data.emptyStock != "") {
+                            alert(data.emptyStock);
+                        }
+                        else {
+                            console.log(data.errorMsg);
+                        }
+                    }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if (jqXHR.status == 401) {
+                        window.location.href = '/Account/Login';
                     }
                 }
+                
             });
         }
     });

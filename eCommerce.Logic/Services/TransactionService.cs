@@ -4,6 +4,7 @@ using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using eCommerce.DAL;
+using eCommerce.DAL.Repositories.Stocks;
 using eCommerce.DAL.Repositories.The_Products.Products;
 using eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans;
 using eCommerce.DAL.Repositories.Transactions.ShippingDetailss;
@@ -25,9 +26,11 @@ namespace eCommerce.Logic.Services
         private TransactionDetailsRepo transactionDetailRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ShippingDetailsRepo shippingDetailsRepo;
+        private StockRepo stockRepo;
 
         public TransactionService(CommerceContext _context, TransactionHeaderRepo _transactionHeaderRepo, TransactionDetailsRepo _transactionDetailRepo, 
-                                  ProductInstanceRepo _productInstanceRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo)
+                                  ProductInstanceRepo _productInstanceRepo, ShippingDetailsRepo _shippingDetailsRepo, KonfirmasiPembayaranRepo _konfirmasiPembayaranRepo,
+                                  StockRepo _stockRepo)
         {
             context = _context;
             transactionHeaderRepo = _transactionHeaderRepo;
@@ -35,6 +38,7 @@ namespace eCommerce.Logic.Services
             productInstanceRepo = _productInstanceRepo;
             shippingDetailsRepo = _shippingDetailsRepo;
             konfirmasiPembayaranRepo = _konfirmasiPembayaranRepo;
+            stockRepo = _stockRepo;
         }
 
         /// <summary>
@@ -43,12 +47,21 @@ namespace eCommerce.Logic.Services
         /// <param name="CustomerId"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool CreateTransaction(long CustomerId, long ProductInstanceId, int Quantity, string Username)
+        public string CreateTransaction(long CustomerId, long ProductInstanceId, int Quantity, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
                 try
                 {
+                    //Update stock
+                    var stockResult = stockRepo.MoveStockToCart(ProductInstanceId, Quantity);
+                    if (!stockResult)
+                    {
+                        contextTransaction.Rollback();
+                        return FunctionResult.OutOfStock;
+                    }
+
+                    //Crete new header object
                     TransactionHeader transactionHeader = new TransactionHeader();
                     transactionHeader.CreatedBy = transactionHeader.UpdatedBy = Username;
                     transactionHeader.Code = transactionHeaderRepo.GenerateTransactionCode();
@@ -57,6 +70,7 @@ namespace eCommerce.Logic.Services
 
                     transactionHeaderRepo.Save(transactionHeader);
 
+                    //Create new detail object
                     TransactionDetails transactionDetail = new TransactionDetails();
                     transactionDetail.TransactionHeaderId = transactionHeader.Id;
                     transactionDetail.CreatedBy = transactionDetail.UpdatedBy= Username;
@@ -66,19 +80,18 @@ namespace eCommerce.Logic.Services
 
                     transactionDetailRepo.Save(transactionDetail);
 
-                    transactionHeader.TotalPrice = transactionDetailRepo.CalculateTotalPrice(transactionHeader.Id);
-
-                    transactionHeaderRepo.Save(transactionHeader);
+                    //Update header total price
+                    UpdateTotalPrice(transactionHeader.Id, Username);
 
                     contextTransaction.Commit();
                 }
                 catch (Exception)
                 {
                     contextTransaction.Rollback();
-                    return false;
+                    return FunctionResult.Error;
                 }
             }
-            return true;
+            return FunctionResult.Success;
         }
 
         /// <summary>
@@ -87,10 +100,17 @@ namespace eCommerce.Logic.Services
         /// <param name="transactionHeader"></param>
         /// <param name="ProductInstanceId"></param>
         /// <returns></returns>
-        public bool AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId, int Quantity, string Username)
+        public string AddItemToCart(TransactionHeader transactionHeader, long ProductInstanceId, int Quantity, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
+                var stockResult = stockRepo.MoveStockToCart(ProductInstanceId, Quantity);
+                if (!stockResult)
+                {
+                    contextTransaction.Rollback();
+                    return FunctionResult.OutOfStock;
+                }
+
                 TransactionDetails transactionDetail = new TransactionDetails();
 
                 try
@@ -131,11 +151,11 @@ namespace eCommerce.Logic.Services
                 catch (Exception)
                 {
                     contextTransaction.Rollback();
-                    return false;
+                    return FunctionResult.Error;
                 }
             }
 
-            return true;
+            return FunctionResult.Success;
         }
 
         /// <summary>
@@ -144,13 +164,23 @@ namespace eCommerce.Logic.Services
         /// <param name="Quantity"></param>
         /// <param name="TransactionDetailId"></param>
         /// <returns></returns>
-        public bool UpdateQuantity(int Quantity, long TransactionDetailId, string Username)
+        public string UpdateQuantity(int Quantity, long TransactionDetailId, string Username)
         {
             using (var contextTransaction = context.Database.BeginTransaction())
             {
+                int diffrence = 0;
                 try
                 {
                     var item = transactionDetailRepo.GetById(TransactionDetailId);
+                    diffrence = Quantity - item.Quantity;
+
+                    var stockResult = stockRepo.MoveStockToCart(item.ProductInstanceId, diffrence);
+                    if (!stockResult)
+                    {
+                        contextTransaction.Rollback();
+                        return FunctionResult.OutOfStock;
+                    }
+
 
                     if (item != null)
                     {
@@ -162,15 +192,18 @@ namespace eCommerce.Logic.Services
                         transactionDetailRepo.Save(item);
                         UpdateTotalPrice(item.TransactionHeaderId, Username);
                     }
+
+                    
+
                     contextTransaction.Commit();
                 }
                 catch (Exception)
                 {
                     contextTransaction.Rollback();
-                    return false;
+                    return FunctionResult.Error;
                 }
             }
-            return true;
+            return FunctionResult.Success;
         }
 
         /// <summary>
@@ -185,10 +218,14 @@ namespace eCommerce.Logic.Services
             {
                 try
                 {
+                    var detail = transactionDetailRepo.GetById(TransactionDetailId);
+                    var result = stockRepo.MoveStockToCart(detail.ProductInstanceId, -detail.Quantity);
+
                     transactionDetailRepo.Delete(TransactionDetailId);
 
                     UpdateTotalPrice(TransactionHeaderId, Username);
                     contextTransaction.Commit();
+
                 }
                 catch (Exception)
                 {
@@ -228,13 +265,55 @@ namespace eCommerce.Logic.Services
             return true;
         }
 
-        public bool ProcessTransaction(long TransactionHeaderId, List<long> RejectedItems, string Remarks, string Username)
+        /// <summary>
+        /// Proccess Confirmation. If payment confirmation is valid and the amount transfered has match the total price of the transaction, transaction will be flag as process and stock will be subtract.
+        /// If confirmation is rejected, this method only flag the payment confirmation that it has been validated
+        /// </summary>
+        /// <returns></returns>
+        public bool ProcessConfirmation(long TransactionHeaderId, string Remarks, string Username, long KonfirmasiPembayaranId, bool Validation)
         {
+            using (var contextTrans = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    //Validate payment confirmation
+                    konfirmasiPembayaranRepo.Validate(KonfirmasiPembayaranId, Validation, Username);
+
+                    //If admin approve the payment confirmation
+                    if (Validation != false)
+                    {
+                        //Count transfered amount whether user had transfered requried payment amount
+                        var validTransfer = CheckTransferAmount(TransactionHeaderId);
+
+                        //If user transfered enough amount of payment. Flag transaction to process, flag shipping to processed ,and subtract stock
+                        if (validTransfer)
+                        {
+                            transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.ProcessTransaction, Username);
+                            shippingDetailsRepo.ProcessOrder(TransactionHeaderId, Username);
+
+                            var detail = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
+
+                            foreach (var item in detail)
+                            {
+                                stockRepo.SoldItem(item.ProductInstanceId, item.Quantity);
+                            }
+                        }
+
+                    }
+
+                    contextTrans.Commit();
+                }
+                catch (Exception)
+                {
+                    contextTrans.Rollback();
+                    return false;
+                }
+            }
             return true;
         }
 
         /// <summary>
-        /// Recalculate Total Price
+        /// Recalculate Total Price and save it
         /// </summary>
         /// <param name="TransactionHeaderId"></param>
         private void UpdateTotalPrice(long TransactionHeaderId, string Username)
@@ -263,6 +342,21 @@ namespace eCommerce.Logic.Services
                 }
             }
             return null;
+        }
+
+        private bool CheckTransferAmount(long TransactionHeaderId)
+        {
+            var totalPrice = transactionHeaderRepo.GetById(TransactionHeaderId).TotalPrice;
+            var transferedAmount = konfirmasiPembayaranRepo.GetAllTransferedAmountByHeaderId(TransactionHeaderId);
+
+            
+            if (transferedAmount < totalPrice)
+            {
+                return false;
+            }
+            
+
+            return true;
         }
     }
 }

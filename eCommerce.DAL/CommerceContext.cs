@@ -3,6 +3,8 @@ using eCommerce.Core.CommerceClasses.Banks;
 using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.BrandsAndCategories;
 using eCommerce.Core.CommerceClasses.Customers;
+using eCommerce.Core.CommerceClasses.InventoryJournals;
+using eCommerce.Core.CommerceClasses.Stocks;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
 using eCommerce.Core.CommerceClasses.The_Products.Product_Images;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
@@ -57,5 +59,8 @@ namespace eCommerce.DAL
         public DbSet<ShippingDetails> ShippingDetails { get; set; }
         public DbSet<KonfirmasiPembayaran> KonfirmasiPembayaran { get; set; }
         public DbSet<Bank> Bank { get; set; }
+        public DbSet<Stock> Stock { get; set; }
+        public DbSet<InventoryJournal> InventoryJournal { get; set; }
+        public DbSet<InventoryJournalItem> InventoryJournalItem { get; set; }
     }
 }

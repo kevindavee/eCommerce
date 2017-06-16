@@ -66,9 +66,15 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ProcessOrder(long TransactionHeaderId, List<long> RejectedItems, string Remarks)
+        public ActionResult ValidatePaymentConfirmation(long TransactionHeaderId, string Remarks, long KonfirmasiPembayaranId, bool Validation)
         {
-            var result = transactionService.ProcessTransaction(TransactionHeaderId, RejectedItems, Remarks, Username);
+            var result = transactionService.ProcessConfirmation(TransactionHeaderId, Remarks, Username, KonfirmasiPembayaranId, Validation);
+
+            if (!result)
+            {
+                ViewData["Message"] = "An error occured. Cannot updated data !";
+                return RedirectToAction("ManagePayment");
+            }
 
             return RedirectToAction("ManagePayment");
         }
