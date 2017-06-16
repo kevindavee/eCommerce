@@ -9,7 +9,7 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Categories
     public class Category : EntityBase
     {
         public string Nama { get; set; } = "";
-        public long? ParentId { get; set; } = 0;
+        public long? ParentId { get; set; }
 
         public virtual ICollection<Product> Product { get; set; }
     }
