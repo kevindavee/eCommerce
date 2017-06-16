@@ -38,6 +38,7 @@ namespace eCommerce.Web.Models.ProductViewModels
         public string selectedUkuran { get; set; }
         public List<string> ukuranList { get; set; }
 
-        public List<Review> Review { get; set; }
+        public Review Review { get; set; } = new Review();
+        public List<Review> ReviewList { get; set; } 
     }
 }

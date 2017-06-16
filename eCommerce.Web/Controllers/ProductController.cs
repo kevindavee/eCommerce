@@ -111,6 +111,8 @@ namespace eCommerce.Web.Controllers
             var productInstance = productInstanceRepo.GetAll().Where(j => j.ProductId == ProductId);
             var Category = categoryRepo.GetById((long)productObj.CategoryId);
             var ParentCategory = categoryRepo.GetById((long)Category.ParentId).Nama;
+            var reviewList = reviewRepo.GetListReviewByProductId(ProductId);
+
 
             var colorList = new List<string>();
             var ukuranList = new List<string>();
@@ -133,6 +135,7 @@ namespace eCommerce.Web.Controllers
             model.ParentCategory = ParentCategory;
             model.colorList = colorList;
             model.ukuranList = ukuranList;
+            model.ReviewList = reviewList;
             //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
 
 
@@ -141,9 +144,12 @@ namespace eCommerce.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddReview(Review review)
+        public ActionResult AddReview(Review review, long ProductId)
         {
             review.CustomerId = userRepo.GetCustomerId(context.HttpContext.User.Identity.Name);
+            review.TheReview = review.TheReview;
+            review.ProductId = ProductId;
+
 
             reviewRepo.Save(review);
 
