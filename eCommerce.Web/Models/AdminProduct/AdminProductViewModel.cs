@@ -12,5 +12,6 @@ namespace eCommerce.Web.Models.AdminProduct
     public class IndexPageAdminProductViewModel
     {
         public List<Product> listProduct { get; set; }
+        public Product DetailProduct { get; set; } = new Product();
     }
 }
