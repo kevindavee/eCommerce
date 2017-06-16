@@ -28,4 +28,11 @@ namespace eCommerce.Commons
         public const string Shipped = "Order shipped";
     }
 
+    public static class FunctionResult
+    {
+        public const string Success = "Success";
+        public const string Error = "Error";
+        public const string OutOfStock = "Out of Stock";
+    }
+
 }

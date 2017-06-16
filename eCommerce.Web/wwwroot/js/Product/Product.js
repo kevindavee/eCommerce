@@ -74,10 +74,8 @@ function GetFilterFieldValue() {
 
 
 function GetPriceByOptions(ProductId, Warna, Ukuran, ParentCategory) {
-    alert("test");
     var url = "/Product/GetPriceByOptions";
     $.getJSON("/Product/GetPriceByOptions?ProductId=" + ProductId + "&optValueWarna=" + Warna + "&optValueUkuran=" + Ukuran + "&parentCategory=" + ParentCategory, function (data) {
-        alert(data.toSource());
         //alert(data.price);
         //alert(data.idProductInstance);
 

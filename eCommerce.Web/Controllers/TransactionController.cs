@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Hosting;
 using eCommerce.Core.CommerceClasses.Shippers;
 using eCommerce.Core.CommerceClasses.Alamats;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eCommerce.Web.Controllers
 {
@@ -67,11 +68,12 @@ namespace eCommerce.Web.Controllers
         }
 
         #region Shopping Cart
+        [Authorize]
         [HttpPost]
         public JsonResult AddToCart(long ProductInstanceId, int Quantity)
         {
             //Action untuk add Item ke shopping cart
-            bool result;
+            string result;
             //CustomerId = 1;
             var CustomerId = userRepo.GetCustomerId(User.Identity.Name);
             var activeCart = transactionHeaderRepo.GetActiveCart(CustomerId);
@@ -85,12 +87,16 @@ namespace eCommerce.Web.Controllers
                 result = transactionService.AddItemToCart(activeCart, ProductInstanceId, Quantity, UserName);
             }
 
-            if (!result)
+            if (result == FunctionResult.OutOfStock)
             {
-                return Json(data: new { Status = result });
+                return Json(data: new { Status = false, EmptyStock = "Cannot add to cart ! Please refresh your page" });
+            }
+            if (result == FunctionResult.Error)
+            {
+                return Json(data: new { Status = false, ErrorMsg = "Error !" });
             }
 
-            return Json(data: new { Status = result });
+            return Json(data: new { Status = true });
         }
 
         public ActionResult Cart()
@@ -130,15 +136,19 @@ namespace eCommerce.Web.Controllers
             //Pake AJAX supaya tidak refresh page
             var result = transactionService.UpdateQuantity(Quantity, TransactionDetailId, UserName);
 
-            if (!result)
+            if (result == FunctionResult.Error)
             {
                 return Json(data: new { Status = false, ErrorMsg = "An error ocurred !" });
+            }
+            if (result == FunctionResult.OutOfStock)
+            {
+                return Json(data: new { Status = false, EmptyStock = "Insufficient quantity for this item" });
             }
 
             var headerId = transactionDetailRepo.GetById(TransactionDetailId).TransactionHeaderId;
             var TotalPrice = transactionHeaderRepo.GetById(headerId).TotalPrice;
 
-            return Json(data: new { Status = true, ErrorMsg = "", TotalPrice = TotalPrice });
+            return Json(data: new { Status = true, TotalPrice = TotalPrice });
         }
 
         [HttpPost]
@@ -312,7 +322,7 @@ namespace eCommerce.Web.Controllers
                 var isWaiting = transactionHeaderRepo.IsWaitingForConfirmation(TransactionHeaderId);
                 if (isWaiting == false)
                 {
-                    TempData["Message"] = "Invalid transaction. Cannot confirm payment";
+                    ViewData["Message"] = "Your already confirmed your order !";
                     return RedirectToAction("Index", "Home");
                 }
 

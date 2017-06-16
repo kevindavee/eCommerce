@@ -14,7 +14,7 @@ namespace eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans
         public string NoRekening { get; set; } = "";
         public string NamaPemilikRekening { get; set; } = "";
         public decimal NominalTransfer { get; set; } = 0;
-        public string Status { get; set; } = "";
+        public bool? IsValid { get; set; } = null;
         public string ImageBuktiTransfer { get; set; } = "";
 
         public virtual TransactionHeader TransactionHeader { get; set; }
