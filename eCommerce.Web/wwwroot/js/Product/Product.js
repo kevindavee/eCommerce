@@ -80,7 +80,7 @@ function GetPriceByOptions(ProductId, Warna, Ukuran, ParentCategory) {
         //alert(data.idProductInstance);
 
         $('#lblPrice').empty();
-        $('#lblPrice').append(data.price);
+        $('#lblPrice').append(ThousandSeparator(data.price));
         $('#hiddenProductInstanceId').val(data.idProductInstance);
     })
 }
