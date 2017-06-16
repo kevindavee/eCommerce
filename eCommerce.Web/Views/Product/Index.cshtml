@@ -2,7 +2,6 @@
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @model eCommerce.Web.Models.ProductViewModels.ProductViewModel
 <script src="~/js/Product/Product.js"></script>
 <div class="section section-breadcrumbs">
@@ -14,76 +13,141 @@
         </div>
     </div>
 </div>
+<div class="col-md-2">
+    @*sort*@
+    <div class="form-group">
+        <label class="col-md-12 control-label">Sort:</label>
+        <div class="row"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <select class=" form-control" id="dropdown-sort">
+                <option value="0">All</option>
+                <option value="1">Most Seen</option>
+                <option value="2">Lowest Price</option>
+                <option value="3">Highest Price</option>
+            </select>
+        </div>
+        <div class="row"></div>
+    </div>
+    @*price range*@
+    <div class="form-group">
+        <label class="col-md-12 control-label">Price:</label>
+        <div class="row"></div>
+        <div class="col-md-12">
+            <input type="number" class="form-control" id="txt-min-harga" placeholder="Minimum Price">
+        </div>
+        <div class="row"></div>
+        <div class="col-md-offset-6">
+            <label class="control-label" style="text-align:center;">to</label>
+        </div>
+        <div class="row"></div>
+        <div class="col-md-12">
+            <input type="number" class="form-control" id="txt-max-harga" placeholder="Maximum Price">
+        </div>
+        <div class="row"></div>
+    </div>
+    @*brand*@
+    <div class="form-group">
+        <label class="col-md-12 control-label">Brand:</label>
+        <div class="row"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <select class=" form-control" id="dropdown-sort">
+                <option value="0">All</option>
+                <option value="1">Sony</option>
+                <option value="2">Xiaomi</option>
+            </select>
+        </div>
+        <div class="row"></div>
+    </div>
+    @*show result per page*@
+    <div class="form-group">
+        <label class="col-md-12 control-label">Show Results Per Page</label>
+        <div class="row"></div>
+        <div class="col-md-9 col-sm-12 col-xs-12">
+            <div class="col-md-4 col-sm-4 col-xs-4">
+                <a class="btn btn-sm">16</a>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+                <a class="btn btn-sm">24</a>
+            </div>
+            <div class="col-md-4 col-sm-4 col-xs-4">
+                <a class="btn btn-sm">32</a>
+            </div>
+        </div>
+        <div class="row"></div>
+    </div>
+    @*button*@
+    <div class="form-group">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <a class="btn btn-md col-md-12">Update <span class="fa fa-refresh"></span></a>
+        </div>
 
-<div class="section section-white">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="col-md-3">
-                    <div class="available">
-                        <ul>
-                            <li>
-                                Sort
-                                <select style="margin-left:10px;" id="dropdown-sort">
-                                    <option value="0">All</option>
-                                    <option value="1">Top Rating</option>
-                                    <option value="2">Lowest Price</option>
-                                    <option value="3">Highest Price</option>
-                                </select>
-                            </li>
-
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-md-7">
-                    <div class="">
-                        <div class="form-group">
-                            <div class="col-md-2">
-                                <label for="usr" style="margin-top:20px;margin-left:-20px;">Min Price:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="number" style="margin-top:7px;margin-left:-10px;height:50px;" class="form-control" id="txt-min-harga">
-                            </div>
-                            <div class="col-md-2">
-                                <label for="usr" style="margin-top:20px;margin-left:-20px;">Max Price:</label>
-                            </div>
-                            <div class="col-md-4">
-                                <input type="number" style="margin-top:7px;margin-left:-5px;height:50px;" class="form-control" id="txt-max-harga">
+    </div>
+</div>
+<div class="col-md-10 col-xs-10 col-xs-12">
+    <div class="eshop-section section">
+        @*<div class="container">*@
+        <div class="row" id="div-product-list">
+            @{ Html.RenderPartial("ProductIndex", Model.ProductList);}
+        </div>
+        @*</div>*@
+    </div>
+</div>
+@*<div class="section section-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <!--sort-->
+                    <div class="col-md-3">
+                        <div class="available">
+                            <!--<ul>
+                                <li style="display:inline-block">
+                                    <p style="text-align:center">Sort</p>
+                                    <select style="margin-left:10px;" id="dropdown-sort">
+                                        <option value="0">All</option>
+                                        <option value="1">Most Seen</option>
+                                        <option value="2">Lowest Price</option>
+                                        <option value="3">Highest Price</option>
+                                    </select>
+                                </li>
+                            </ul>-->
+                            <div class="form-group">
+                                <div class="col-md-2 col-sm-6 col-xs-12">
+                                    <label> <!--style="margin-top:20px;margin-left:-20px;"-->Sort:</label>
+                                </div>
+                                <div class="col-md-10 col-sm-6 col-xs-12">
+                                    <select class="form-control" id="dropdown-sort"> <!--style="margin-left:10px;"-->
+                                        <option value="0">All</option>
+                                        <option value="1">Most Seen</option>
+                                        <option value="2">Lowest Price</option>
+                                        <option value="3">Highest Price</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-
-                    <a class="btn btn-block btn-success" type="button" id="btn-search" style="background-color:darkblue;margin-top:27px;" href="#">Search</a>
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="col-md-3">
-                    <div class="available">
-                        <ul>
-                            <li>
-                                Brand
-                                <select style="margin-left:10px;" id="dropdown-brand">
-                                    @foreach (var item in Model.BrandList.Distinct())
-                                    {
-                                        <option value="@item.Id">@item.Nama</option>
-                                    }
-                                </select>
-                            </li>
-
-                        </ul>
+                    <!--price range-->
+                    <div class="col-md-7">
+                        <div class="">
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <label for="usr"> <!--style="margin-top:20px;margin-left:-20px;"-->Min Price:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number"  class="form-control" id="txt-min-harga" /> <!--style="margin-top:7px;margin-left:-10px;height:50px;"-->>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="usr"> <!--style="margin-top:20px;margin-left:-20px;"-->Max Price:</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="number" class="form-control" id="txt-max-harga" /><!--style="margin-top:7px;margin-left:-5px;height:50px;"-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a class="btn btn-lg" id="btn-search" href="#">Search</a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-@Html.HiddenFor(j => j.CategoryId, new { @id = "hiddenCategoryIdBrandList" })
-<div class="eshop-section section" >
-    <div class="container">
-        <div class="row" id="div-product-list">
-           @{ Html.RenderPartial("ProductIndex", Model.ProductList.ProductList);}
-        </div>
-    </div>
-</div>
+    </div>*@
