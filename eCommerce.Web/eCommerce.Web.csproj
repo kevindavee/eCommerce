@@ -99,6 +99,7 @@
     <Content Include="wwwroot\css\user\main.css" />
     <Content Include="wwwroot\css\user\style.css" />
     <Content Include="wwwroot\images\product6.jpg" />
+    <Content Include="wwwroot\js\AdminProduct\AdminProduct.js" />
     <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
