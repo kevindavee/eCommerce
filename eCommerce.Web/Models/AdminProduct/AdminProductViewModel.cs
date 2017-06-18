@@ -22,6 +22,13 @@ namespace eCommerce.Web.Models.AdminProduct
         public Product Product { get; set; } = new Product();
         public List<Category> listCategory { get; set; } = new List<Category>();
         public List<Category> listSubCategory { get; set; } = new List<Category>();
+        public List<OptionListViewModel> listOptions { get; set; } = new List<OptionListViewModel>();
         public List<Brand> listBrand { get; set; } = new List<Brand>();
+    }
+
+    public class OptionListViewModel
+    {
+        public Options Options { get; set; } = new Options();
+        public bool Selected { get; set; } = false;
     }
 }
