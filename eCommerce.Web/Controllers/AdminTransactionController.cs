@@ -54,14 +54,9 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
-        public PartialViewResult PaymentList(DateTime? StartDate, DateTime? EndDate)
+        public IActionResult PaymentList(DateTime? StartDate, DateTime? EndDate)
         {
-            ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
-
-            viewModel.konfirmasiPembayaran = konfirmasiPembayaranRepo.GetActiveList();
-            viewModel.transactionHeader = transactionHeaderRepo.GetTransactionsWaitingForApproval();
-
-            return PartialView("_PaymentList", viewModel);
+            return ViewComponent("PaymentList");
         }
 
         [HttpPost]
@@ -84,42 +79,90 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
-        public PartialViewResult ShipmentList()
+        public IActionResult ShipmentList()
         {
-            return PartialView();
+            return ViewComponent("ShippingList");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateShippingStatus(long ShippingDetailsId, string TrackingNumber)
+        {
+            shippingDetailsRepo.UpdateTrackingNumber(ShippingDetailsId, TrackingNumber, Username);
+
+            return RedirectToAction("ManageShipment");
         }
 
         public ActionResult ManageBank()
         {
-            return View();
+            var model = bankRepo.GetAll();
+
+            return View(model);
         }
 
-        public ActionResult AddBank()
+        public ActionResult AddBank(long BankId = 0)
         {
-            return View();
+            Bank bank;
+            if (BankId == 0)
+            {
+                bank = new Bank();
+            }
+            else
+            {
+                bank = bankRepo.GetById(BankId);
+            }
+
+            return View(bank);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddBank(Bank bank)
         {
+            if (bank.Id != 0)
+            {
+                bank.UpdatedBy = "Admin";
+                bank.UpdatedDate = DateTime.Today;
+
+            }
+            bankRepo.Save(bank);
+
             return RedirectToAction("ManageBank");
         }
 
         public ActionResult ManageShipper()
         {
-            return View();
+            var model = shipperRepo.GetAll();
+
+            return View(model);
         }
 
-        public ActionResult AddShipper()
+        public ActionResult AddShipper(long ShipperId = 0)
         {
-            return View();
+            Shipper shipper;
+            if (ShipperId == 0)
+            {
+                shipper = new Shipper();
+            }
+            else
+            {
+                shipper = shipperRepo.GetById(ShipperId);
+            }
+
+            return View(shipper);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddShipper(Shipper shipper)
         {
+            if (shipper.Id != 0)
+            {
+                shipper.UpdatedBy = "Admin";
+                shipper.UpdatedDate = DateTime.Today;
+
+            }
+            shipperRepo.Save(shipper);
             return RedirectToAction("ManageShipper");
         }
     }

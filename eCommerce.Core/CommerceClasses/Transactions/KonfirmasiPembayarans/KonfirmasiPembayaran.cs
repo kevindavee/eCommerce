@@ -3,6 +3,7 @@ using eCommerce.Core.CommerceClasses.Banks;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans
@@ -13,7 +14,10 @@ namespace eCommerce.Core.CommerceClasses.Transactions.KonfirmasiPembayarans
         public long BankId { get; set; } = 0;
         public string NoRekening { get; set; } = "";
         public string NamaPemilikRekening { get; set; } = "";
+
+        [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal NominalTransfer { get; set; } = 0;
+
         public bool? IsValid { get; set; } = null;
         public string ImageBuktiTransfer { get; set; } = "";
 

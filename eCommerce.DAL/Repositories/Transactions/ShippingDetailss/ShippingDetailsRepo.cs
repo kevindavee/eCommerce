@@ -1,5 +1,6 @@
 ﻿using eCommerce.Commons;
 using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,9 +27,18 @@ namespace eCommerce.DAL.Repositories.Transactions.ShippingDetailss
             Save(shipping);
         }
 
-        public void UpdateTrackingNumber(long TransactionHeaderId, string trackingNumber, string Username)
+        public List<ShippingDetails> GetProcessedShippingDetails()
         {
-            var shipping = dbSet.Where(s => s.TransactionHeaderId == TransactionHeaderId).FirstOrDefault();
+            var list = dbSet.Where(s => s.ShippingStatus == ShippingStatus.OrderProcessed)
+                            .Include(i => i.TransactionHeader)
+                            .Include(i => i.Shipper).ToList();
+
+            return list;
+        }
+
+        public void UpdateTrackingNumber(long ShippingDetailId, string trackingNumber, string Username)
+        {
+            var shipping = GetById(ShippingDetailId);
             shipping.TrackingNumber = trackingNumber;
             shipping.ShippingStatus = ShippingStatus.Shipped;
             shipping.UpdatedDate = DateTime.Today;

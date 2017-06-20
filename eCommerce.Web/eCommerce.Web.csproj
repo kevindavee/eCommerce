@@ -99,9 +99,12 @@
     <Content Include="wwwroot\css\user\main.css" />
     <Content Include="wwwroot\css\user\style.css" />
     <Content Include="wwwroot\images\product6.jpg" />
+    <Content Include="wwwroot\js\AdminProduct\AdminProduct.js" />
+    <Content Include="wwwroot\js\AdminTransaction\admin-transaction.js" />
     <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
+    <Content Include="wwwroot\js\Custom\initialize-datatable.js" />
     <Content Include="wwwroot\js\Custom\product-jquery.js" />
     <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
     <Content Include="wwwroot\js\jquery-1.9.1.min.js" />
@@ -116,7 +119,6 @@
     <Content Include="wwwroot\js\template.js" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
@@ -153,6 +155,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\AdminProduct\" />
+    <Folder Include="Views\AdminTransaction\Components\BankList\" />
+    <Folder Include="Views\AdminTransaction\Components\ShipperList\" />
+    <Folder Include="Views\AdminTransaction\Components\ShippingList\" />
+    <Folder Include="Views\AdminTransaction\Components\PaymentList\" />
     <Folder Include="Views\Shared\Components\CategoryList\" />
     <Folder Include="wwwroot\BuktiTransfer\" />
   </ItemGroup>

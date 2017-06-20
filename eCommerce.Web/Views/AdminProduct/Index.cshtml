@@ -6,6 +6,17 @@
 @using eCommerce.Web.Models.AdminProduct
 
 @model IndexPageAdminProductViewModel
+
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs({
+            activate: function (event, ui) {
+            }
+        });
+        //$("#subtabs13").tabs();
+    });
+</script>
+
 <div class="right_col" role="main">
     <div class="">
         <div class="page-title">
@@ -41,18 +52,18 @@
                     </div>
                     <div class="x_content">
 
-                        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                        <div class="" role="tabpanel" id="tabs" data-example-id="togglable-tabs">
                             <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
                                 <!--tab1-->
                                 <!--product list-->
                                 <li role="presentation" class="active">
-                                    <a href="#tab_content1" id="list-tab" role="tab" data-toggle="tab" aria-expanded="true">Product List</a>
+                                    <a href="#tabManageProduct" id="list-tab" role="tab" data-toggle="tab" aria-expanded="true">Product List</a>
                                 </li>
                                 <!--tab1 end-->
                                 <!--tab2-->
                                 <!--product details-->
                                 <li role="presentation" class="">
-                                    <a href="#tab_content2" role="tab" id="details-tab" data-toggle="tab" aria-expanded="false">Product Details</a>
+                                    <a href="#tabProductDetails" role="tab" id="details-tab" data-toggle="tab" aria-expanded="false">Product Details</a>
                                 </li>
                                 <!--tab2 end-->
                                 <!--tab3-->
@@ -76,13 +87,13 @@
                             <div id="myTabContent" class="tab-content">
                                 <!--tab1 content-->
                                 <!--product list-->
-                                <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="home-tab">
+                                <div role="tabpanel" class="tab-pane fade active in" id="tabManageProduct" aria-labelledby="home-tab">
                                     @{Html.RenderPartial("ManageProduct", Model.listProduct);}
                                 </div>
                                 <!--tab1 content end-->
                                 <!--tab2 content-->
                                 <!--product details/edit-->
-                                <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="profile-tab">
+                                <div role="tabpanel" class="tab-pane fade" id="tabProductDetails" aria-labelledby="profile-tab">
                                     @{Html.RenderPartial("ProductDetails", Model.DetailsProduct);}
                                 </div>
                                 <!--tab2 content end-->
@@ -437,3 +448,5 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/js/AdminProduct/AdminProduct.js"></script>

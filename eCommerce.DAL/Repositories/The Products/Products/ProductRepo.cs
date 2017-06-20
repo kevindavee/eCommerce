@@ -17,5 +17,10 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         {
             return dbSet.Include(i => i.Brand).Include(i => i.Category);
         }
+
+        public Product GetByIdIncludeCat(long id)
+        {
+            return dbSet.Where(i => i.Id == id).Include(i => i.Category).FirstOrDefault();
+        }
     }
 }
