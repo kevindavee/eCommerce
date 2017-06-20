@@ -101,6 +101,7 @@
     <Content Include="wwwroot\images\product6.jpg" />
     <Content Include="wwwroot\js\AdminProduct\AdminProduct.js" />
     <Content Include="wwwroot\js\AdminTransaction\admin-transaction.js" />
+    <Content Include="wwwroot\js\bootstrap-progressbar.js" />
     <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />

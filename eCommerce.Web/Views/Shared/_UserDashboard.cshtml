@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style type="text/css">
+        .thumb-image {
+            float: left;
+            width: 100px;
+            position: relative;
+            padding: 5px;
+        }
+    </style>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Gentelella Alela! | </title>
+    <!-- Bootstrap -->
+    <link href="~/css/admin/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="~/css/admin/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="~/css/admin/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="~/css/admin/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="~/css/admin/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- PNotify -->
+    <!--<link href="../vendors/pnotify/dist/pnotify.css" rel="stylesheet">-->
+    <!--<link href="../vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">-->
+    <!--<link href="../vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">-->
+    <!-- Custom Theme Style -->
+    <link href="~/css/admin/custom.min.css" rel="stylesheet">
+</head>
+<body class="nav-md">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <div class="container body">
+        <div class="main_container">
+            <div class="col-md-3 left_col">
+                @*<div class="left_col scroll-view">
+                    <div class="clearfix"></div>*@
+                <!-- /menu profile quick info -->
+                <br />
+                <!-- sidebar menu -->
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="menu_section">
+                        <div class="profile clearfix">
+                            <div class="profile_pic">
+                                <img src="http://pm1.narvii.com/5866/76b201e12343e860570c62f4067307e04ed545fe_hq.jpg" alt="..." class="img-circle profile_img">
+                            </div>
+                            <div class="profile_info">
+                                <span>Welcome,</span>
+                                <h2>John Doe</h2>
+                            </div>
+                        </div>
+                        <ul class="nav side-menu">
+                            <li>
+                                <a><i class="fa fa-user"></i> Profile <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li>
+                                        <a>Profile</a>
+                                    </li>
+                                    <li>
+                                        <a>Archived Transaction</a>
+                                    </li>
+                                    <li>
+                                        <a>Wishlist</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- /sidebar menu -->
+            </div>
+        </div>
+        <!-- top navigation -->
+        <div class="top_nav">
+            <div class="nav_menu">
+                <nav>
+                    <div class="nav toggle">
+                        <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="">
+                            <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                John Doe<span class=" fa fa-angle-down"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="dropdown">
+                            <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-envelope-o"></i>
+                                <span class="badge bg-green">0</span>
+                            </a>
+                            <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                <li>
+                                    <a>
+                                        <span class="message">
+                                            No Message.
+                                        </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <div class="text-center">
+                                        <a>
+                                            <strong>See All Alerts</strong>
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <!-- /top navigation -->
+        <!-- page content -->
+        @RenderBody()
+    </div>
+    <!-- /page content -->
+    <!-- footer content -->
+    <footer>
+        <div class="pull-right">
+            Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>
+        </div>
+        <div class="clearfix"></div>
+    </footer>
+    <!-- /footer content -->
+    <div id="custom_notifications" class="custom-notifications dsp_none">
+        <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group"></ul>
+        <div class="clearfix"></div>
+        <div id="notif-group" class="tabbed_notifications"></div>
+    </div>
+    <script>
+        function detailsclick() {
+            $('#myTab a[href="#tab_content2"]').tab('show');
+        }
+
+        function getddlkategori() {
+            $("#dropdown-category-add :selected").text();
+            //alert($("#dropdown-category :selected").text());
+            document.getElementById("dropdown-subcategory-add").style.display = "block";
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#fileUpload").on('change', function () {
+                //Get count of selected files
+                var countFiles = $(this)[0].files.length;
+                var imgPath = $(this)[0].value;
+                var extn = imgPath.substring(imgPath.lastIndexOf('.') + 1).toLowerCase();
+                var image_holder = $("#image-holder");
+                image_holder.empty();
+                if (extn == "gif" || extn == "png" || extn == "jpg" || extn == "jpeg") {
+                    if (typeof (FileReader) != "undefined") {
+                        //loop for each file selected for uploaded.
+                        for (var i = 0; i < countFiles; i++) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $("<img />", {
+                                    "src": e.target.result,
+                                    "class": "thumb-image"
+                                }).appendTo(image_holder);
+                            }
+                            image_holder.show();
+                            reader.readAsDataURL($(this)[0].files[i]);
+                        }
+                    } else {
+                        alert("This browser does not support FileReader.");
+                    }
+                } else {
+                    alert("Pls select only images");
+                }
+            });
+        });
+    </script>
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="~/js/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="~/js/nprogress.js"></script>
+    <!-- bootstrap-progressbar -->
+    <script src="~/js/bootstrap-progressbar.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/js/icheck.min.js"></script>
+    <!-- PNotify -->
+    <!--<script src="../vendors/pnotify/dist/pnotify.js"></script>
+    <script src="../vendors/pnotify/dist/pnotify.buttons.js"></script>
+    <script src="../vendors/pnotify/dist/pnotify.nonblock.js"></script>-->
+    <!-- Custom Theme Scripts -->
+    <script src="~/js/custom.min.js"></script>
+</body>
+</html>
