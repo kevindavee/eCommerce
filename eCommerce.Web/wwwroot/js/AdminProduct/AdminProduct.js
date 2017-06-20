@@ -21,3 +21,10 @@ function GetBrandListByCategory(subCategoryId, brandId) {
         }
     })
 }
+
+function DetailsProductClick(Id) {
+    $.get(url + "ProductDetails?id=" + Id, function (data) {
+        $('#tabProductDetails').html(data);
+        $('#details-tab').tab('show');
+    })
+}

@@ -56,13 +56,23 @@ namespace eCommerce.Web.Controllers
 
             return View(productList);
         }
-        public ActionResult ProductDetails(long id = 0)
+        public PartialViewResult ProductDetails(long id = 0)
         {
             var viewModel = new DetailsProductViewModel();
-            var product = productRepo.GetById(id);
+            var product = productRepo.GetByIdIncludeCat(id);
             viewModel.Product = product;
+            if(product.Category != null)
+            {
+                viewModel.CategoryId = (long)product.Category.ParentId;
+            }
             viewModel.listCategory = categoryRepo.GetAll().Where(i => i.ParentId == null).ToList();
-
+            viewModel.listSubCategory = categoryRepo.GetAll().Where(i => i.ParentId != null).ToList();
+            var brAndCatList = brAndCatRepo.GetByCategoryId(product.CategoryId).ToList();
+            foreach (var item in brAndCatList)
+            {
+                viewModel.listBrand.Add(brandRepo.GetById(item.BrandId));
+            }
+            
             var listOption = optionRepo.GetAll();
             foreach (var item in listOption)
             {
@@ -70,7 +80,7 @@ namespace eCommerce.Web.Controllers
             }
             
             //Form untuk input product baru atau edit product
-            return View(viewModel);
+            return PartialView(viewModel);
         }
 
         public JsonResult GetSubCategory(long CategoryId = 0)
