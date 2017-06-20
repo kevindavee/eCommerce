@@ -1,0 +1,43 @@
+@model eCommerce.Web.Models.AdminTransaction.ShippingDetailsViewModel
+
+<table class="table table-responsive table-bordered table-hover" id="myTable">
+    <thead>
+        <tr>
+            <td>Order Code</td>
+            <td>Nama Penerima</td>
+            <td>Alamat</td>
+            <td>Kota</td>
+            <td>Provinsi</td>
+            <td>Kode Pos</td>
+            <td>Shipping Vendor</td>
+            <td>Input tracking number</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ShippingDetails)
+        {
+            <tr>
+                <td>@item.TransactionHeader.Code</td>
+                <td>@item.NamaPenerima</td>
+                <td>@item.AlamatPengiriman</td>
+                <td>@item.Kota</td>
+                <td>@item.Provinsi</td>
+                <td>@item.KodePos</td>
+                <td>@item.Shipper.Nama</td>
+                <td>
+                    @using (Html.BeginForm("UpdateShippingStatus", "AdminTransaction", new { ShippingDetailsId = item.Id}, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal"}))
+                    {
+                        <div class="row">
+                            <div class="col-md-8">
+                                @Html.TextBox("TrackingNumber", null, htmlAttributes: new { @class = "form-control textbox-tracking", id = item.Id, placeholder = "Enter tracking number"})
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-primary" id="btn-submit-@item.Id" disabled="disabled">Update</button>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

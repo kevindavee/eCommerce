@@ -79,13 +79,9 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
-        public PartialViewResult ShipmentList()
+        public IActionResult ShipmentList()
         {
-            ManageShipmentViewModel viewmodel = new ManageShipmentViewModel();
-
-            viewmodel.ShippingDetails = shippingDetailsRepo.GetProcessedShippingDetails();
-
-            return PartialView(viewmodel);
+            return ViewComponent("ShippingList");
         }
 
         [HttpPost]
@@ -104,9 +100,19 @@ namespace eCommerce.Web.Controllers
             return View(model);
         }
 
-        public ActionResult AddBank()
+        public ActionResult AddBank(long BankId = 0)
         {
-            return View();
+            Bank bank;
+            if (BankId == 0)
+            {
+                bank = new Bank();
+            }
+            else
+            {
+                bank = bankRepo.GetById(BankId);
+            }
+
+            return View(bank);
         }
 
         [HttpPost]
@@ -128,12 +134,22 @@ namespace eCommerce.Web.Controllers
         {
             var model = shipperRepo.GetAll();
 
-            return View();
+            return View(model);
         }
 
-        public ActionResult AddShipper()
+        public ActionResult AddShipper(long ShipperId = 0)
         {
-            return View();
+            Shipper shipper;
+            if (ShipperId == 0)
+            {
+                shipper = new Shipper();
+            }
+            else
+            {
+                shipper = shipperRepo.GetById(ShipperId);
+            }
+
+            return View(shipper);
         }
 
         [HttpPost]

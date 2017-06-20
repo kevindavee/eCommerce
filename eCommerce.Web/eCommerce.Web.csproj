@@ -100,9 +100,11 @@
     <Content Include="wwwroot\css\user\style.css" />
     <Content Include="wwwroot\images\product6.jpg" />
     <Content Include="wwwroot\js\AdminProduct\AdminProduct.js" />
+    <Content Include="wwwroot\js\AdminTransaction\admin-transaction.js" />
     <Content Include="wwwroot\js\bootstrap-progressbar.min.js" />
     <Content Include="wwwroot\js\bootstrap.js" />
     <Content Include="wwwroot\js\bootstrap.min.js" />
+    <Content Include="wwwroot\js\Custom\initialize-datatable.js" />
     <Content Include="wwwroot\js\Custom\product-jquery.js" />
     <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
     <Content Include="wwwroot\js\jquery-1.9.1.min.js" />
@@ -153,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\AdminProduct\" />
+    <Folder Include="Views\AdminTransaction\Components\BankList\" />
+    <Folder Include="Views\AdminTransaction\Components\ShipperList\" />
+    <Folder Include="Views\AdminTransaction\Components\ShippingList\" />
     <Folder Include="Views\AdminTransaction\Components\PaymentList\" />
     <Folder Include="Views\Shared\Components\CategoryList\" />
     <Folder Include="wwwroot\BuktiTransfer\" />
