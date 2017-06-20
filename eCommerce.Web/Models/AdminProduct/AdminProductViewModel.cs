@@ -20,6 +20,7 @@ namespace eCommerce.Web.Models.AdminProduct
     public class DetailsProductViewModel
     {
         public Product Product { get; set; } = new Product();
+        public long CategoryId { get; set; } = 0;
         public List<Category> listCategory { get; set; } = new List<Category>();
         public List<Category> listSubCategory { get; set; } = new List<Category>();
         public List<OptionListViewModel> listOptions { get; set; } = new List<OptionListViewModel>();

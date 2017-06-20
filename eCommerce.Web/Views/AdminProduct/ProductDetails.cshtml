@@ -1,3 +1,8 @@
+
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
 @using eCommerce.Web.Models.AdminProduct
 
 @model DetailsProductViewModel
@@ -19,7 +24,7 @@
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         @*<input type="text" id="nama-barang" class="form-control col-md-6 col-xs-12">*@
-                        @Html.TextBoxFor(e => e.Product.Nama, new { @id="namabarangDetails", @class= "form-control col-md-6 col-xs-12" })
+                        @Html.TextBoxFor(e => e.Product.Nama, new { @id = "namabarangDetails", @class = "form-control col-md-6 col-xs-12" })
                     </div>
                 </div>
                 <!--nama barang end-->
@@ -40,7 +45,7 @@
                                 );
                             }
                         }
-                        @Html.DropDownListFor(e => e.Product.CategoryId, ListBoxCategory, new { @id = "DDLCategoryDetails", @class = "form-control", @onchange= "GetSubCategory('#DDLCategoryDetails', '#DDLSubCategoryDetails')" })
+                        @Html.DropDownListFor(e => e.CategoryId, ListBoxCategory, new { @id = "DDLCategoryDetails", @class = "form-control", @onchange = "GetSubCategory('#DDLCategoryDetails', '#DDLSubCategoryDetails')" })
                     </div>
                     <div class="col-md-3 col-sm-3 col-xs-12" id="dropdown-subcategory">
                         <!-- ganti dropdown pake razor -->
@@ -54,7 +59,7 @@
                                 );
                             }
                         }
-                        @Html.DropDownListFor(e => e.Product.CategoryId, ListBoxSubCategory, new { @id = "DDLSubCategoryDetails", @class = "form-control", @onchange= "GetBrandListByCategory('#DDLSubCategoryDetails', '#DDLBrandDetails')" })
+                        @Html.DropDownListFor(e => e.Product.CategoryId, ListBoxSubCategory, new { @id = "DDLSubCategoryDetails", @class = "form-control", @onchange = "GetBrandListByCategory('#DDLSubCategoryDetails', '#DDLBrandDetails')" })
                     </div>
                 </div>
                 <!--kategori end-->
@@ -87,7 +92,7 @@
                         @for (var i = 0; i < Model.listOptions.Count; i++)
                         {
                             <div class="col-md-1">
-                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @class=""})
+                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @class = "" })
                             </div>
                             <div class="col-md-2">
                                 @Model.listOptions[i].Options.OptionName
@@ -158,3 +163,4 @@
         </div>
     </div>
 </div>
+
