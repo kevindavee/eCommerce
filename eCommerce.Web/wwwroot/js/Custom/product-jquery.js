@@ -19,7 +19,7 @@
                         alert("Item has been added to cart ! ");
                     }
                     else {
-                        if (data.emptyStock != "") {
+                        if ('emptyStock' in data) {
                             alert(data.emptyStock);
                         }
                         else {

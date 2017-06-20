@@ -16,11 +16,9 @@ namespace eCommerce.DAL.Repositories.Transactions.KonfirmasiPembayarans
 
         public List<KonfirmasiPembayaran> GetActiveList()
         {
-            var result = dbSet.Where(s => s.TransactionHeader.CurrentStatus == TransactionStatus.PaymentConfirmation)
-                              .Include(i => i.Bank)
-                              .ToList();
-
-            return result;
+            return dbSet.Where(s => s.IsValid == null)
+                        .Include(i => i.TransactionHeader)
+                        .Include(i => i.Bank).ToList();
         }
 
         public void Validate(long KonfirmasiPembayaranId, bool isValid, string Username)

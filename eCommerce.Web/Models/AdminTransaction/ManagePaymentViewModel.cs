@@ -12,7 +12,6 @@ namespace eCommerce.Web.Models.AdminTransaction
 {
     public class ManagePaymentViewModel
     {
-        public List<TransactionHeader> transactionHeader { get; set; }
         public List<KonfirmasiPembayaran> konfirmasiPembayaran { get; set; }
     }
 }

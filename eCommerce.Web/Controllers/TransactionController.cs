@@ -99,6 +99,7 @@ namespace eCommerce.Web.Controllers
             return Json(data: new { Status = true });
         }
 
+        [Authorize]
         public ActionResult Cart()
         {
             //Page shopping cart
@@ -129,6 +130,7 @@ namespace eCommerce.Web.Controllers
             return View(viewmodel);
         }
 
+        [Authorize]
         [HttpPost]
         public JsonResult UpdateQuantity(int Quantity, long TransactionDetailId)
         {
@@ -151,6 +153,7 @@ namespace eCommerce.Web.Controllers
             return Json(data: new { Status = true, TotalPrice = TotalPrice });
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteFromCart(long TransactionDetailId, long TransactionHeaderId)
@@ -171,6 +174,7 @@ namespace eCommerce.Web.Controllers
         #endregion
 
         #region CheckOut
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CheckOut(long TransactionHeaderId)
@@ -197,6 +201,7 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("Cart", new { CustomerId = CustomerId });
         }
 
+        [Authorize]
         public ActionResult CheckOutForm(long TransactionHeaderId)
         {
             //Page setelah klik button checkout. Untuk melakukan pembayaran dan melengkapi data pengiriman
@@ -239,6 +244,7 @@ namespace eCommerce.Web.Controllers
             return View(viewmodel);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ConfirmTransaction(CheckOutViewModel checkOutViewModel, long TransactionHeaderId)
@@ -274,12 +280,14 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("TransactionSubmitted");
         }
 
+        [Authorize]
         public ActionResult TransactionSubmitted(long TransactionId)
         {
             //Page untuk menampilkan bahwa transaksi sudah berhasil. Menampilkan nomor rekening untuk customer bisa transfer
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CancelCheckOut(long TransactionHeaderId)
@@ -307,6 +315,7 @@ namespace eCommerce.Web.Controllers
         #endregion
 
         #region Payment Confirmation
+        [Authorize]
         public ActionResult PaymentConfirmation(long TransactionHeaderId)
         {
             //Page untuk customer mengisi form konfirmasi pembayaran
@@ -332,6 +341,7 @@ namespace eCommerce.Web.Controllers
             return View(model);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult PaymentConfirmation(KonfirmasiPembayaran konfirmasiPembayaran, IFormFile upload)
@@ -339,9 +349,9 @@ namespace eCommerce.Web.Controllers
             //Action untuk submit konfirmasi pembayaran
             try
             {
-                var filePathAndName = Path.Combine(environment.WebRootPath, "BuktiTransfer", upload.FileName);
                 if (upload != null)
                 {
+                    var filePathAndName = Path.Combine(environment.WebRootPath, "BuktiTransfer", upload.FileName);
                     using (var stream = new FileStream(filePathAndName, FileMode.Create))
                     {
                         upload.CopyTo(stream);

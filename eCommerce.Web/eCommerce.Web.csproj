@@ -117,7 +117,6 @@
     <Content Include="wwwroot\js\template.js" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="jquery.datatables" Version="1.10.15" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
@@ -154,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\AdminProduct\" />
+    <Folder Include="Views\AdminTransaction\Components\PaymentList\" />
     <Folder Include="Views\Shared\Components\CategoryList\" />
     <Folder Include="wwwroot\BuktiTransfer\" />
   </ItemGroup>

@@ -1,0 +1,53 @@
+@model eCommerce.Web.Models.AdminTransaction.ManagePaymentViewModel
+
+<table class="table table-bordered table-responsive table-hover">
+    <thead>
+        <tr>
+            <td>Order Id</td>
+            <td>Total Amount</td>
+            <td>Transfer to Bank</td>
+            <td>Account Name</td>
+            <td>Account Number</td>
+            <td>Transfered Amount</td>
+            <td>Approve</td>
+            <td>Reject</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.konfirmasiPembayaran)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.TransactionHeader.Code)</td>
+                <td>Rp. @Html.DisplayFor(modelItem => item.TransactionHeader.TotalPrice)</td>
+                <td>@Html.DisplayFor(modelItem => item.Bank.Nama)</td>
+                <td>@Html.DisplayFor(modelItem => item.NamaPemilikRekening)</td>
+                <td>@Html.DisplayFor(modelItem => item.NoRekening)</td>
+                <td>Rp. @Html.DisplayFor(modelItem => item.NominalTransfer)</td>
+                <td>
+                    @using (Html.BeginForm("ValidatePaymentConfirmation", "AdminTransaction",
+                                            new { TransactionHeaderId = item.TransactionHeaderId, KonfirmasiPembayaranId = item.Id, Validation = true},
+                                            FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal"}))
+                    {
+                        <button type="submit" class="btn btn-primary">Approve</button>
+                    }
+                </td>
+                <td>
+                    @using (Html.BeginForm("ValidatePaymentConfirmation", "AdminTransaction",
+                                        new { TransactionHeaderId = item.TransactionHeaderId, KonfirmasiPembayaranId = item.Id, Validation = false },
+                                        FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
+                    {
+                        <div class="row">
+                            <div class="col-md-8">
+                                @Html.TextBox("Remarks", null, htmlAttributes: new { @class = "form-control", placeholder = "Enter remarks" })
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </div>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

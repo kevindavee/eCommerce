@@ -54,14 +54,9 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
-        public PartialViewResult PaymentList(DateTime? StartDate, DateTime? EndDate)
+        public IActionResult PaymentList(DateTime? StartDate, DateTime? EndDate)
         {
-            ManagePaymentViewModel viewModel = new ManagePaymentViewModel();
-
-            viewModel.konfirmasiPembayaran = konfirmasiPembayaranRepo.GetActiveList();
-            viewModel.transactionHeader = transactionHeaderRepo.GetTransactionsWaitingForApproval();
-
-            return PartialView("_PaymentList", viewModel);
+            return ViewComponent("PaymentList");
         }
 
         [HttpPost]
@@ -86,12 +81,27 @@ namespace eCommerce.Web.Controllers
 
         public PartialViewResult ShipmentList()
         {
-            return PartialView();
+            ManageShipmentViewModel viewmodel = new ManageShipmentViewModel();
+
+            viewmodel.ShippingDetails = shippingDetailsRepo.GetProcessedShippingDetails();
+
+            return PartialView(viewmodel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UpdateShippingStatus(long ShippingDetailsId, string TrackingNumber)
+        {
+            shippingDetailsRepo.UpdateTrackingNumber(ShippingDetailsId, TrackingNumber, Username);
+
+            return RedirectToAction("ManageShipment");
         }
 
         public ActionResult ManageBank()
         {
-            return View();
+            var model = bankRepo.GetAll();
+
+            return View(model);
         }
 
         public ActionResult AddBank()
@@ -103,11 +113,21 @@ namespace eCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddBank(Bank bank)
         {
+            if (bank.Id != 0)
+            {
+                bank.UpdatedBy = "Admin";
+                bank.UpdatedDate = DateTime.Today;
+
+            }
+            bankRepo.Save(bank);
+
             return RedirectToAction("ManageBank");
         }
 
         public ActionResult ManageShipper()
         {
+            var model = shipperRepo.GetAll();
+
             return View();
         }
 
@@ -120,6 +140,13 @@ namespace eCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddShipper(Shipper shipper)
         {
+            if (shipper.Id != 0)
+            {
+                shipper.UpdatedBy = "Admin";
+                shipper.UpdatedDate = DateTime.Today;
+
+            }
+            shipperRepo.Save(shipper);
             return RedirectToAction("ManageShipper");
         }
     }

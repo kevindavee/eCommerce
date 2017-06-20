@@ -266,8 +266,7 @@ namespace eCommerce.Logic.Services
         }
 
         /// <summary>
-        /// Proccess Confirmation. If payment confirmation is valid and the amount transfered has match the total price of the transaction, transaction will be flag as process and stock will be subtract.
-        /// If confirmation is rejected, this method only flag the payment confirmation that it has been validated
+        /// Proccess Confirmation. If payment confirmation is valid, transaction will be flag as process and stock will be subtract.
         /// </summary>
         /// <returns></returns>
         public bool ProcessConfirmation(long TransactionHeaderId, string Remarks, string Username, long KonfirmasiPembayaranId, bool Validation)
@@ -282,21 +281,15 @@ namespace eCommerce.Logic.Services
                     //If admin approve the payment confirmation
                     if (Validation != false)
                     {
-                        //Count transfered amount whether user had transfered requried payment amount
-                        var validTransfer = CheckTransferAmount(TransactionHeaderId);
-
                         //If user transfered enough amount of payment. Flag transaction to process, flag shipping to processed ,and subtract stock
-                        if (validTransfer)
+                        transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.ProcessTransaction, Username);
+                        shippingDetailsRepo.ProcessOrder(TransactionHeaderId, Username);
+
+                        var detail = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
+
+                        foreach (var item in detail)
                         {
-                            transactionHeaderRepo.ChangeStatus(TransactionHeaderId, TransactionStatus.ProcessTransaction, Username);
-                            shippingDetailsRepo.ProcessOrder(TransactionHeaderId, Username);
-
-                            var detail = transactionDetailRepo.GetByHeaderId(TransactionHeaderId);
-
-                            foreach (var item in detail)
-                            {
-                                stockRepo.SoldItem(item.ProductInstanceId, item.Quantity);
-                            }
+                            stockRepo.SoldItem(item.ProductInstanceId, item.Quantity);
                         }
 
                     }
@@ -342,21 +335,6 @@ namespace eCommerce.Logic.Services
                 }
             }
             return null;
-        }
-
-        private bool CheckTransferAmount(long TransactionHeaderId)
-        {
-            var totalPrice = transactionHeaderRepo.GetById(TransactionHeaderId).TotalPrice;
-            var transferedAmount = konfirmasiPembayaranRepo.GetAllTransferedAmountByHeaderId(TransactionHeaderId);
-
-            
-            if (transferedAmount < totalPrice)
-            {
-                return false;
-            }
-            
-
-            return true;
         }
     }
 }
