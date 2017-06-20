@@ -1,0 +1,21 @@
+@model IEnumerable<eCommerce.Core.CommerceClasses.Banks.Bank>
+
+<table class="table table-bordered table-hover table-responsive" id="myTable">
+    <thead>
+        <tr>
+            <td class="col-md-2"></td>
+            <td class="col-md-10">Bank Name</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-md-2">
+                    <a href="@Url.Action("AddBank", new { BankId = item.Id})" class="btn btn-primary">Edit</a>
+                </td>
+                <td class="col-md-10">@Html.DisplayFor(modelItem => item.Nama)</td>
+            </tr>
+        }
+    </tbody>
+</table>

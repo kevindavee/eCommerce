@@ -1,5 +1,6 @@
 ﻿using eCommerce.Commons;
 using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,9 @@ namespace eCommerce.DAL.Repositories.Transactions.ShippingDetailss
 
         public List<ShippingDetails> GetProcessedShippingDetails()
         {
-            var list = dbSet.Where(s => s.ShippingStatus == ShippingStatus.OrderProcessed).ToList();
+            var list = dbSet.Where(s => s.ShippingStatus == ShippingStatus.OrderProcessed)
+                            .Include(i => i.TransactionHeader)
+                            .Include(i => i.Shipper).ToList();
 
             return list;
         }
