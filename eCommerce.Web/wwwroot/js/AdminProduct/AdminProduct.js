@@ -28,3 +28,35 @@ function DetailsProductClick(Id) {
         $('#details-tab').tab('show');
     })
 }
+
+function DeleteProduct(Id) {
+    if (confirm("Are you sure?")) {
+        $.post(url + "DeleteProduct?id=" + Id, function (data) {
+            $('#tabManageProduct').html(data);
+        })
+    }
+}
+
+function ChangeOptions(Id, OptionNama) {
+    if (confirm("Are you sure?")) {
+        $.post(url + "ChangeOptions?id=" + Id, function (data) {
+            if (data == "1")
+            {
+
+            }
+            else
+            {
+                alert("error");
+            }
+        })
+    }
+}
+
+function SubmitProduct() {
+    if (confirm("Are you sure?")) {
+        $.post(url + "SubmitProduct", $('#formDetailsProduct').serialize(), function (data) {
+            $('#tabProductDetails').html(data);
+            $('#details-tab').tab('show');
+        })
+    }
+}
