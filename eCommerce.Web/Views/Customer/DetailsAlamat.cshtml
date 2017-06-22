@@ -1,7 +1,90 @@
 
 @{
     ViewData["Title"] = "DetailsAlamat";
+    Layout = "~/Views/Shared/_UserDashboard.cshtml";
 }
 
-<h2>DetailsAlamat</h2>
-
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                @*<h3>Profiles</h3>*@
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><i class="fa fa-bars"></i> Edit Address</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_content">
+                                <br />
+                                <form id="demo-form2" data-parsley-validate="" class="form-horizontal" novalidate="">
+                                    <div class="col-md-9 col-sm-9 col-xs-12">
+                                        @*address details*@
+                                        @*nama*@
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                                                Address Name
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" class="form-control col-md-6 col-xs-12">
+                                            </div>
+                                        </div>
+                                        @*address*@
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                                                Address
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" class="form-control col-md-6 col-xs-12">
+                                            </div>
+                                        </div>
+                                        @*city*@
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                                                City
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" class="form-control col-md-6 col-xs-12">
+                                            </div>
+                                        </div>
+                                        @*province*@
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                                                Province
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" class="form-control col-md-6 col-xs-12">
+                                            </div>
+                                        </div>
+                                        @*zipcode*@
+                                        <div class="form-group">
+                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                                                ZIP Code
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" class="form-control col-md-6 col-xs-12">
+                                            </div>
+                                        </div>
+                                        @*button*@
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-sm-offset-2 col-xs-12">
+                                                <button type="submit" class="btn btn-success">Submit</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>

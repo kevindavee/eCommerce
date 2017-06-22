@@ -1,7 +1,71 @@
 
 @{
     ViewData["Title"] = "DaftarAlamat";
+    Layout = "~/Views/Shared/_UserDashboard.cshtml";
 }
 
-<h2>DaftarAlamat</h2>
 
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            <div class="title_left">
+                @*<h3>Profiles</h3>*@
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2><i class="fa fa-bars"></i> Address</h2>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_content">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>City</th>
+                                        <th>Province</th>
+                                        <th>ZIP Code</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Home</td>
+                                        <td>Fake Road Street No.1</td>
+                                        <td>City 1</td>
+                                        <td>Province 1</td>
+                                        <td>10000</td>
+                                        <td>
+                                            <a onclick="" class="btn btn-primary">Edit</a>
+                                            <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Office</td>
+                                        <td>Fake Road Street No.2</td>
+                                        <td>City 1</td>
+                                        <td>Province 1</td>
+                                        <td>10000</td>
+                                        <td>
+                                            <a class="btn btn-primary">Edit</a>
+                                            <a href="" class="btn btn-danger" type="reset">Delete</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    
