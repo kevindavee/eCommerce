@@ -10,6 +10,8 @@ using eCommerce.Web.Models.AdminProduct;
 using eCommerce.DAL.Repositories.The_Products.Categories;
 using eCommerce.DAL.Repositories.BrandsAndCategories;
 using eCommerce.Core.CommerceClasses.Brands;
+using eCommerce.Core.CommerceClasses.The_Products.Products;
+using Microsoft.AspNetCore.Http;
 
 namespace eCommerce.Web.Controllers
 {
@@ -23,9 +25,12 @@ namespace eCommerce.Web.Controllers
         private OptionsRepo optionRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
+        private IHttpContextAccessor context;
+
+        private string UserName = "";
 
         public AdminProductController(BrandRepo _brandRepo, CategoryRepo _categoryRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo
-                                       , OptionsRepo _optionRepo, BrandAndCategoryRepo _brAndCatRepo)
+                                       , OptionsRepo _optionRepo, BrandAndCategoryRepo _brAndCatRepo, IHttpContextAccessor _context)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
@@ -34,6 +39,8 @@ namespace eCommerce.Web.Controllers
             categoryRepo = _categoryRepo;
             optionRepo = _optionRepo;
             brAndCatRepo = _brAndCatRepo;
+            context = _context;
+            UserName = context.HttpContext.User.Identity.Name;
         }
         public ActionResult Index()
         {
@@ -49,13 +56,22 @@ namespace eCommerce.Web.Controllers
             }
             return View(viewModel);
         }
-        public ActionResult ManageProduct()
+        public PartialViewResult ManageProduct()
         {
             //Page untuk melihat list of product
-            var productList = productRepo.GetAll();
+            var productList = productRepo.GetAllProduct().ToList();
 
-            return View(productList);
+            return PartialView(productList);
         }
+
+        public ActionResult DeleteProduct(long id = 0)
+        {
+            //Page untuk melihat list of product
+            productRepo.Delete(id);
+
+            return RedirectToAction("ManageProduct");
+        }
+
         public PartialViewResult ProductDetails(long id = 0)
         {
             var viewModel = new DetailsProductViewModel();
@@ -81,6 +97,22 @@ namespace eCommerce.Web.Controllers
             
             //Form untuk input product baru atau edit product
             return PartialView(viewModel);
+        }
+
+        public ActionResult SubmitProduct(DetailsProductViewModel model)
+        {
+            //Page untuk melihat list of product
+            var product = new Product();
+            product.Nama = model.Product.Nama;
+            product.Deskripsi = model.Product.Deskripsi;
+            product.CategoryId = model.Product.CategoryId;
+            product.BrandId = model.Product.BrandId;
+            product.CreatedBy = UserName;
+            product.UpdatedBy = UserName;
+
+            productRepo.Save(product);
+
+            return RedirectToAction("ProductDetails", new { id = product.Id });
         }
 
         public JsonResult GetSubCategory(long CategoryId = 0)
