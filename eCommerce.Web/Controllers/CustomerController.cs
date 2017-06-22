@@ -95,7 +95,7 @@ namespace eCommerce.Web.Controllers
             model.Alamat = alamatCustomer;
             //model.CustomerId =
 
-            return View();
+            return View("DetailsAlamat");
         }
 
         [HttpPost]
