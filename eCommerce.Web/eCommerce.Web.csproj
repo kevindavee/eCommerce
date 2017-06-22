@@ -163,7 +163,6 @@
     <ProjectReference Include="..\eCommerce.Logic\eCommerce.Logic.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Views\AdminProduct\" />
     <Folder Include="Views\AdminTransaction\Components\BankList\" />
     <Folder Include="Views\AdminTransaction\Components\ShipperList\" />
     <Folder Include="Views\AdminTransaction\Components\ShippingList\" />

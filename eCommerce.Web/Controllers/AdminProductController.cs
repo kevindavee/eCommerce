@@ -12,6 +12,7 @@ using eCommerce.DAL.Repositories.BrandsAndCategories;
 using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using Microsoft.AspNetCore.Http;
+using eCommerce.Core.CommerceClasses.The_Products.Categories;
 
 namespace eCommerce.Web.Controllers
 {
@@ -150,6 +151,56 @@ namespace eCommerce.Web.Controllers
         {
             //Form untuk input product baru atau edit product
             return View();
+        }
+
+        public ActionResult ManageCategory()
+        {
+            return View();
+        }
+
+        public IActionResult CategoryList()
+        {
+            return ViewComponent("CategoryList");
+        }
+
+        public ActionResult AddEditCategory(long CategoryId = 0)
+        {
+            var parent = new List<Category>();
+            parent = categoryRepo.GetAll().Where(s => s.ParentId == null).ToList();
+            parent.Insert(0, new Category { Id = 0, Nama = "No Parent Category" });
+
+            ViewBag.Parent = parent;
+            Category category;
+            if (CategoryId == 0)
+            {
+                category = new Category();
+            }
+            else
+            {
+                category = categoryRepo.GetById(CategoryId);
+            }
+
+            return View(category);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditCategory(Category category)
+        {
+            if (category.Id != 0)
+            {
+                category.UpdatedBy = "Admin";
+                category.UpdatedDate = DateTime.Today;
+            }
+
+            if (category.ParentId == 0)
+            {
+                category.ParentId = null;
+            }
+
+            categoryRepo.Save(category);
+
+            return RedirectToAction("ManageCategory");
         }
 
         

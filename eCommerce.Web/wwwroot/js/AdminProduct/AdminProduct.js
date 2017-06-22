@@ -60,3 +60,15 @@ function SubmitProduct() {
         })
     }
 }
+
+$(document).ready(function () {
+    $('.btn-category').on('click', function () {
+        var parentId = parseInt($(this).val());
+
+        var displaySubCategoryTableId = '#table-subcategory-' + parentId;
+
+        $('.table-subcategory').css('display', 'none');
+        $(displaySubCategoryTableId).css('display', '');
+
+    });
+});

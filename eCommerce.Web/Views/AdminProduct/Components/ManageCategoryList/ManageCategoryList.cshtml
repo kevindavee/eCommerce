@@ -1,0 +1,55 @@
+@model eCommerce.Web.Models.AdminProduct.CategoryListViewModel
+
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="table table-responsive table-bordered table-hover">
+            <thead>
+                <tr>
+                    <td><b>Category Name</b></td>
+                    <td><b>Details</b></td>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Category.Where(s => s.ParentId == null).OrderBy(o => o.Nama))
+                {
+                    <tr>
+                        <td>@item.Nama</td>
+                        <td>
+                            <button type="button" class="btn btn-info btn-category" value="@item.Id">Details</button>
+                        </td>
+                        <td>
+                            <a href="@Url.Action("AddEditCategory", "AdminProduct", new { CategoryId = item.Id})" class="btn btn-primary">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-6">
+        @foreach (var item in Model.SubCategoryParentIdList)
+        {
+            <table class="table table-responsive table-bordered table-hover table-subcategory" style="display:none;" id="table-subcategory-@item">
+                <thead>
+                    <tr>
+                        <td><b>@Model.Category.Where(s => s.Id == item).SingleOrDefault().Nama - SubCategory Name</b></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var subcategory in Model.Category.Where(s => s.ParentId == item))
+                    {
+                        <tr>
+                            <td>@subcategory.Nama</td>
+                            <td>
+                                <a href="@Url.Action("AddEditCategory", "AdminProduct", new { CategoryId = subcategory.Id})" class="btn btn-primary">Edit</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            
+        }
+    </div>
+</div>
