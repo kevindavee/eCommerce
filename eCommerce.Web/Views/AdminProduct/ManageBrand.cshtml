@@ -1,0 +1,26 @@
+
+@{
+    ViewData["Title"] = "ManageBrand";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><i class="fa fa-bars"></i> Manage Brand</h2>
+                        <a href="@Url.Action("AddEditBrand", "AdminProduct", new { BrandId = 0})" class="btn btn-primary pull-right">Add new</a>
+                        <div class="clearfix"></div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="x_content">
+                        @await Component.InvokeAsync("ManageBrandList")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

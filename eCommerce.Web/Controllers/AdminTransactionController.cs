@@ -49,6 +49,7 @@ namespace eCommerce.Web.Controllers
             Username = context.HttpContext.User.Identity.Name;
         }
 
+        #region Payment Confirmation
         public ActionResult ManagePayment()
         {
             return View();
@@ -74,6 +75,9 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("ManagePayment");
         }
 
+        #endregion
+
+        #region Shipping details
         public ActionResult ManageShipment()
         {
             return View();
@@ -92,7 +96,9 @@ namespace eCommerce.Web.Controllers
 
             return RedirectToAction("ManageShipment");
         }
+        #endregion
 
+        #region Bank
         public ActionResult ManageBank()
         {
             var model = bankRepo.GetAll();
@@ -130,6 +136,9 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("ManageBank");
         }
 
+        #endregion
+
+        #region Shipper
         public ActionResult ManageShipper()
         {
             var model = shipperRepo.GetAll();
@@ -165,5 +174,7 @@ namespace eCommerce.Web.Controllers
             shipperRepo.Save(shipper);
             return RedirectToAction("ManageShipper");
         }
+
+        #endregion
     }
 }

@@ -57,6 +57,7 @@ namespace eCommerce.Web.Controllers
             }
             return View(viewModel);
         }
+
         public PartialViewResult ManageProduct()
         {
             //Page untuk melihat list of product
@@ -153,6 +154,7 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
+        #region Category
         public ActionResult ManageCategory()
         {
             return View();
@@ -160,7 +162,7 @@ namespace eCommerce.Web.Controllers
 
         public IActionResult CategoryList()
         {
-            return ViewComponent("CategoryList");
+            return ViewComponent("ManageCategoryList");
         }
 
         public ActionResult AddEditCategory(long CategoryId = 0)
@@ -202,7 +204,45 @@ namespace eCommerce.Web.Controllers
 
             return RedirectToAction("ManageCategory");
         }
+        #endregion
 
-        
+        public ActionResult ManageBrand()
+        {
+            return View();
+        }
+
+        public IActionResult BrandList()
+        {
+            return ViewComponent("ManageBrandList");
+        }
+
+        public ActionResult AddEditBrand(long BrandId = 0)
+        {
+            Brand brand;
+            if (BrandId == 0)
+            {
+                brand = new Brand();
+            }
+            else
+            {
+                brand = brandRepo.GetById(BrandId);
+            }
+            return View(brand);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditBrand(Brand brand)
+        {
+            if (brand.Id != 0)
+            {
+                brand.UpdatedBy = "Admin";
+                brand.UpdatedDate = DateTime.Today;
+            }
+
+            brandRepo.Save(brand);
+            return RedirectToAction("ManageBrand");
+        }
+
     }
 }

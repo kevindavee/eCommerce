@@ -71,4 +71,19 @@ $(document).ready(function () {
         $(displaySubCategoryTableId).css('display', '');
 
     });
+
+    $('#btn-submit-brand, #btn-submit-category').on('click', function myfunction(e) {
+        var allFieldValid = true;
+
+        $('.brand-field, .category-field').each(function () {
+            if ($(this).val() === '') {
+                allFieldValid = false;
+            }
+        });
+
+        if (!allFieldValid) {
+            e.preventDefault();
+            alert("Please enter all required field !");
+        }
+    })
 });
