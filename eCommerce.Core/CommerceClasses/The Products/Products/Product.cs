@@ -15,6 +15,9 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
         public string Nama { get; set; } = "";
         public string Deskripsi { get; set; } = "";
         public long BrandId { get; set; } = 0;
+        public decimal DefaultPrice { get; set; } = 0;
+        public bool WarnaOption { get; set; } = false;
+        public bool SizeOption { get; set; } = false;
         public float Rating { get; set; } = 0;
         public long RatingCount { get; set; } = 0;
         public bool IsAvailable { get; set; } = true;

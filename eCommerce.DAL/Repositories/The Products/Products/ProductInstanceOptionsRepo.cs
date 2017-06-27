@@ -23,6 +23,21 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
             dbSetOptValue = context.Set<OptionValue>();
         }
 
+        public IEnumerable<ProductInstanceOptions> GetByProductInstanceIdAndOptionId(long productInstanceId, long OptionId)
+        {
+            return dbSet.Where(i => i.ProductInstanceId == productInstanceId && i.OptionValue.OptionsId == OptionId);
+        }
+        public IEnumerable<ProductInstanceOptions> GetByProductInstanceId(long productInstanceId)
+        {
+            return dbSet.Where(i => i.ProductInstanceId == productInstanceId);
+        }
+
+        public void DeleteListProductInstanceOptions(List<ProductInstanceOptions> listInstanceOptions)
+        {
+            dbSet.RemoveRange(listInstanceOptions);
+            context.SaveChanges();
+        }
+
         public long GetPriceByFilter(long productId, string optValueWarna, string optValueUkuran, string parentCategory)
         {
             var listProductInstanceId = dbSet.Where(j => j.ProductInstance.ProductId == productId)
