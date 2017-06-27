@@ -12,6 +12,15 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         {
             
         }
+        public IEnumerable<ProductInstance> GetByProductId(long productId)
+        {
+            return dbSet.Where(i => i.ProductId == productId);
+        }
+        public void DeleteList(List<ProductInstance> list)
+        {
+            dbSet.RemoveRange(list);
+            context.SaveChanges();
+        }
         public decimal GetPriceForProductList(long productId)
         {
             decimal price;

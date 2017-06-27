@@ -78,6 +78,10 @@ namespace eCommerce.Web.Controllers
         {
             var viewModel = new DetailsProductViewModel();
             var product = productRepo.GetByIdIncludeCat(id);
+            if(product == null)
+            {
+                product = new Product();
+            }
             viewModel.Product = product;
             if(product.Category != null)
             {
@@ -94,7 +98,22 @@ namespace eCommerce.Web.Controllers
             var listOption = optionRepo.GetAll();
             foreach (var item in listOption)
             {
-                viewModel.listOptions.Add(new OptionListViewModel { Options = item });
+                var check = false;
+                if(item.OptionName == "Size")
+                {
+                    if(product.SizeOption == true)
+                    {
+                        check = true;
+                    }
+                }
+                else if(item.OptionName == "Warna")
+                {
+                    if (product.WarnaOption == true)
+                    {
+                        check = true;
+                    }
+                }
+                viewModel.listOptions.Add(new OptionListViewModel { Options = item, Selected = check });
             }
             
             //Form untuk input product baru atau edit product
@@ -104,10 +123,15 @@ namespace eCommerce.Web.Controllers
         public ActionResult SubmitProduct(DetailsProductViewModel model)
         {
             //Page untuk melihat list of product
-            var product = new Product();
+            var product = productRepo.GetById(model.Product.Id);
+            if(product == null)
+            {
+                product = new Product();
+            }
             product.Nama = model.Product.Nama;
             product.Deskripsi = model.Product.Deskripsi;
             product.CategoryId = model.Product.CategoryId;
+            product.DefaultPrice = model.Product.DefaultPrice;
             product.BrandId = model.Product.BrandId;
             product.CreatedBy = UserName;
             product.UpdatedBy = UserName;
@@ -115,6 +139,88 @@ namespace eCommerce.Web.Controllers
             productRepo.Save(product);
 
             return RedirectToAction("ProductDetails", new { id = product.Id });
+        }
+
+        public string ChangeOptions(long productId, long id, bool check)
+        {
+            try
+            {
+                var option = optionRepo.GetById(id);
+                var product = productRepo.GetById(productId);
+                if (product == null)
+                {
+                    return "Save Product First!!";
+                }
+                if(option.OptionName == "Warna")
+                {
+                    if(check == true)
+                    {
+                        product.WarnaOption = true;
+                    }
+                    else
+                    {
+                        product.WarnaOption = false;
+                    }
+                }
+                else if(option.OptionName == "Size")
+                {
+                    if(check == true)
+                    {
+                        product.SizeOption = true;
+                    }
+                    else
+                    {
+                        product.SizeOption = false;
+                    }
+                }
+                productRepo.Save(product);
+                var productInstanceList = productInstanceRepo.GetByProductId(product.Id).ToList();
+                var deleteProductInstanceList = new List<ProductInstance>();
+                foreach (var item in productInstanceList)
+                {
+                    var productInstanceOptionsList = productInstanceOptionsRepo.GetByProductInstanceIdAndOptionId(item.Id, option.Id).ToList();
+                    if(productInstanceOptionsList.Count() > 0)
+                    {
+                        productInstanceOptionsRepo.DeleteListProductInstanceOptions(productInstanceOptionsList);
+                    }
+                    productInstanceOptionsList = productInstanceOptionsRepo.GetByProductInstanceId(item.Id).ToList();
+                    if (productInstanceOptionsList.Count() == 0)
+                    {
+                        deleteProductInstanceList.Add(item);
+                    }
+                }
+                if(deleteProductInstanceList.Count() > 0)
+                {
+                    productInstanceRepo.DeleteList(deleteProductInstanceList);
+                }
+                //lanjut disini
+                return "1";
+            }
+            catch (Exception ex)
+            {
+
+                return ex.Message;
+            }
+            //Page untuk melihat list of product
+            
+        }
+
+        public JsonResult ListCheckedOption(long id = 0)
+        {
+
+            var product = productRepo.GetById(id);
+            if(product == null)
+            {
+                product = new Product();
+            }
+            var listCheck = new List<bool>();
+
+            listCheck.Add(product.WarnaOption);
+            listCheck.Add(product.SizeOption);
+
+            var result = new { checkedList = listCheck };
+
+            return Json(result);
         }
 
         public JsonResult GetSubCategory(long CategoryId = 0)

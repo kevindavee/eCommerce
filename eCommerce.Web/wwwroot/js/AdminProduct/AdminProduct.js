@@ -25,6 +25,17 @@ function GetBrandListByCategory(subCategoryId, brandId) {
 function DetailsProductClick(Id) {
     $.get(url + "ProductDetails?id=" + Id, function (data) {
         $('#tabProductDetails').html(data);
+        $.getJSON(url + "ListCheckedOption?id=" + Id, function (data) {
+                //lanjut disini
+            if (data.checkedList[0] === true)
+            {
+                $("#warnaHidden").removeClass("hide");
+            }
+            if (data.checkedList[1] === true)
+            {
+                $("#sizeHidden").removeClass("hide");
+            }
+        })
         $('#details-tab').tab('show');
     })
 }
@@ -37,16 +48,35 @@ function DeleteProduct(Id) {
     }
 }
 
-function ChangeOptions(Id, OptionNama) {
+function ChangeOptions(productId, Id, OptionNama) {
     if (confirm("Are you sure?")) {
-        $.post(url + "ChangeOptions?id=" + Id, function (data) {
-            if (data == "1")
+        $.post(url + "ChangeOptions?productId=" + productId + "&id=" + Id + "&check=" + document.getElementById(Id).checked, function (data) {
+            if (data === "1")
             {
-
+                
+                if (OptionNama === 'Warna')
+                {
+                    if (document.getElementById(Id).checked === true) {
+                        $("#warnaHidden").removeClass("hide");
+                    }
+                    else
+                    {
+                        $("#warnaHidden").addClass("hide");
+                    }
+                }
+                else
+                {
+                    if (document.getElementById(Id).checked === true) {
+                        $("#sizeHidden").removeClass("hide");
+                    }
+                    else {
+                        $("#sizeHidden").addClass("hide");
+                    }
+                }
             }
             else
             {
-                alert("error");
+                alert(data);
             }
         })
     }
