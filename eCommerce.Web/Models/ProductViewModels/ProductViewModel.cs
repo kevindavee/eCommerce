@@ -25,6 +25,8 @@ namespace eCommerce.Web.Models.ProductViewModels
     {
         public Product Product { get; set; }
 
+        public string PictureLocation { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal Price { get; set; }
     }

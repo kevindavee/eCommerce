@@ -8,7 +8,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Products Listing (4 Columns)</h1>
+                <h1>Products List</h1>
             </div>
         </div>
     </div>
@@ -23,10 +23,10 @@
                     <div class="row"></div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
                         <select class=" form-control" id="dropdown-sort">
-                            <option value="0">All</option>
-                            <option value="1">Most Seen</option>
-                            <option value="2">Lowest Price</option>
-                            <option value="3">Highest Price</option>
+                            <option value="All">All</option>
+                            <option value="Top Rating">Top Rating</option>
+                            <option value="Lowest Price">Lowest Price</option>
+                            <option value="Highest Price">Highest Price</option>
                         </select>
                     </div>
                     <div class="row"></div>
@@ -53,11 +53,15 @@
                     <label class="col-md-12 control-label">Brand:</label>
                     <div class="row"></div>
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <select class=" form-control" id="dropdown-sort">
-                            <option value="0">All</option>
-                            <option value="1">Sony</option>
-                            <option value="2">Xiaomi</option>
+                        <select class=" form-control" id="dropdown-brand">
+                            @foreach (var item in Model.BrandList.Distinct())
+                            {
+                                <option value="@item.Id">@item.Nama</option>
+                            }
+                            @*<option value="1">Sony</option>
+                            <option value="2">Xiaomi</option>*@
                         </select>
+                        @Html.HiddenFor(j =>j.CategoryId, new { @id = "hiddenCategoryIdBrandList" })
                     </div>
                     <div class="row"></div>
                 </div>
@@ -81,7 +85,7 @@
                 @*button*@
                 <div class="form-group">
                     <div class="col-md-12 col-sm-12 col-xs-12">
-                        <a class="btn btn-md col-md-12">Update <span class="fa fa-refresh"></span></a>
+                        <a class="btn btn-md col-md-12" id="btn-search">Update <span class="fa fa-refresh"></span></a>
                     </div>
 
                 </div>

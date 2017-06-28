@@ -107,6 +107,7 @@
     <Content Include="wwwroot\js\bootstrap.min.js" />
     <Content Include="wwwroot\js\custom.js" />
     <Content Include="wwwroot\js\custom.min.js" />
+    <Content Include="wwwroot\js\Customer\Customer.js" />
     <Content Include="wwwroot\js\Custom\initialize-datatable.js" />
     <Content Include="wwwroot\js\Custom\product-jquery.js" />
     <Content Include="wwwroot\js\Custom\transaction-jquery.js" />
@@ -124,7 +125,11 @@
     <Content Include="wwwroot\js\main-menu.js" />
     <Content Include="wwwroot\js\modernizr-2.6.2-respond-1.1.0.min.js" />
     <Content Include="wwwroot\js\nprogress.js" />
+    <Content Include="wwwroot\js\Product\jquery.bxslider.js" />
+    <Content Include="wwwroot\js\Product\jquery.flexisel.js" />
+    <Content Include="wwwroot\js\Product\jquery.flexslider.js" />
     <Content Include="wwwroot\js\Product\Product.js" />
+    <Content Include="wwwroot\js\Product\responsiveslides.min.js" />
     <Content Include="wwwroot\js\template.js" />
   </ItemGroup>
   <ItemGroup>

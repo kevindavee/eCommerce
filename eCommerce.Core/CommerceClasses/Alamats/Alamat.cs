@@ -14,6 +14,8 @@ namespace eCommerce.Core.CommerceClasses.Alamats
         public string Kota { get; set; } = "";
         public string Provinsi { get; set; } = "";
         public int KodePos { get; set; } = 0;
+        public bool Deleted { get; set; } = false;
+
 
         public virtual Customer Customer { get; set; }
     }

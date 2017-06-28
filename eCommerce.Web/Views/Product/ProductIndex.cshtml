@@ -10,7 +10,8 @@
             <!-- Product Image -->
             <div class="shop-item-image">
                 <a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">
-                    <img src="~/images/product6.jpg" />
+                    @*<img src="~/images/product6.jpg" />*@
+                    <img src="@Url.Content(item.PictureLocation)" alt="IMAGES" />
                     @*@if (item.Product.ProductImage != null)
                         {
                              @item.Product.ProductImage.FirstOrDefault()

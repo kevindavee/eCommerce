@@ -98,15 +98,9 @@ namespace eCommerce.Web.Controllers
         public IEnumerable<ProductListViewModel> ProductList(long CategoryId = 0, string sort = "")
         {
             var listProduct = new List<ProductListViewModel>();
-            var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
-            switch (sort)
-            {
-                case "Top Rating":
-                    productList.OrderByDescending(j => j.Rating);
-                    break;
-                default:
-                    break;
-            }
+            //var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
+            var productList = productRepo.GetByCategoryIncludeImage(CategoryId);
+
 
 
             foreach (var item in productList)
@@ -114,8 +108,24 @@ namespace eCommerce.Web.Controllers
                 listProduct.Add(new ProductListViewModel
                 {
                     Product = item,
-                    Price = productInstanceRepo.GetPriceForProductList(item.Id)
+                    Price = productInstanceRepo.GetPriceForProductList(item.Id),
+                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/images/product6.jpg")
                 });
+            }
+
+            switch (sort)
+            {
+                case "Top Rating":
+                    listProduct = listProduct.OrderByDescending(j => j.Product.Rating).ToList();
+                    break;
+                case "Lowest Price":
+                    listProduct = listProduct.OrderBy(j => j.Price).ToList();
+                    break;
+                case "Highest Price":
+                    listProduct = listProduct.OrderByDescending(j => j.Price).ToList();
+                    break;
+                default:
+                    break;
             }
 
             return listProduct;

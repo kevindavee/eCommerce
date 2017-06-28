@@ -42,7 +42,7 @@ $(document).ready(function () {
 
 
 function GetFilterFieldValue() {
-    var sort = parseInt($('#dropdown-sort').val());
+    var sort = $('#dropdown-sort').val();
     var MinHarga = null;
     var MaxHarga = null;
     var brandId = parseInt($('#dropdown-brand').val());

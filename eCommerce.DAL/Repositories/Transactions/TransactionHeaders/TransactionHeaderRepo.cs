@@ -128,5 +128,27 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
             return code;
         }
 
+        public List<TransactionHeader> GetTransactionsHistory(long CustomerId)
+        {
+            var result = dbSet.Where(j => j.CustomerId == CustomerId && j.CurrentStatus == TransactionStatus.PaymentConfirmation && j.LastStatus == TransactionStatus.CheckedOut)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
+                              .Include(i => i.ShippingDetails)
+                              .ToList();
+
+            return result;
+        }
+        public TransactionHeader GetDetailsTransactionsHistory(long TransactionHeaderId)
+        {
+            var result = dbSet.Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
+                              .Include(i => i.Customer)
+                              .Include(i => i.ShippingDetails)
+                              .FirstOrDefault(f => f.Id == TransactionHeaderId);
+
+
+            return result;
+        }
+
     }
 }

@@ -22,5 +22,9 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         {
             return dbSet.Where(i => i.Id == id).Include(i => i.Category).FirstOrDefault();
         }
+        public List<Product> GetByCategoryIncludeImage(long CategoryId)
+        {
+            return dbSet.Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).Include(i => i.ProductImage).ToList();
+        }
     }
 }

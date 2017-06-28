@@ -14,7 +14,7 @@ namespace eCommerce.DAL.Repositories.Alamats
 
         public List<Alamat> GetAlamatForCurrentCustomer(long CustomerId)
         {
-            return dbSet.Where(s => s.CustomerId == CustomerId).ToList();
+            return dbSet.Where(s => s.CustomerId == CustomerId && !s.Deleted).ToList();
         }
     }
 }
