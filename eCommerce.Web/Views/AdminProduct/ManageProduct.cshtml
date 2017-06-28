@@ -27,7 +27,7 @@
                             <td>@item.Nama</td>
                             <td>@item.Category.Nama</td>
                             <td>@item.Brand.Nama</td>
-                            <td>@*@item.ProductInstance.FirstOrDefault().Price*@</td>
+                            <td>@item.DefaultPrice</td>
                             <td>
                                 @if(item.IsAvailable == true)
                                 {

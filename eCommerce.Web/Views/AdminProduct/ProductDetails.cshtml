@@ -25,6 +25,7 @@
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         @*<input type="text" id="nama-barang" class="form-control col-md-6 col-xs-12">*@
                         @Html.TextBoxFor(e => e.Product.Nama, new { @id = "namabarangDetails", @class = "form-control col-md-6 col-xs-12" })
+                        @Html.HiddenFor(e => e.Product.Id)
                     </div>
                 </div>
                 <!--nama barang end-->
@@ -92,7 +93,7 @@
                         @for (var i = 0; i < Model.listOptions.Count; i++)
                         {
                             <div class="col-md-1">
-                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @class = "", @onchange="ChangeOptions(" + Model.listOptions[i].Options.Id + ", '" + Model.listOptions[i].Options.OptionName + "')" })
+                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @id="" + Model.listOptions[i].Options.Id + "", @class = "", @onchange="ChangeOptions(" + Model.Product.Id +"," + Model.listOptions[i].Options.Id + ", '" + Model.listOptions[i].Options.OptionName + "')" })
                             </div>
                             <div class="col-md-2">
                                 @Model.listOptions[i].Options.OptionName
@@ -123,24 +124,23 @@
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
                         @*<input type="text" id="harga-barang" class="form-control col-md-6 col-xs-12">*@
-                        @Html.TextBoxFor(i => i.DefaultPrice, new { @class= "form-control col-md-6 col-xs-12" })
+                        @Html.TextBoxFor(i => i.Product.DefaultPrice, new { @class= "form-control col-md-6 col-xs-12" })
                     </div>
                 </div>
                 <!--harga end-->
                 <!--status-->
-                <div class="form-group">
+                @*<div class="form-group">
                     <label class="control-label col-md-2 col-sm-2 col-xs-12">
                         Status
                     </label>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        <!-- ganti dropdown pake razor -->
                         <select class="form-control">
                             <option>Choose option</option>
                             <option value="1">Tersedia</option>
                             <option value="0">Tidak Tersedia</option>
                         </select>
                     </div>
-                </div>
+                </div>*@
                 <!--status end-->
                 <!--deskripsi-->
                 <div class="form-group">
@@ -152,23 +152,40 @@
                         @Html.TextAreaFor(i => i.Product.Deskripsi, new { @class= "form-control", @rows= "6" })
                     </div>
                 </div>
-                <div class="form-group hide">
+                @*<div id="warnaList" class="form-group">
                     <label class="control-label col-md-2 col-sm-2 col-xs-12">
                         Warna
+                    </label>
+                </div>*@
+                <div id="warnaHidden" class="form-group hide">
+                    <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                        Warna
+                    </label>
+                    <div class="col-md-3 col-sm-3 col-xs-12">
+                        @*<textarea class="form-control" rows="6"></textarea>*@
+                        @Html.TextBox("warna", "", new { @id = "TBWarnaId", @class = "form-control" })
+                    </div>
+                    <div class="col-md-2 col-sm-2 col-xs-10">
+                        <input type="button" class="btn" value="Add" onclick=""/>
+                    </div>
+                </div>
+                <div id="sizeHidden" class="form-group hide">
+                    <label class="control-label col-md-2 col-sm-2 col-xs-12">
+                        Size
                     </label>
                     <div class="col-md-3 col-sm-3 col-xs-12">
                         @*<textarea class="form-control" rows="6"></textarea>*@
                         @Html.TextBox("size", "", new { @id = "TBSizeId", @class = "form-control" })
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-10">
-                        <input type="button" class="btn" value="Add" onclick=""/>
+                        <input type="button" class="btn" value="Add" onclick="" />
                     </div>
                 </div>
                 <!--deskripsi end-->
                 <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                         <button class="btn btn-primary" type="button">Cancel</button>
-                        <button class="btn btn-primary" type="reset">Reset</button>
+                        <button class="btn btn-primary" onclick="DetailsProductClick(0)" type="reset">Reset</button>
                         <button type="submit" class="btn btn-success" onclick="SubmitProduct()">Submit</button>
                     </div>
                 </div>
