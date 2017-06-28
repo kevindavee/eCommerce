@@ -73,7 +73,7 @@ namespace eCommerce.Web.Controllers
         }
 
         public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0,
-                                              int PageIndex = 0, int TotalPage = 0, int PageSize = 16)
+                                              int PageIndex = 0, int PageSize = 16)
         {
             ProductPartialPagingViewModel model = new ProductPartialPagingViewModel();
             //Partial view untuk refresh list of product
@@ -86,7 +86,7 @@ namespace eCommerce.Web.Controllers
             model.TotalPage = (int)Math.Ceiling(totalPage);
             model.ProductList = list.Skip(PageIndex * PageSize).Take(PageSize).ToList();
 
-            return PartialView(list);
+            return PartialView(model);
         }
 
         public ActionResult Detail(long ProductId)

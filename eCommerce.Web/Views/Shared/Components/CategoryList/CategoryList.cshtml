@@ -1,21 +1,19 @@
 @model IEnumerable<eCommerce.Core.CommerceClasses.The_Products.Categories.Category>
 
 @foreach (var item in Model)
-{
-    <div>
-        <h4>
-            @if (item.ParentId == null)
-            {
-                var HeaderNama = item.Nama;
-                @HeaderNama
-            }
-        </h4>
-        <ul>
-            @foreach (var item1 in Model.Where(j => j.ParentId == item.Id).OrderBy(o => o.Nama))
-            {
-                <li><a href="~/Product/Index?CategoryId=@item1.Id">@item1.Nama</a></li>
-            }
-        </ul>
-    </div>
-
+{ 
+    @if (item.ParentId == null)
+    {
+        <div>
+            <h4>
+                @item.Nama
+            </h4>
+            <ul>
+                @foreach (var item1 in Model.Where(j => j.ParentId == item.Id).OrderBy(o => o.Nama))
+                {
+                    <li><a href="~/Product/Index?CategoryId=@item1.Id">@item1.Nama</a></li>
+                }
+            </ul>
+        </div>
+    }
 }

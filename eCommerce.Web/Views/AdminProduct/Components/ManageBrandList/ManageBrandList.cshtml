@@ -4,7 +4,8 @@
     <thead>
         <tr>
             <td class="col-md-2"></td>
-            <td class="col-md-10">Brand Name</td>
+            <td class="col-md-2"></td>
+            <td class="col-md-8">Brand Name</td>
         </tr>
     </thead>
     <tbody>
@@ -14,7 +15,10 @@
                 <td class="col-md-2">
                     <a href="@Url.Action("AddEditBrand", "AdminProduct", new { BrandId = item.Id})" class="btn btn-primary">Edit</a>
                 </td>
-                <td class="col-md-10">@Html.DisplayFor(modelItem => item.Nama)</td>
+                <td class="col-md-2">
+                    <a href="@Url.Action("BrandDetail", "AdminProduct", new { BrandId = item.Id})" class="btn btn-primary">Details</a>
+                </td>
+                <td class="col-md-8">@Html.DisplayFor(modelItem => item.Nama)</td>
             </tr>
         }
     </tbody>

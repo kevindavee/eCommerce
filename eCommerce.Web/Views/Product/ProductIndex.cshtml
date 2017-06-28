@@ -1,9 +1,12 @@
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@model List<eCommerce.Web.Models.ProductViewModels.ProductListViewModel>
-@foreach (var item in Model)
-            {
+@model eCommerce.Web.Models.ProductViewModels.ProductPartialPagingViewModel
+
+@Html.Hidden("PageIndex", Model.PageIndex)
+@Html.Hidden("TotalPage", Model.TotalPage)
+@foreach (var item in Model.ProductList)
+{
     <div class="col-md-3 col-sm-6">
         <!-- Product -->
         <div class="shop-item">

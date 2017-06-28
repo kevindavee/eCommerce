@@ -13,6 +13,7 @@ using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using Microsoft.AspNetCore.Http;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
+using eCommerce.Core.CommerceClasses.BrandsAndCategories;
 
 namespace eCommerce.Web.Controllers
 {
@@ -312,6 +313,7 @@ namespace eCommerce.Web.Controllers
         }
         #endregion
 
+        #region Brand
         public ActionResult ManageBrand()
         {
             return View();
@@ -348,6 +350,55 @@ namespace eCommerce.Web.Controllers
 
             brandRepo.Save(brand);
             return RedirectToAction("ManageBrand");
+        }
+
+        public ActionResult BrandDetail(long BrandId)
+        {
+            BrandCategoryViewModel viewmodel = new BrandCategoryViewModel();
+
+            var parent = new List<Category>();
+            parent = categoryRepo.GetAll().Where(s => s.ParentId == null).ToList();
+            parent.Insert(0, new Category { Id = 0, Nama = "Choose Parent Category" });
+
+            ViewBag.Parent = parent;
+
+            viewmodel.Brand = brandRepo.GetById(BrandId);
+            viewmodel.Categories = brAndCatRepo.GetCategoriesByBrandId(BrandId);
+            
+            return View(viewmodel);
+        }
+
+        #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddBrandCategory(long CategoryId, long BrandId)
+        {
+            BrandAndCategory brandcategory = new BrandAndCategory();
+            brandcategory.CategoryId = CategoryId;
+            brandcategory.BrandId = BrandId;
+
+            var result = brAndCatRepo.Save(brandcategory);
+
+            if (!result)
+            {
+                ViewData["Message"] = "You already add this category before !";
+            }
+
+            return RedirectToAction("BrandDetail", new { BrandId = BrandId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteBrandCategory(long CategoryId, long BrandId)
+        {
+            BrandAndCategory brandcategory = new BrandAndCategory();
+            brandcategory.CategoryId = CategoryId;
+            brandcategory.BrandId = BrandId;
+
+            brAndCatRepo.Delete(brandcategory);
+
+            return RedirectToAction("BrandDetail", new { BrandId = BrandId });
         }
 
     }
