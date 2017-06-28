@@ -130,7 +130,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
 
         public List<TransactionHeader> GetTransactionsHistory(long CustomerId)
         {
-            var result = dbSet.Where(j => j.CustomerId == CustomerId && j.CurrentStatus == TransactionStatus.PaymentConfirmation && j.LastStatus == TransactionStatus.CheckedOut)
+            var result = dbSet.Where(j => j.CustomerId == CustomerId)
                               .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
                               .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
                               .Include(i => i.ShippingDetails)

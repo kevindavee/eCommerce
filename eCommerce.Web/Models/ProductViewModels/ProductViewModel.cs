@@ -53,6 +53,8 @@ namespace eCommerce.Web.Models.ProductViewModels
         public List<string> ukuranList { get; set; }
 
         public Review Review { get; set; } = new Review();
-        public List<Review> ReviewList { get; set; } 
+        public List<Review> ReviewList { get; set; }
+
+        public List<string> PathProductImageList { get; set; }
     }
 }
