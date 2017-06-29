@@ -22,6 +22,50 @@ function GetBrandListByCategory(subCategoryId, brandId) {
     })
 }
 
+function AddOptionWarna(tbId, productId) {
+    if ($(tbId).val() === '')
+    {
+        alert("Harus diisi!");
+    }
+    else
+    {
+        $.post(url + "AddOptionWarna?warna=" + $(tbId).val() + "&productId=" + productId, function (data) {
+            $('#tabProductDetails').html(data);
+            $.getJSON(url + "ListCheckedOption?id=" + productId, function (data) {
+                //lanjut disini
+                if (data.checkedList[0] === true) {
+                    $("#warnaHidden").removeClass("hide");
+                }
+                if (data.checkedList[1] === true) {
+                    $("#sizeHidden").removeClass("hide");
+                }
+            })
+            $('#details-tab').tab('show');
+        })
+    }
+}
+
+function AddOptionSize(tbId, productId) {
+    if ($(tbId).val() === '') {
+        alert("Harus diisi!");
+    }
+    else {
+        $.post(url + "AddOptionSize?size=" + $(tbId).val() + "&productId=" + productId, function (data) {
+            $('#tabProductDetails').html(data);
+            $.getJSON(url + "ListCheckedOption?id=" + productId, function (data) {
+                //lanjut disini
+                if (data.checkedList[0] === true) {
+                    $("#warnaHidden").removeClass("hide");
+                }
+                if (data.checkedList[1] === true) {
+                    $("#sizeHidden").removeClass("hide");
+                }
+            })
+            $('#details-tab').tab('show');
+        })
+    }
+}
+
 function DetailsProductClick(Id) {
     $.get(url + "ProductDetails?id=" + Id, function (data) {
         $('#tabProductDetails').html(data);
@@ -51,33 +95,17 @@ function DeleteProduct(Id) {
 function ChangeOptions(productId, Id, OptionNama) {
     if (confirm("Are you sure?")) {
         $.post(url + "ChangeOptions?productId=" + productId + "&id=" + Id + "&check=" + document.getElementById(Id).checked, function (data) {
-            if (data === "1")
-            {
-                
-                if (OptionNama === 'Warna')
-                {
-                    if (document.getElementById(Id).checked === true) {
-                        $("#warnaHidden").removeClass("hide");
-                    }
-                    else
-                    {
-                        $("#warnaHidden").addClass("hide");
-                    }
+            $('#tabProductDetails').html(data);
+            $.getJSON(url + "ListCheckedOption?id=" + productId, function (data) {
+                //lanjut disini
+                if (data.checkedList[0] === true) {
+                    $("#warnaHidden").removeClass("hide");
                 }
-                else
-                {
-                    if (document.getElementById(Id).checked === true) {
-                        $("#sizeHidden").removeClass("hide");
-                    }
-                    else {
-                        $("#sizeHidden").addClass("hide");
-                    }
+                if (data.checkedList[1] === true) {
+                    $("#sizeHidden").removeClass("hide");
                 }
-            }
-            else
-            {
-                alert(data);
-            }
+            })
+            $('#details-tab').tab('show');
         })
     }
 }

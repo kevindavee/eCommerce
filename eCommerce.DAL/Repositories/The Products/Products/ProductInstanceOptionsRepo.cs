@@ -23,6 +23,11 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
             dbSetOptValue = context.Set<OptionValue>();
         }
 
+        public void Save(ProductInstanceOptions prodInstanceOpt)
+        {
+            context.ProductInstanceOptions.Add(prodInstanceOpt);
+            context.SaveChanges();
+        }
         public IEnumerable<ProductInstanceOptions> GetByProductInstanceIdAndOptionId(long productInstanceId, long OptionId)
         {
             return dbSet.Where(i => i.ProductInstanceId == productInstanceId && i.OptionValue.OptionsId == OptionId);

@@ -20,7 +20,7 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
 
         public Product GetByIdIncludeCat(long id)
         {
-            return dbSet.Where(i => i.Id == id).Include(i => i.Category).FirstOrDefault();
+            return dbSet.Where(i => i.Id == id).Include(i => i.Category).Include(i => i.ProductInstance).FirstOrDefault();
         }
     }
 }

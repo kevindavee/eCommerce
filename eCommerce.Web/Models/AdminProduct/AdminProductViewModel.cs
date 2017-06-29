@@ -26,8 +26,14 @@ namespace eCommerce.Web.Models.AdminProduct
         public List<Category> listSubCategory { get; set; } = new List<Category>();
         public List<OptionListViewModel> listOptions { get; set; } = new List<OptionListViewModel>();
         public List<Brand> listBrand { get; set; } = new List<Brand>();
+        public List<ListProductOption> listProductOption { get; set; } = new List<ListProductOption>();
     }
 
+    public class ListProductOption
+    {
+        public long Id { get; set; }
+        public string Nama { get; set; } = "";
+    }
     public class OptionListViewModel
     {
         public Options Options { get; set; } = new Options();
