@@ -356,7 +356,7 @@ namespace eCommerce.Web.Controllers
                     {
                         upload.CopyTo(stream);
                     }
-                    konfirmasiPembayaran.ImageBuktiTransfer = filePathAndName;
+                    konfirmasiPembayaran.ImageBuktiTransfer = "/BuktiTransfer/" + upload.FileName;
                 }
 
                 konfirmasiPembayaran.CreatedBy = konfirmasiPembayaran.UpdatedBy = UserName;
