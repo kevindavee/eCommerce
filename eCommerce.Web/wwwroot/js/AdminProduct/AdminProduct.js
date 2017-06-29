@@ -86,6 +86,24 @@ function DetailsProductClick(Id) {
     })
 }
 
+function DeleteProductOption(Id, productId) {
+    if (confirm("Are you sure?")) {
+        $.post(url + "DeleteProductOption?id=" + Id, function (data) {
+            $('#tabProductDetails').html(data);
+            $.getJSON(url + "ListCheckedOption?id=" + productId, function (data) {
+                //lanjut disini
+                if (data.checkedList[0] === true) {
+                    $("#warnaHidden").removeClass("hide");
+                }
+                if (data.checkedList[1] === true) {
+                    $("#sizeHidden").removeClass("hide");
+                }
+            })
+            $('#details-tab').tab('show');
+        })
+    }
+}
+
 function DeleteProduct(Id) {
     if (confirm("Are you sure?")) {
         $.post(url + "DeleteProduct?id=" + Id, function (data) {

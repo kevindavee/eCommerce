@@ -155,6 +155,21 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("ProductDetails", new { id = product.Id });
         }
 
+        public ActionResult DeleteProductOption(long id = 0)
+        {
+            //Page untuk melihat list of product
+            var productInstance = productInstanceRepo.GetById(id);
+            long productid = 0;
+            if(productInstance != null)
+            {
+                productid = productInstance.ProductId;
+                productInstanceRepo.Delete(id);
+            }
+            
+
+            return RedirectToAction("ProductDetails", new { id = productid });
+        }
+
         public ActionResult AddOptionWarna(string warna = "", long productId = 0)
         {
             //Page untuk melihat list of product
