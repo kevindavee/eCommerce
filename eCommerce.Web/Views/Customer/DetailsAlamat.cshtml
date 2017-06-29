@@ -1,90 +1,82 @@
 
 @{
     ViewData["Title"] = "DetailsAlamat";
-    Layout = "~/Views/Shared/_UserDashboard.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@model eCommerce.Web.Models.CustomerViewModels.AlamatViewModel
 
-<div class="right_col" role="main">
-    <div class="">
-        <div class="page-title">
-            <div class="title_left">
-                @*<h3>Profiles</h3>*@
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_title">
-                    <h2><i class="fa fa-bars"></i> Edit Address</h2>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_content">
-                                <br />
-                                <form id="demo-form2" data-parsley-validate="" class="form-horizontal" novalidate="">
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        @*address details*@
-                                        @*nama*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                                                Address Name
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control col-md-6 col-xs-12">
-                                            </div>
-                                        </div>
-                                        @*address*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                                                Address
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <textarea type="text" class="form-control col-md-6 col-xs-12"></textarea>
-                                            </div>
-                                        </div>
-                                        @*city*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                                                City
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control col-md-6 col-xs-12">
-                                            </div>
-                                        </div>
-                                        @*province*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                                                Province
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control col-md-6 col-xs-12">
-                                            </div>
-                                        </div>
-                                        @*zipcode*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                                                ZIP Code
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control col-md-6 col-xs-12">
-                                            </div>
-                                        </div>
-                                        @*button*@
-                                        <div class="form-group">
-                                            <div class="col-md-offset-2 col-sm-offset-2 col-xs-12">
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+<script src="~/js/Customer/Customer.js"></script>
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 blog-sidebar">
+                @*<h4>Search our Blog</h4>
+                    <form>
+                        <div class="input-group">
+                            <input class="form-control input-md" id="appendedInputButtons" type="text">
+                            <span class="input-group-btn">
+                                <button class="btn btn-md" type="button">Search</button>
+                            </span>
                         </div>
+                    </form>*@
+                <h4>Profile</h4>
+                <ul class="blog-categories">
+                    <li><a href="~/Customer/Profile/">Edit Profile</a></li>
+                    <li><a href="~/Customer/AddressList/"><strong>Address</strong></a></li>
+                    <li><a href="~/Customer/Transaction/">Transaction History</a></li>
+                </ul>
+            </div>
+            <!-- End Sidebar -->
+            <div class="col-sm-7">
+                <div class="blog-post blog-single-post">
+                    <!-- Comments -->
+                    <div class="post-coments">
+                        <!-- Comments Form -->
+                        @*<h4>Leave a Comment</h4>*@
+                        <div class="comment-form-wrapper">
+                            <form id="formCustomerAddress">
+                                <div class="form-group">
+                                    <label for="comment-name"><b>Address name</b></label>
+                                    @Html.TextBoxFor(j => j.Alamat.NamaAlamat, new { @class = "form-control" })
+                                    @Html.HiddenFor(j => j.Alamat.Id, new { })
+                                    @*<input class="form-control" id="comment-name" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email">@*<i class="glyphicon glyphicon-phone"></i>*@ <b>Postal Code</b></label>
+                                    @Html.TextBoxFor(j => j.Alamat.KodePos, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email">@*<i class="glyphicon glyphicon-phone"></i>*@ <b>Provinces</b></label>
+                                    @Html.TextBoxFor(j => j.Alamat.Provinsi, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email"><b>Kota</b></label>
+                                    @Html.TextBoxFor(j => j.Alamat.Kota, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email"><b>Address</b></label>
+                                    @Html.TextAreaFor(j => j.Alamat.TheAlamat, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-large pull-right" onclick="SaveAlamat(@Model.CustomerId)" value="Save" />
+                                    @*<button type="submit" class="btn btn-large pull-right" onclick="SaveProfile()">Save</button>*@
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
+                        <!-- End Comment Form -->
                     </div>
+                    <!-- End Comments -->
                 </div>
             </div>
+            <!-- End Blog Post -->
         </div>
-        <div class="clearfix"></div>
     </div>
 </div>
+

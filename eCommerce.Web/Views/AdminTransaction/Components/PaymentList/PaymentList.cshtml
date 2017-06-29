@@ -9,6 +9,7 @@
             <td>Account Name</td>
             <td>Account Number</td>
             <td>Transfered Amount</td>
+            <td>Receipt</td>
             <td>Approve</td>
             <td>Reject</td>
         </tr>
@@ -24,11 +25,21 @@
                 <td>@Html.DisplayFor(modelItem => item.NoRekening)</td>
                 <td>Rp. @Html.DisplayFor(modelItem => item.NominalTransfer)</td>
                 <td>
+                    @if (!string.IsNullOrEmpty(item.ImageBuktiTransfer))
+                    {
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#bukti-@item.Id"><i class="fa fa-search"></i></button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-info " data-toggle="modal" data-target="#bukti-@item.Id" disabled="disabled"><i class="fa fa-search"></i></button>
+                    }
+                </td>
+                <td>
                     @using (Html.BeginForm("ValidatePaymentConfirmation", "AdminTransaction",
                                             new { TransactionHeaderId = item.TransactionHeaderId, KonfirmasiPembayaranId = item.Id, Validation = true},
                                             FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal"}))
                     {
-                        <button type="submit" class="btn btn-primary">Approve</button>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i></button>
                     }
                 </td>
                 <td>
@@ -41,7 +52,7 @@
                                 @Html.TextBox("Remarks", null, htmlAttributes: new { @class = "form-control", placeholder = "Enter remarks" })
                             </div>
                             <div class="col-md-4">
-                                <button type="submit" class="btn btn-danger">Reject</button>
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-times-circle"></i></button>
                             </div>
                         </div>
                     }
@@ -51,3 +62,23 @@
     </tbody>
 </table>
 
+@foreach (var item in Model.konfirmasiPembayaran.Where(s => !string.IsNullOrEmpty(s.ImageBuktiTransfer)))
+{
+    <div id="bukti-@item.Id" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Transfer Receipt</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <img src="@item.ImageBuktiTransfer" class="img-responsive" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -13,6 +13,7 @@ using eCommerce.Core.CommerceClasses.Brands;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using Microsoft.AspNetCore.Http;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
+using eCommerce.Core.CommerceClasses.BrandsAndCategories;
 
 namespace eCommerce.Web.Controllers
 {
@@ -59,6 +60,7 @@ namespace eCommerce.Web.Controllers
             }
             return View(viewModel);
         }
+
         public PartialViewResult ManageProduct()
         {
             //Page untuk melihat list of product
@@ -612,6 +614,7 @@ namespace eCommerce.Web.Controllers
             return View();
         }
 
+        #region Category
         public ActionResult ManageCategory()
         {
             return View();
@@ -619,7 +622,7 @@ namespace eCommerce.Web.Controllers
 
         public IActionResult CategoryList()
         {
-            return ViewComponent("CategoryList");
+            return ViewComponent("ManageCategoryList");
         }
 
         public ActionResult AddEditCategory(long CategoryId = 0)
@@ -661,7 +664,95 @@ namespace eCommerce.Web.Controllers
 
             return RedirectToAction("ManageCategory");
         }
+        #endregion
 
-        
+        #region Brand
+        public ActionResult ManageBrand()
+        {
+            return View();
+        }
+
+        public IActionResult BrandList()
+        {
+            return ViewComponent("ManageBrandList");
+        }
+
+        public ActionResult AddEditBrand(long BrandId = 0)
+        {
+            Brand brand;
+            if (BrandId == 0)
+            {
+                brand = new Brand();
+            }
+            else
+            {
+                brand = brandRepo.GetById(BrandId);
+            }
+            return View(brand);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddEditBrand(Brand brand)
+        {
+            if (brand.Id != 0)
+            {
+                brand.UpdatedBy = "Admin";
+                brand.UpdatedDate = DateTime.Today;
+            }
+
+            brandRepo.Save(brand);
+            return RedirectToAction("ManageBrand");
+        }
+
+        public ActionResult BrandDetail(long BrandId)
+        {
+            BrandCategoryViewModel viewmodel = new BrandCategoryViewModel();
+
+            var parent = new List<Category>();
+            parent = categoryRepo.GetAll().Where(s => s.ParentId == null).ToList();
+            parent.Insert(0, new Category { Id = 0, Nama = "Choose Parent Category" });
+
+            ViewBag.Parent = parent;
+
+            viewmodel.Brand = brandRepo.GetById(BrandId);
+            viewmodel.Categories = brAndCatRepo.GetCategoriesByBrandId(BrandId);
+            
+            return View(viewmodel);
+        }
+
+        #endregion
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddBrandCategory(long CategoryId, long BrandId)
+        {
+            BrandAndCategory brandcategory = new BrandAndCategory();
+            brandcategory.CategoryId = CategoryId;
+            brandcategory.BrandId = BrandId;
+
+            var result = brAndCatRepo.Save(brandcategory);
+
+            if (!result)
+            {
+                ViewData["Message"] = "You already add this category before !";
+            }
+
+            return RedirectToAction("BrandDetail", new { BrandId = BrandId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteBrandCategory(long CategoryId, long BrandId)
+        {
+            BrandAndCategory brandcategory = new BrandAndCategory();
+            brandcategory.CategoryId = CategoryId;
+            brandcategory.BrandId = BrandId;
+
+            brAndCatRepo.Delete(brandcategory);
+
+            return RedirectToAction("BrandDetail", new { BrandId = BrandId });
+        }
+
     }
 }

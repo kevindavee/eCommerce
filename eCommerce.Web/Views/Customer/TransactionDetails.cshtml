@@ -1,0 +1,75 @@
+
+@{
+    ViewData["Title"] = "DetailTransaction";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model eCommerce.Web.Models.CustomerViewModels.DetailsTransactionHistoryViewModel
+
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 blog-sidebar">
+                <h4>Profile</h4>
+                <ul class="blog-categories">
+                    <li><a href="~/Customer/Profile/">Edit Profile</a></li>
+                    <li><a href="~/Customer/AddressList/">Address</a></li>
+                    <li><a href="~/Customer/Transaction/"><strong>Transaction History</strong></a></li>
+                </ul>
+            </div>
+            <!-- End Sidebar -->
+            <div class="col-sm-7">
+                <div class="blog-post blog-single-post">
+                    <!-- info customer -->
+                    <div class="row invoice-info">
+                        <div class="col-sm-4 invoice-col">
+                            <strong>Code: </strong>@Model.TransactionHeader.Code<br />
+                            <strong>Transaction Date: </strong>@Model.TransactionHeader.TglTransaksi.ToString("dd-MMM-yyyy")<br />
+                            <strong>Customer: </strong>@Model.TransactionHeader.Customer.Nama<br />
+                            <strong>Total Price: </strong>Rp. @Model.TransactionHeader.TotalPrice<br />
+                        </div>
+                        <!-- info receiver -->
+                        <div class="col-sm-8 invoice-col">
+                            <strong>Receiver's Name: </strong>@Model.TransactionHeader.ShippingDetails.NamaPenerima<br />
+                            <strong>Receiver's Address: </strong>@(Model.TransactionHeader.ShippingDetails.Provinsi + "," + Model.TransactionHeader.ShippingDetails.Kota + "," + Model.TransactionHeader.ShippingDetails.KodePos + "," + Model.TransactionHeader.ShippingDetails.AlamatPengiriman)
+                        </div>
+                    </div>
+                    <!-- /.row -->
+                    <!-- Table row -->
+                    <div class="row">
+                        <div class="col-md-12 col-xs-12 table">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Qty</th>
+                                        <th>Product</th>
+                                        <th>Discount</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.TransactionHeader.TransactionDetails)
+                                    {
+                                        <tr>
+                                            <td>@item.Quantity</td>
+                                            <td>@item.ProductInstance.Product.Nama</td>
+                                            <td>Rp. @item.Discount</td>
+                                            <td>Rp. @(item.Quantity * item.Price)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+            </div>
+            <!-- End Blog Post -->
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,63 @@
+
+@{
+    ViewData["Title"] = "DaftarAlamat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model eCommerce.Web.Models.CustomerViewModels.DaftarAlamatViewModel
+
+<script src="~/js/Customer/Customer.js"></script>
+
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 blog-sidebar">
+                <h4>Profile</h4>
+                <ul class="blog-categories">
+                    <li><a href="~/Customer/Profile/">Edit Profile</a></li>
+                    <li><a href="~/Customer/AddressList/"><strong>Address</strong></a></li>
+                    <li><a href="~/Customer/Transaction/">Transaction History</a></li>
+                </ul>
+            </div>
+            <!-- End Sidebar -->
+            <div class="col-sm-7">
+                <div class="blog-post blog-single-post">
+                    <!-- Comments -->
+                    <a href="~/Customer/DetailsAlamat?AlamatId=0"><input type="button" class="btn btn-large" name="name" value="Add New Address(+)" /></a>
+                    <br />
+                    <br />
+                    @*<a href="">Add New Address(+)</a>*@
+                    <div class="post-coments">
+                        @foreach (var item in Model.ListAlamat)
+                        {
+                            <ul class="post-comments">
+                                <li>
+                                    <div class="comment-wrapper">
+                                        @item.NamaAlamat
+                                        <p>
+                                            <strong>Provinces : </strong>@item.Provinsi <br />
+                                            <strong>City : </strong>@item.Kota <br />
+                                            <strong>Address : </strong>@item.TheAlamat <br />
+                                        </p>
+                                        <div class="actions">
+                                            <a href="~/Customer/DetailsAlamat?AlamatId=@item.Id" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="#" onclick="DeleteCustomerAddress(@item.Id)" class="btn btn-xs btn-grey"><i class="glyphicon glyphicon-trash"></i></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        }
+                        
+                    </div>
+                    <!-- End Comments -->
+                </div>
+            </div>
+            <!-- End Blog Post -->
+        </div>
+    </div>
+</div>
+
+
+
+    

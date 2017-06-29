@@ -34,6 +34,7 @@ using eCommerce.DAL.Repositories.The_Products.Categories;
 using Microsoft.AspNetCore.Mvc;
 using eCommerce.DAL.Repositories.Stocks;
 using eCommerce.DAL.Repositories.InventoryJournals;
+using eCommerce.DAL.Repositories.The_Products.Product_Images;
 
 namespace eCommerce.Web
 {
@@ -101,6 +102,8 @@ namespace eCommerce.Web
             services.AddScoped<StockRepo, StockRepo>();
             services.AddScoped<InventoryJournalRepo, InventoryJournalRepo>();
             services.AddScoped<InventoryJournalItemRepo, InventoryJournalItemRepo>();
+            services.AddScoped<ProductImageRepo, ProductImageRepo>();
+
 
 
             services.AddScoped<TransactionService, TransactionService>();

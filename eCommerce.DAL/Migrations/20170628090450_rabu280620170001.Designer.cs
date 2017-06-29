@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170628090450_rabu280620170001")]
+    partial class rabu280620170001
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -26,8 +27,6 @@ namespace eCommerce.DAL.Migrations
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<long>("CustomerId");
-
-                    b.Property<bool>("Deleted");
 
                     b.Property<int>("KodePos");
 
@@ -339,8 +338,6 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<decimal>("DefaultPrice");
-
                     b.Property<string>("Deskripsi");
 
                     b.Property<bool>("IsAvailable");
@@ -351,13 +348,9 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<long>("RatingCount");
 
-                    b.Property<bool>("SizeOption");
-
                     b.Property<string>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedDate");
-
-                    b.Property<bool>("WarnaOption");
 
                     b.HasKey("Id");
 

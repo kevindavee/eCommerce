@@ -15,6 +15,7 @@ using eCommerce.Core.CommerceClasses.The_Products.Reviews;
 using eCommerce.DAL.Repositories.UserLogins;
 using eCommerce.DAL.Repositories.The_Products.Reviews;
 using eCommerce.Core.CommerceClasses.Brands;
+using eCommerce.DAL.Repositories.The_Products.Product_Images;
 
 namespace eCommerce.Web.Controllers
 {
@@ -27,6 +28,8 @@ namespace eCommerce.Web.Controllers
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
         private ReviewRepo reviewRepo;
         private UserManagementRepo userRepo;
+        private ProductImageRepo productImageRepo;
+
 
         private IHttpContextAccessor context;
 
@@ -34,7 +37,7 @@ namespace eCommerce.Web.Controllers
 
         public ProductController(BrandRepo _brandRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, 
                                  ProductInstanceOptionsRepo _productInstanceOptionsRepo, CategoryRepo _categoryRepo, IHttpContextAccessor _context,
-                                 UserManagementRepo _userRepo, ReviewRepo _reviewRepo)
+                                 UserManagementRepo _userRepo, ReviewRepo _reviewRepo, ProductImageRepo _productImageRepo)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
@@ -44,6 +47,7 @@ namespace eCommerce.Web.Controllers
             context = _context;
             userRepo = _userRepo;
             reviewRepo = _reviewRepo;
+            productImageRepo = _productImageRepo;
         }
         public ActionResult Index(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0)
         {
@@ -73,7 +77,7 @@ namespace eCommerce.Web.Controllers
         }
 
         public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0,
-                                              int PageIndex = 0, int TotalPage = 0, int PageSize = 16)
+                                              int PageIndex = 0, int PageSize = 16)
         {
             ProductPartialPagingViewModel model = new ProductPartialPagingViewModel();
             //Partial view untuk refresh list of product
@@ -86,7 +90,7 @@ namespace eCommerce.Web.Controllers
             model.TotalPage = (int)Math.Ceiling(totalPage);
             model.ProductList = list.Skip(PageIndex * PageSize).Take(PageSize).ToList();
 
-            return PartialView(list);
+            return PartialView(model);
         }
 
         public ActionResult Detail(long ProductId)
@@ -98,15 +102,9 @@ namespace eCommerce.Web.Controllers
         public IEnumerable<ProductListViewModel> ProductList(long CategoryId = 0, string sort = "")
         {
             var listProduct = new List<ProductListViewModel>();
-            var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
-            switch (sort)
-            {
-                case "Top Rating":
-                    productList.OrderByDescending(j => j.Rating);
-                    break;
-                default:
-                    break;
-            }
+            //var productList = productRepo.GetAll().Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).ToList();
+            var productList = productRepo.GetByCategoryIncludeImage(CategoryId);
+
 
 
             foreach (var item in productList)
@@ -114,8 +112,24 @@ namespace eCommerce.Web.Controllers
                 listProduct.Add(new ProductListViewModel
                 {
                     Product = item,
-                    Price = productInstanceRepo.GetPriceForProductList(item.Id)
+                    Price = productInstanceRepo.GetPriceForProductList(item.Id),
+                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/images/product6.jpg")
                 });
+            }
+
+            switch (sort)
+            {
+                case "Top Rating":
+                    listProduct = listProduct.OrderByDescending(j => j.Product.Rating).ToList();
+                    break;
+                case "Lowest Price":
+                    listProduct = listProduct.OrderBy(j => j.Price).ToList();
+                    break;
+                case "Highest Price":
+                    listProduct = listProduct.OrderByDescending(j => j.Price).ToList();
+                    break;
+                default:
+                    break;
             }
 
             return listProduct;
@@ -130,7 +144,7 @@ namespace eCommerce.Web.Controllers
             var Category = categoryRepo.GetById((long)productObj.CategoryId);
             var ParentCategory = categoryRepo.GetById((long)Category.ParentId).Nama;
             var reviewList = reviewRepo.GetListReviewByProductId(ProductId);
-
+            var productImagePathList = productImageRepo.GetProductImgPathByProductId(ProductId);
 
             var colorList = new List<string>();
             var ukuranList = new List<string>();
@@ -154,6 +168,7 @@ namespace eCommerce.Web.Controllers
             model.colorList = colorList;
             model.ukuranList = ukuranList;
             model.ReviewList = reviewList;
+            model.PathProductImageList = productImagePathList;
             //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
 
 

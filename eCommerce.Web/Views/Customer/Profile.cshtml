@@ -1,124 +1,201 @@
 
 @{
     ViewData["Title"] = "Profile";
-    Layout = "~/Views/Shared/_UserDashboard.cshtml";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="right_col" role="main">
-    <div class="">
-        <div class="page-title">
-            <div class="title_left">
-                @*<h3>Profiles</h3>*@
+@model eCommerce.Web.Models.CustomerViewModels.ProfileViewModel
+    <!-- Page Title -->
+    @*<div class="section section-breadcrumbs">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Blog Post (Left Sidebar)</h1>
+                </div>
             </div>
         </div>
-        <div class="clearfix"></div>
-        <div class="col-md-12 col-sm-12 col-xs-12">
-            <div class="x_panel">
-                <div class="x_title">
-                    <div class="col-md-11">
-                        <h2><i class="fa fa-bars"></i> Profiles</h2>
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="col-md-offset-11">
-                        <button href="" class="btn btn-info"><i class="fa fa-edit"></i>Edit</button>
-                    </div>
-                </div>
-                <div class="x_content">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="x_panel">
-                            <div class="x_content">
-                                <br />
-                                <form id="demo-form2" data-parsley-validate="" class="form-horizontal" novalidate="">
-                                    <div class="col-md-3 col-sm-3 col-xs-12 profile_left">
-                                        <div class="profile_img">
-                                            <div id="crop-avatar">
-                                                <!-- Current avatar -->
-                                                <img class="img-responsive avatar-view" src="http://pm1.narvii.com/5866/76b201e12343e860570c62f4067307e04ed545fe_hq.jpg" alt="Avatar" title="Change the avatar">
-                                                @*<h3 class="btn btn-success"><i class="fa fa-photo m-right-xs"></i> Change Photo</h3>*@
-                                            </div>
-                                            <br />
-                                        </div>
+    </div>*@
+<script src="~/js/Customer/Customer.js"></script>
 
-                                        <br>
-                                    </div>
-                                    <div class="col-md-9 col-sm-9 col-xs-12">
-                                        @*profile details*@
-                                        @*nama*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Full Name
-                                            </label>
-                                            <label class="control-label">
-                                                Customer's Name
-                                            </label>
-                                        </div>
-                                        @*gender*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Gender
-                                            </label>
-                                            <label class="control-label">
-                                                Gender
-                                            </label>
-                                        </div>
-                                        @*marriage status*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Marriage Status
-                                            </label>
-                                            <label class="control-label">
-                                                Married
-                                            </label>
-                                        </div>
-                                        @*jobs*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Jobs
-                                            </label>
-                                            <div class="col-md-6 col-sm-6 col-xs-12" id="txtJobs">
-                                                <label class="control-label">
-                                                    Jobs
-                                                </label>
-                                            </div>
-                                        </div>
-                                        @*D.O.B*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                D.O.B
-                                            </label>
-                                            @*tanggal*@
-                                            <div class="col-md-6 col-sm-6 col-xs-12" id="dropdown-category">
-                                                <!-- ganti dropdown pake razor -->
-                                                <label class="control-label">
-                                                    @DateTime.Now
-                                                </label>
-                                            </div>
-                                        </div>
-                                        @*phone*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Phone Number
-                                            </label>
-                                            <label class="control-label">
-                                                080909090909
-                                            </label>
-                                        </div>
-                                        @*email*@
-                                        <div class="form-group">
-                                            <label class="control-label col-md-3 col-sm-2 col-xs-12">
-                                                Email
-                                            </label>
-                                            <label class="control-label">
-                                                blabla@@blabla.com
-                                            </label>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
+<div class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-sm-3 blog-sidebar">
+                @*<h4>Search our Blog</h4>
+                    <form>
+                        <div class="input-group">
+                            <input class="form-control input-md" id="appendedInputButtons" type="text">
+                            <span class="input-group-btn">
+                                <button class="btn btn-md" type="button">Search</button>
+                            </span>
                         </div>
+                    </form>*@
+                <h4>Profile</h4>
+                <ul class="blog-categories">
+                    <li><a href="~/Customer/Profile/"><strong>Profile</strong></a></li>
+                    <li><a href="~/Customer/AddressList/">Address</a></li>
+                    <li><a href="~/Customer/Transaction/">Transaction History</a></li>
+                </ul>
+            </div>
+            <!-- End Sidebar -->
+            <div class="col-sm-7">
+                <div class="blog-post blog-single-post">
+                    <!-- Comments -->
+                    <div class="post-coments">
+                        <!-- Comments Form -->
+                        @*<h4>Leave a Comment</h4>*@
+                        <div class="comment-form-wrapper">
+                            <form id="formCustomerProfile">
+                                <div class="form-group">
+                                    <label for="comment-name"><b>Your name</b></label>
+                                    @Html.TextBoxFor(j => j.Customer.Nama, new { @class = "form-control" })
+                                    @Html.HiddenFor(j => j.Customer.Id, new { })
+                                    @*<input class="form-control" id="comment-name" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        D.O.B
+                                    </label>
+
+                                    <div class="control-label">
+                                        @*tanggal*@
+                                        <div class="radio-inline" id="dropdown-category" style="width:100px;">
+                                            <!-- ganti dropdown pake razor -->
+                                            @{ 
+                                                var listDay = new List<SelectListItem>();
+                                                for (int i = 1; i <= 31; i++)
+                                                {
+                                                    listDay.Add(new SelectListItem { Value = i.ToString(), Text = i.ToString() });
+                                                }
+                                                listDay.Insert(0, new SelectListItem { Value = "0", Text = "-Day-" });
+                                            }
+                                            @Html.DropDownListFor(j=> Model.Day, listDay, new { @class = "form-control"})
+                                        </div>
+                                        @*bulan*@
+                                        <div class="radio-inline" id="dropdown-category" style="width:120px;">
+                                            @{
+                                                var listMonth = new List<SelectListItem>();
+                                                listMonth.Add(new SelectListItem { Value = "0", Text = "-Month-" });
+                                                listMonth.Add(new SelectListItem { Value = "1", Text = "January"  });
+                                                listMonth.Add(new SelectListItem { Value = "2", Text = "February" });
+                                                listMonth.Add(new SelectListItem { Value = "3", Text = "March" });
+                                                listMonth.Add(new SelectListItem { Value = "4", Text = "April" });
+                                                listMonth.Add(new SelectListItem { Value = "5", Text = "May" });
+                                                listMonth.Add(new SelectListItem { Value = "6", Text = "June" });
+                                                listMonth.Add(new SelectListItem { Value = "7", Text = "July" });
+                                                listMonth.Add(new SelectListItem { Value = "8", Text = "August" });
+                                                listMonth.Add(new SelectListItem { Value = "9", Text = "September" });
+                                                listMonth.Add(new SelectListItem { Value = "10", Text = "October" });
+                                                listMonth.Add(new SelectListItem { Value = "11", Text = "November" });
+                                                listMonth.Add(new SelectListItem { Value = "12", Text = "December" });
+
+                                            }
+                                            @Html.DropDownListFor(j => Model.Month, listMonth, new { @class = "form-control" })
+                                            <!-- ganti dropdown pake razor -->
+                                        </div>
+                                        @*year*@
+                                        <div class="radio-inline" style="width:100px;">
+                                            @{
+                                                var listYear = new List<SelectListItem>();
+                                                for (int i = 1945; i <= DateTime.Now.Year; i++)
+                                                {
+                                                    listYear.Add(new SelectListItem { Value = i.ToString(), Text = i.ToString() });
+                                                }
+                                                listYear.Insert(0, new SelectListItem { Value = "0", Text = "-Year-" });
+                                            }
+                                            @Html.DropDownListFor(j => Model.Year, listYear, new { @class = "form-control" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        @*<i class="glyphicon glyphicon-user"></i>*@
+                                        Gender
+                                    </label>
+                                    <div class="control-label">
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.JenisKelamin, true, new { })
+                                            @*<input type="radio" checked="" value="Laki-laki" id="rbMan" name="optionsRadios">*@ Man
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.JenisKelamin, false, new { })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Woman
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label">
+                                        Marriage Status
+                                    </label>
+                                    <div class="control-label">
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.StatusNikah, true, new { })
+                                            @*<input type="radio" checked="" value="Laki-laki" id="rbMan" name="optionsRadios1">*@ Married
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.StatusNikah, false, new { })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios1">*@ Not-Married
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email">@*<i class="glyphicon glyphicon-phone"></i>*@ <b>Phone Number</b></label>
+                                    @Html.TextBoxFor(j => j.Customer.NoTelepon, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email"><b>Email</b></label>
+                                    @Html.TextBoxFor(j => j.Customer.Email, new { @class = "form-control" })
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment-email"><b>Job</b></label>
+                                    <div class="control-label" id="divRbJob">
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Pelajar", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Pelajar
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Mahasiswa", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Mahasiswa
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Wiraswasta", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Wiraswasta
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Pengusaha", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Pengusaha
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Ibu Rumah Tangga", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Ibu Rumah Tangga
+                                        </label>
+                                        <label class="radio-inline">
+                                            @Html.RadioButtonFor(j => j.Customer.Pekerjaan, "Lainnya", new { @onchange = "CheckRbJob()" })
+                                            @*<input type="radio" checked="" value="Perempuan" id="rbWoman" name="optionsRadios">*@ Lainnya
+                                            @Html.TextBoxFor(j => j.JobLainnya, new { @class = "form-control hide", @id = "txtJobLainnya" })
+                                        </label>
+                                    </div>
+                                    
+                                    @*@Html.TextBoxFor(j => j.Customer.Pekerjaan, new { @class = "form-control" })*@
+                                    @*<input class="form-control" id="comment-email" type="text" placeholder="">*@
+                                </div>
+                                <div class="form-group">
+                                    <input type="button" class="btn btn-large pull-right" onclick="SaveProfile()" value="Save" />
+                                    @*<button type="submit" class="btn btn-large pull-right" onclick="SaveProfile()">Save</button>*@
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                        </div>
+                        <!-- End Comment Form -->
                     </div>
+                    <!-- End Comments -->
                 </div>
             </div>
+            <!-- End Blog Post -->
         </div>
     </div>
 </div>
+

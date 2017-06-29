@@ -1,0 +1,25 @@
+@model IEnumerable<eCommerce.Core.CommerceClasses.Brands.Brand>
+
+<table class="table table-bordered table-hover table-responsive" id="myTable">
+    <thead>
+        <tr>
+            <td class="col-md-2"></td>
+            <td class="col-md-2"></td>
+            <td class="col-md-8">Brand Name</td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td class="col-md-2">
+                    <a href="@Url.Action("AddEditBrand", "AdminProduct", new { BrandId = item.Id})" class="btn btn-primary">Edit</a>
+                </td>
+                <td class="col-md-2">
+                    <a href="@Url.Action("BrandDetail", "AdminProduct", new { BrandId = item.Id})" class="btn btn-primary">Details</a>
+                </td>
+                <td class="col-md-8">@Html.DisplayFor(modelItem => item.Nama)</td>
+            </tr>
+        }
+    </tbody>
+</table>

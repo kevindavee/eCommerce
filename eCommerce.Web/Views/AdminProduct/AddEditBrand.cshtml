@@ -1,0 +1,44 @@
+@model eCommerce.Core.CommerceClasses.Brands.Brand
+
+@{
+    ViewData["Title"] = "AddEditBrand";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><i class="fa fa-bars"></i> Add/Edit Brand</h2>
+                        <div class="clearfix"></div>
+                        <a href="@Url.Action("ManageBrand", "AdminProduct")"><i class="fa fa-caret-left"></i> Back</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="x_content">
+                        @using (Html.BeginForm("AddEditBrand", "AdminProduct", null, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
+                        {
+                            @Html.HiddenFor(model => model.Id)
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <label class="control-label">Brand Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.Nama, htmlAttributes: new { @class = "form-control brand-field" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-2">
+                                    <button type="submit" class="btn btn-primary" id="btn-submit-brand">Submit</button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/js/AdminProduct/AdminProduct.js"></script>

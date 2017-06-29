@@ -9,45 +9,65 @@ using eCommerce.Core.CommerceClasses.Customers;
 using eCommerce.Web.Models.CustomerViewModels;
 using eCommerce.DAL.Repositories.Alamats;
 using eCommerce.Core.CommerceClasses.Alamats;
+using eCommerce.DAL.Repositories.UserLogins;
+using Microsoft.AspNetCore.Http;
+using eCommerce.DAL.Repositories.Transactions.TransactionHeaders;
 
 namespace eCommerce.Web.Controllers
 {
     public class CustomerController : Controller
     {
         private CustomerRepo customerRepo;
+        private TransactionHeaderRepo transactionHeaderRepo;
         private AlamatRepo alamatRepo;
+        private UserManagementRepo userRepo;
+        private IHttpContextAccessor context;
 
+        string UserName = "";
+        long CustomerId = 0;
 
-        public CustomerController(CustomerRepo _customerRepo, AlamatRepo _alamatRepo)
+        public CustomerController(CustomerRepo _customerRepo, AlamatRepo _alamatRepo, UserManagementRepo _userRepo, IHttpContextAccessor _context,
+            TransactionHeaderRepo _transactionHeaderRepo)
         {
             this.customerRepo = _customerRepo;
             this.alamatRepo = _alamatRepo;
+            this.transactionHeaderRepo = _transactionHeaderRepo;
+            context = _context;
+            UserName = context.HttpContext.User.Identity.Name;
+            CustomerId = _userRepo.GetCustomerId(UserName);
         }
 
         #region Profile
-        public ActionResult Profile(long CustomerId = 0)
+        public ActionResult Profile()
         {
             var customer = customerRepo.GetById(CustomerId);
 
             var model = new ProfileViewModel();
             model.Customer = customer;
-            
+            model.Day = customer.TanggalLahir.Day;
+            model.Month = customer.TanggalLahir.Month;
+            model.Year = customer.TanggalLahir.Year;
+
+
             //Page edit profile customer
             return View(model);
         }
 
         [HttpPost]
-        public ActionResult Profile(ProfileViewModel model)
+        public ActionResult SaveProfile(ProfileViewModel model)
         {
             var customer = customerRepo.GetById(model.Customer.Id);
             try
             {
+                var bday = DateTime.Parse(model.Month + "/" + model.Day + "/" + model.Year, System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat);
+
+
                 customer.Nama = model.Customer.Nama;
                 customer.JenisKelamin = model.Customer.JenisKelamin;
-                customer.TanggalLahir = model.Customer.TanggalLahir;
+                customer.TanggalLahir = bday;
                 customer.NoTelepon = model.Customer.NoTelepon;
                 customer.StatusNikah = model.Customer.StatusNikah;
-                customer.Pekerjaan = model.Customer.Pekerjaan;
+                customer.Pekerjaan = (model.Customer.Pekerjaan == "Lainnya" ? model.JobLainnya : model.Customer.Pekerjaan);
 
                 customerRepo.Save(customer);
             }
@@ -76,13 +96,15 @@ namespace eCommerce.Web.Controllers
         #endregion
 
         #region Address
-        public ActionResult AddressList(long CustomerId)
+        public ActionResult AddressList()
         {
             var listAlamat = alamatRepo.GetAlamatForCurrentCustomer(CustomerId);
-            
+
             //Page yang berisi list address user
             var model = new DaftarAlamatViewModel();
             model.ListAlamat = listAlamat;
+            model.CustomerId = CustomerId;
+
             return View(model);
         }
 
@@ -93,9 +115,28 @@ namespace eCommerce.Web.Controllers
 
             var model = new AlamatViewModel();
             model.Alamat = alamatCustomer;
-            //model.CustomerId =
+            model.CustomerId = CustomerId;
 
-            return View("DetailsAlamat");
+            return View("DetailsAlamat", model);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteCustomerAddress(long AddressId)
+        {
+            var AlamatCustomer = alamatRepo.GetById(AddressId);
+
+            try
+            {
+                AlamatCustomer.Deleted = true;
+
+                alamatRepo.Save(AlamatCustomer);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return RedirectToAction("AddressList", new {  });
         }
 
         [HttpPost]
@@ -116,7 +157,7 @@ namespace eCommerce.Web.Controllers
                 else
                 {
                     AlamatCustomer = new Alamat();
-                    AlamatCustomer.CustomerId = model.CustomerId;
+                    AlamatCustomer.CustomerId = CustomerId;
                     AlamatCustomer.NamaAlamat = model.Alamat.NamaAlamat;
                     AlamatCustomer.TheAlamat = model.Alamat.TheAlamat;
                     AlamatCustomer.KodePos = model.Alamat.KodePos;
@@ -134,7 +175,7 @@ namespace eCommerce.Web.Controllers
                 throw;
             }
 
-            return RedirectToAction("AddressList", new { CustomerId = AlamatCustomer.CustomerId});
+            return RedirectToAction("AddressList", new { });
         }
 
 
@@ -166,16 +207,26 @@ namespace eCommerce.Web.Controllers
         #endregion
 
         #region Transaction History
-        public ActionResult Transaction(long CustomerId)
+        public ActionResult Transaction()
         {
+            var TransactionList = transactionHeaderRepo.GetTransactionsHistory(CustomerId);
+
+            var model = new TransactionHistoryViewModel();
+            model.ListTransaction = TransactionList;
+
             //Page untuk list transaksi yang sudah selesai, transaksi yang sedang berjalan, dan transaksi yang di reject
-            return View();
+            return View(model);
         }
 
-        public ActionResult TransactionDetail(long TransactionId)
+        public ActionResult TransactionDetails(long TransactionId)
         {
+            var Transaction = transactionHeaderRepo.GetDetailsTransactionsHistory(TransactionId);
+
+            var model = new DetailsTransactionHistoryViewModel();
+            model.TransactionHeader = Transaction;
+
             //Page untuk detail transaksi
-            return View();
+            return View(model);
         }
 
         #endregion

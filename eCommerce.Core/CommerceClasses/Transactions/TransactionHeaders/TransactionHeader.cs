@@ -1,5 +1,6 @@
 ﻿using eCommerce.Commons;
 using eCommerce.Core.CommerceClasses.Customers;
+using eCommerce.Core.CommerceClasses.Transactions.ShippingDetailss;
 using eCommerce.Core.CommerceClasses.Transactions.TransactionDetailss;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace eCommerce.Core.CommerceClasses.Transactions.TransactionHeaders
         public string Remarks { get; set; } = "";
 
         public virtual Customer Customer { get; set; }
+        public virtual ShippingDetails ShippingDetails { get; set; }
         public virtual ICollection<TransactionDetails> TransactionDetails { get; set; }
     }
 }
