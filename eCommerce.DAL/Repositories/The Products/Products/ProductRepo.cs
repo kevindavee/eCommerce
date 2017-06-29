@@ -26,5 +26,12 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         {
             return dbSet.Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).Include(i => i.ProductImage).ToList();
         }
+
+        public void IncrementProductViewer(long Id)
+        {
+            var product = GetById(Id);
+            product.Seen++;
+            Save(product);
+        }
     }
 }

@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170629111820_add-seen-field-product")]
+    partial class addseenfieldproduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

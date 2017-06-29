@@ -63,9 +63,9 @@
             </div>
             <nav id="mainmenu" class="mainmenu">
                 <ul>
-                    <li class="logo-wrapper"><a href="index.html">e-Komers</a></li>
+                    <li class="logo-wrapper"><a href="@Url.Action("Index", "Home")">e-Komers</a></li>
                     <li class="active">
-                        <a href="index.html">Home</a>
+                        <a href="@Url.Action("Index", "Home")">Home</a>
                     </li>
                     <li class="has-submenu">
                         <a href="#">Category</a>
@@ -74,9 +74,6 @@
                                 @await  Component.InvokeAsync("CategoryList")
                             </div><!-- /mainmenu-submenu-inner -->
                         </div><!-- /mainmenu-submenu -->
-                    </li>
-                    <li class="">
-                        <input type="text" />
                     </li>
                 </ul>
             </nav>
@@ -90,16 +87,15 @@
                 <div class="col-footer col-md-4 col-xs-6">
                     <h3>Contacts</h3>
                     <p class="contact-us-details">
-                        <b>Address:</b> 123 Fake Street, LN1 2ST, London, United Kingdom<br />
-                        <b>Phone:</b> +44 123 654321<br />
-                        <b>Fax:</b> +44 123 654321<br />
-                        <b>Email:</b> <a href="mailto:getintoutch@yourcompanydomain.com">getintoutch@yourcompanydomain.com</a>
+                        <b>Address:</b> Green Office Park 9 BSD City<br />
+                        <b>Phone:</b> +62 817 4161 355<br />
+                        <b>Email:</b><a href="mailto:mail@ekomers.com">mail@ekomers.com</a>
                     </p>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <div class="footer-copyright">&copy; 2013 mPurpose. All rights reserved.</div>
+                    <div class="footer-copyright">&copy; 2017 eKomers. All rights reserved.</div>
                 </div>
             </div>
         </div>

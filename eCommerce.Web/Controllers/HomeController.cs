@@ -31,31 +31,12 @@ namespace eCommerce.Web.Controllers
         }
         public ActionResult Index()
         {
-            var categoryList = categoryRepo.GetAll();
-
             var model = new HomeViewModel();
-            model.CategoryList = categoryList.ToList();
 
+            model.Product1 = productRepo.GetByCategoryIncludeImage(3).OrderBy(o => o.Seen).Take(4).ToList();
+            model.Product2 = productRepo.GetByCategoryIncludeImage(7).OrderBy(o => o.Seen).Take(4).ToList();
+            model.Product3 = productRepo.GetByCategoryIncludeImage(10).OrderBy(o => o.Seen).Take(4).ToList();
             return View(model);
-        }
-
-        public ActionResult HomeView(long brandId = 0, decimal minPrice = 0, decimal maxPrice = 0)
-        {
-            var brandList = brandRepo.GetAll().ToList();
-
-            //get product list 
-            //bisa difilter lewat brand juga
-            //untuk filter price-nya masih bingung price taro dimana.
-            var productList = productRepo.GetAll().Where(j => brandId == 0 ? true : j.BrandId == brandId).ToList();
-
-            //untuk product harus pake paging. 
-            //bisa paging dengan sakura.pagedlist
-            //bisa juga paging dengan ReflectionIT.Mvc.Paging. 
-            var model = new HomeViewModel();
-            model.BrandList = brandList;
-            model.ProductList = productList;
-
-            return View();
         }
 
         

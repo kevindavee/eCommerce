@@ -10,10 +10,9 @@ namespace eCommerce.Web.Models.HomeViewModels
 {
     public class HomeViewModel
     {
-        public List<Category> CategoryList { get; set; }
-
-        public List<Product> ProductList { get; set; }
-        public List<Brand> BrandList { get; set; }
+        public List<Product> Product1 { get; set; }
+        public List<Product> Product2 { get; set; }
+        public List<Product> Product3 { get; set; }
     }
     public class ProductDetailsViewModel
     {

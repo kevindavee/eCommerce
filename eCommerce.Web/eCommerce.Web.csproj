@@ -175,6 +175,7 @@
     <Folder Include="Views\AdminTransaction\Components\ShippingList\" />
     <Folder Include="Views\AdminTransaction\Components\PaymentList\" />
     <Folder Include="Views\Shared\Components\CategoryList\" />
+    <Folder Include="wwwroot\HomeImageSlider\" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />
