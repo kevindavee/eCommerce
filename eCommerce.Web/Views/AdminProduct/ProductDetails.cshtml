@@ -152,11 +152,24 @@
                         @Html.TextAreaFor(i => i.Product.Deskripsi, new { @class= "form-control", @rows= "6" })
                     </div>
                 </div>
-                @*<div id="warnaList" class="form-group">
+                <div id="productOptionList" class="form-group">
                     <label class="control-label col-md-2 col-sm-2 col-xs-12">
-                        Warna
+                        Product Options
                     </label>
-                </div>*@
+                    @foreach (var item in Model.listProductOption)
+                    {
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                            </div>
+                            <div class="col-md-2">
+                                @item.Nama
+                            </div>
+                            <div class="col-md-5">
+                                <input type="button" value="Delete" class="btn" onclick="DeleteProductOption(@item.Id, @Model.Product.Id)" />
+                            </div>
+                        </div>
+                    }
+                </div>
                 <div id="warnaHidden" class="form-group hide">
                     <label class="control-label col-md-2 col-sm-2 col-xs-12">
                         Warna
@@ -166,7 +179,7 @@
                         @Html.TextBox("warna", "", new { @id = "TBWarnaId", @class = "form-control" })
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-10">
-                        <input type="button" class="btn" value="Add" onclick=""/>
+                        <input type="button" class="btn" value="Add" onclick="AddOptionWarna('#TBWarnaId', @Model.Product.Id)"/>
                     </div>
                 </div>
                 <div id="sizeHidden" class="form-group hide">
@@ -178,7 +191,7 @@
                         @Html.TextBox("size", "", new { @id = "TBSizeId", @class = "form-control" })
                     </div>
                     <div class="col-md-2 col-sm-2 col-xs-10">
-                        <input type="button" class="btn" value="Add" onclick="" />
+                        <input type="button" class="btn" value="Add" onclick="AddOptionSize('#TBSizeId', @Model.Product.Id)" />
                     </div>
                 </div>
                 <!--deskripsi end-->

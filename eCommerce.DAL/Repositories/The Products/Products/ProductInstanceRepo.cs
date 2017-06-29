@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.CommerceClasses.The_Products.Products;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,11 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
         public IEnumerable<ProductInstance> GetByProductId(long productId)
         {
             return dbSet.Where(i => i.ProductId == productId);
+        }
+
+        public ProductInstance GetByIdIncludeOptions(long id)
+        {
+            return dbSet.Where(i => i.Id == id).Include(i => i.ProductInstanceOptions).FirstOrDefault();
         }
         public void DeleteList(List<ProductInstance> list)
         {

@@ -25,6 +25,7 @@ namespace eCommerce.Web.Controllers
         private CategoryRepo categoryRepo;
         private ProductRepo productRepo;
         private OptionsRepo optionRepo;
+        private OptionValueRepo optionValueRepo;
         private ProductInstanceRepo productInstanceRepo;
         private ProductInstanceOptionsRepo productInstanceOptionsRepo;
         private IHttpContextAccessor context;
@@ -32,7 +33,7 @@ namespace eCommerce.Web.Controllers
         private string UserName = "";
 
         public AdminProductController(BrandRepo _brandRepo, CategoryRepo _categoryRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo
-                                       , OptionsRepo _optionRepo, BrandAndCategoryRepo _brAndCatRepo, IHttpContextAccessor _context)
+                                       , OptionsRepo _optionRepo, OptionValueRepo _optionValueRepo, BrandAndCategoryRepo _brAndCatRepo, IHttpContextAccessor _context)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
@@ -40,6 +41,7 @@ namespace eCommerce.Web.Controllers
             this.productInstanceOptionsRepo = _productInstanceOptionsRepo;
             categoryRepo = _categoryRepo;
             optionRepo = _optionRepo;
+            optionValueRepo = _optionValueRepo;
             brAndCatRepo = _brAndCatRepo;
             context = _context;
             UserName = context.HttpContext.User.Identity.Name;
@@ -116,7 +118,18 @@ namespace eCommerce.Web.Controllers
                 }
                 viewModel.listOptions.Add(new OptionListViewModel { Options = item, Selected = check });
             }
-            
+
+            foreach (var item in product.ProductInstance)
+            {
+                var productInstance = productInstanceRepo.GetByIdIncludeOptions(item.Id);
+                var nama = "";
+                foreach (var item1 in productInstance.ProductInstanceOptions)
+                {
+                    var optionValue = optionValueRepo.GetById(item1.OptionValueId);
+                    nama = nama + optionValue.Value + ", ";
+                }
+                viewModel.listProductOption.Add(new ListProductOption { Id = item.Id, Nama = nama });
+            }
             //Form untuk input product baru atau edit product
             return PartialView(viewModel);
         }
@@ -142,7 +155,362 @@ namespace eCommerce.Web.Controllers
             return RedirectToAction("ProductDetails", new { id = product.Id });
         }
 
-        public string ChangeOptions(long productId, long id, bool check)
+        public ActionResult DeleteProductOption(long id = 0)
+        {
+            //Page untuk melihat list of product
+            var productInstance = productInstanceRepo.GetById(id);
+            long productid = 0;
+            if(productInstance != null)
+            {
+                productid = productInstance.ProductId;
+                productInstanceRepo.Delete(id);
+            }
+            
+
+            return RedirectToAction("ProductDetails", new { id = productid });
+        }
+
+        public ActionResult AddOptionWarna(string warna = "", long productId = 0)
+        {
+            //Page untuk melihat list of product
+            try
+            {
+                var product = productRepo.GetByIdIncludeCat(productId);
+                var option = optionRepo.GetAll().Where(i => i.OptionName == "Warna").FirstOrDefault();
+                if(product.ProductInstance.Count() > 0)
+                {
+                    bool check = false;
+                    bool check1 = false;
+                    bool check2 = false;
+                    //int count = 0;
+                    var listOptionSize = new List<OptionValue>();
+                    var listProductInstance = new List<ProductInstance>();
+                    foreach (var item in product.ProductInstance)
+                    {
+                        var productInstance = productInstanceRepo.GetByIdIncludeOptions(item.Id);
+                        if(productInstance.ProductInstanceOptions.Count() > 1)
+                        {
+                            check2 = true;
+                        }
+                        //var productInstanceOption = productInstanceOptionsRepo.GetByProductInstanceId(item.Id).ToList();
+                        foreach (var item1 in productInstance.ProductInstanceOptions)
+                        {
+                            var optionValue = optionValueRepo.GetById(item1.OptionValueId);
+                            if (optionValue.Value.ToLower().Trim() == warna.ToLower().Trim())
+                            {
+                                check = true;
+                            }
+                            if(optionValue.OptionsId != option.Id)
+                            {
+                                check1 = true;
+                                var sizeVal = listOptionSize.Where(i => i.Value == optionValue.Value).FirstOrDefault();
+                                if(sizeVal == null)
+                                {
+                                    listOptionSize.Add(optionValue);
+                                    listProductInstance.Add(productInstance);
+                                }
+                            }
+                        }
+                    }
+                    if(check == false)
+                    {
+                        if(check1 == true)
+                        {
+                            if(check2 == true)
+                            {
+                                foreach (var item in listOptionSize)
+                                {
+                                    var productInstance = new ProductInstance();
+                                    productInstance.ProductId = product.Id;
+                                    productInstance.Price = product.DefaultPrice;
+                                    productInstance.CreatedBy = UserName;
+                                    productInstance.UpdatedBy = UserName;
+
+                                    productInstanceRepo.Save(productInstance);
+
+                                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
+                                    if (optionValue == null)
+                                    {
+                                        optionValue = new OptionValue();
+                                        optionValue.Value = warna;
+                                        optionValue.OptionsId = option.Id;
+                                        optionValue.CreatedBy = UserName;
+                                        optionValue.UpdatedBy = UserName;
+                                        optionValueRepo.Save(optionValue);
+                                    }
+
+                                    var productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = optionValue.Id;
+                                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+
+                                    productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = item.Id;
+                                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+                                }
+                            }
+                            else
+                            {
+                                var y = 0;
+                                foreach (var item in listOptionSize)
+                                {
+                                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
+                                    if (optionValue == null)
+                                    {
+                                        optionValue = new OptionValue();
+                                        optionValue.Value = warna;
+                                        optionValue.OptionsId = option.Id;
+                                        optionValue.CreatedBy = UserName;
+                                        optionValue.UpdatedBy = UserName;
+                                        optionValueRepo.Save(optionValue);
+                                    }
+
+                                    var productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = optionValue.Id;
+                                    productInstanceOption.ProductInstanceId = listProductInstance[y].Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+                                    y++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var productInstance = new ProductInstance();
+                            productInstance.ProductId = product.Id;
+                            productInstance.Price = product.DefaultPrice;
+                            productInstance.CreatedBy = UserName;
+                            productInstance.UpdatedBy = UserName;
+
+                            productInstanceRepo.Save(productInstance);
+
+                            var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
+                            if (optionValue == null)
+                            {
+                                optionValue = new OptionValue();
+                                optionValue.Value = warna;
+                                optionValue.OptionsId = option.Id;
+                                optionValue.CreatedBy = UserName;
+                                optionValue.UpdatedBy = UserName;
+                                optionValueRepo.Save(optionValue);
+                            }
+
+                            var productInstanceOption = new ProductInstanceOptions();
+                            productInstanceOption.OptionValueId = optionValue.Id;
+                            productInstanceOption.ProductInstanceId = productInstance.Id;
+                            productInstanceOptionsRepo.Save(productInstanceOption);
+                        }
+                    }
+                }
+                else
+                {
+                    var productInstance = new ProductInstance();
+                    productInstance.ProductId = product.Id;
+                    productInstance.Price = product.DefaultPrice;
+                    productInstance.CreatedBy = UserName;
+                    productInstance.UpdatedBy = UserName;
+
+                    productInstanceRepo.Save(productInstance);
+
+                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
+                    if(optionValue == null)
+                    {
+                        optionValue = new OptionValue();
+                        optionValue.Value = warna;
+                        optionValue.OptionsId = option.Id;
+                        optionValue.CreatedBy = UserName;
+                        optionValue.UpdatedBy = UserName;
+                        optionValueRepo.Save(optionValue);
+                    }
+
+                    var productInstanceOption = new ProductInstanceOptions();
+                    productInstanceOption.OptionValueId = optionValue.Id;
+                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                    productInstanceOptionsRepo.Save(productInstanceOption);
+
+                }
+
+
+                return RedirectToAction("ProductDetails", new { id = product.Id });
+            }
+            catch (Exception ex)
+            {
+
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public ActionResult AddOptionSize(string size = "", long productId = 0)
+        {
+            //Page untuk melihat list of product
+            try
+            {
+                var product = productRepo.GetByIdIncludeCat(productId);
+                var option = optionRepo.GetAll().Where(i => i.OptionName == "Size").FirstOrDefault();
+                if (product.ProductInstance.Count() > 0)
+                {
+                    bool check = false;
+                    bool check1 = false;
+                    bool check2 = false;
+                    //int count = 0;
+                    var listOptionWarna = new List<OptionValue>();
+                    var listProductInstance = new List<ProductInstance>();
+                    foreach (var item in product.ProductInstance)
+                    {
+                        var productInstance = productInstanceRepo.GetByIdIncludeOptions(item.Id);
+                        if (productInstance.ProductInstanceOptions.Count() > 1)
+                        {
+                            check2 = true;
+                        }
+                        //var productInstanceOption = productInstanceOptionsRepo.GetByProductInstanceId(item.Id).ToList();
+                        foreach (var item1 in productInstance.ProductInstanceOptions)
+                        {
+                            var optionValue = optionValueRepo.GetById(item1.OptionValueId);
+                            if (optionValue.Value.ToLower().Trim() == size.ToLower().Trim())
+                            {
+                                check = true;
+                            }
+                            if (optionValue.OptionsId != option.Id)
+                            {
+                                check1 = true;
+                                var sizeVal = listOptionWarna.Where(i => i.Value == optionValue.Value).FirstOrDefault();
+                                if (sizeVal == null)
+                                {
+                                    listOptionWarna.Add(optionValue);
+                                    listProductInstance.Add(productInstance);
+                                }
+                            }
+                        }
+                    }
+                    if (check == false)
+                    {
+                        if (check1 == true)
+                        {
+                            if (check2 == true)
+                            {
+                                foreach (var item in listOptionWarna)
+                                {
+                                    var productInstance = new ProductInstance();
+                                    productInstance.ProductId = product.Id;
+                                    productInstance.Price = product.DefaultPrice;
+                                    productInstance.CreatedBy = UserName;
+                                    productInstance.UpdatedBy = UserName;
+
+                                    productInstanceRepo.Save(productInstance);
+
+                                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
+                                    if (optionValue == null)
+                                    {
+                                        optionValue = new OptionValue();
+                                        optionValue.Value = size;
+                                        optionValue.OptionsId = option.Id;
+                                        optionValue.CreatedBy = UserName;
+                                        optionValue.UpdatedBy = UserName;
+                                        optionValueRepo.Save(optionValue);
+                                    }
+
+                                    var productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = optionValue.Id;
+                                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+
+                                    productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = item.Id;
+                                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+                                }
+                            }
+                            else
+                            {
+                                var y = 0;
+                                foreach (var item in listOptionWarna)
+                                {
+                                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
+                                    if (optionValue == null)
+                                    {
+                                        optionValue = new OptionValue();
+                                        optionValue.Value = size;
+                                        optionValue.OptionsId = option.Id;
+                                        optionValue.CreatedBy = UserName;
+                                        optionValue.UpdatedBy = UserName;
+                                        optionValueRepo.Save(optionValue);
+                                    }
+
+                                    var productInstanceOption = new ProductInstanceOptions();
+                                    productInstanceOption.OptionValueId = optionValue.Id;
+                                    productInstanceOption.ProductInstanceId = listProductInstance[y].Id;
+                                    productInstanceOptionsRepo.Save(productInstanceOption);
+                                    y++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var productInstance = new ProductInstance();
+                            productInstance.ProductId = product.Id;
+                            productInstance.Price = product.DefaultPrice;
+                            productInstance.CreatedBy = UserName;
+                            productInstance.UpdatedBy = UserName;
+
+                            productInstanceRepo.Save(productInstance);
+
+                            var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
+                            if (optionValue == null)
+                            {
+                                optionValue = new OptionValue();
+                                optionValue.Value = size;
+                                optionValue.OptionsId = option.Id;
+                                optionValue.CreatedBy = UserName;
+                                optionValue.UpdatedBy = UserName;
+                                optionValueRepo.Save(optionValue);
+                            }
+
+                            var productInstanceOption = new ProductInstanceOptions();
+                            productInstanceOption.OptionValueId = optionValue.Id;
+                            productInstanceOption.ProductInstanceId = productInstance.Id;
+                            productInstanceOptionsRepo.Save(productInstanceOption);
+                        }
+                    }
+                }
+                else
+                {
+                    var productInstance = new ProductInstance();
+                    productInstance.ProductId = product.Id;
+                    productInstance.Price = product.DefaultPrice;
+                    productInstance.CreatedBy = UserName;
+                    productInstance.UpdatedBy = UserName;
+
+                    productInstanceRepo.Save(productInstance);
+
+                    var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
+                    if (optionValue == null)
+                    {
+                        optionValue = new OptionValue();
+                        optionValue.Value = size;
+                        optionValue.OptionsId = option.Id;
+                        optionValue.CreatedBy = UserName;
+                        optionValue.UpdatedBy = UserName;
+                        optionValueRepo.Save(optionValue);
+                    }
+
+                    var productInstanceOption = new ProductInstanceOptions();
+                    productInstanceOption.OptionValueId = optionValue.Id;
+                    productInstanceOption.ProductInstanceId = productInstance.Id;
+                    productInstanceOptionsRepo.Save(productInstanceOption);
+
+                }
+
+
+                return RedirectToAction("ProductDetails", new { id = product.Id });
+            }
+            catch (Exception ex)
+            {
+
+                return new StatusCodeResult(500);
+            }
+        }
+
+        public ActionResult ChangeOptions(long productId, long id, bool check)
         {
             try
             {
@@ -150,7 +518,7 @@ namespace eCommerce.Web.Controllers
                 var product = productRepo.GetById(productId);
                 if (product == null)
                 {
-                    return "Save Product First!!";
+                    return new StatusCodeResult(500);
                 }
                 if(option.OptionName == "Warna")
                 {
@@ -195,12 +563,12 @@ namespace eCommerce.Web.Controllers
                     productInstanceRepo.DeleteList(deleteProductInstanceList);
                 }
                 //lanjut disini
-                return "1";
+                return RedirectToAction("ProductDetails", new { id = product.Id });
             }
             catch (Exception ex)
             {
 
-                return ex.Message;
+                return new StatusCodeResult(500);
             }
             //Page untuk melihat list of product
             
