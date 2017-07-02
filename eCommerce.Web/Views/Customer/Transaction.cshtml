@@ -5,7 +5,7 @@
 }
 
 
-@model eCommerce.Web.Models.CustomerViewModels.TransactionHistoryViewModel
+@*@model eCommerce.Web.Models.CustomerViewModels.TransactionHistoryViewModel*@
 
 <div class="section">
     <div class="container">
@@ -22,53 +22,28 @@
             <!-- End Sidebar -->
             <div class="col-sm-9">
                 <div class="blog-post blog-single-post">
-                    @*<!-- info customer -->
-                    <div class="row invoice-info">
-                        <div class="col-sm-4 invoice-col">
-                            <strong>Code: </strong>TRX-06212017-00001<br />
-                            <strong>Transaction Date: </strong>06/21/2017 7:00 AM<br />
-                            <strong>Customer: </strong>Customer's Name<br />
-                            <strong>Total Price: </strong>Rp. 350.000,00<br />
-                        </div>
-                        <!-- info receiver -->
-                        <div class="col-sm-8 invoice-col">
-                            <strong>Receiver's Name: </strong>Receiver's Name<br />
-                            <strong>Receiver's Address: </strong>This is the fakest street ever No.001, City, Province, ZIP Code
+                    <div class="tabbable">
+                        <!-- Tabs -->
+                        <ul class="nav nav-tabs product-details-nav">
+                            <li class="active"><a href="#tab1" data-toggle="tab">Current Transaction</a></li>
+                            <li><a href="#tab2" data-toggle="tab">Completed Transaction</a></li>
+                            <li><a href="#tab3" data-toggle="tab">Cancelled Transaction</a></li>
+                        </ul>
+                        <!-- Tab Content (Full Description) -->
+                        <div class="tab-content product-detail-info">
+                            <div class="tab-pane active" id="tab1">
+                                @await Component.InvokeAsync("CurrentTransaction")
+                            </div>
+                            <!-- Tab Content (Specification) -->
+                            <div class="tab-pane" id="tab2">
+                                @await Component.InvokeAsync("CompletedTransaction")
+                            </div>
+                            <div class="tab-pane" id="tab3">
+                                @await Component.InvokeAsync("CancelledTransaction")
+                            </div>
                         </div>
                     </div>
-                    <!-- /.row -->*@
-                    <!-- Table row -->
-                    <div class="row">
-                        <div class="col-md-12 col-xs-12 table">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Transaction Date</th>
-                                        <th>Total Price</th>
-                                        <th>Receiver Address</th>
-                                        <th>Transaction Status</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.ListTransaction)
-                                    {
-                                        <tr>
-                                            <td>@item.Code</td>
-                                            <td>@item.TglTransaksi.ToString("dd-MMM-yyyy")</td>
-                                            <td>Rp. @item.TotalPrice</td>
-                                            <td>@(item.ShippingDetails.Provinsi + "," + item.ShippingDetails.Kota + "," + item.ShippingDetails.KodePos + "," + item.ShippingDetails.AlamatPengiriman)</td>
-                                            <td>@item.CurrentStatus</td>
-                                            <td><a class="btn btn-info" href="~/Customer/TransactionDetails?TransactionId=@item.Id">Details</a></td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        <!-- /.col -->
-                    </div>
-                    <!-- /.row -->
+                    
                 </div>
             </div>
             <!-- End Blog Post -->

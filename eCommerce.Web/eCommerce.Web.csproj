@@ -99,6 +99,8 @@
     <Content Include="wwwroot\css\user\main.css" />
     <Content Include="wwwroot\css\user\style.css" />
     <Content Include="wwwroot\images\product6.jpg" />
+    <Content Include="wwwroot\images\test1.jpg" />
+    <Content Include="wwwroot\images\test2.jpg" />
     <Content Include="wwwroot\js\AdminProduct\AdminProduct.js" />
     <Content Include="wwwroot\js\AdminTransaction\admin-transaction.js" />
     <Content Include="wwwroot\js\bootstrap-progressbar.js" />
@@ -125,11 +127,7 @@
     <Content Include="wwwroot\js\main-menu.js" />
     <Content Include="wwwroot\js\modernizr-2.6.2-respond-1.1.0.min.js" />
     <Content Include="wwwroot\js\nprogress.js" />
-    <Content Include="wwwroot\js\Product\jquery.bxslider.js" />
-    <Content Include="wwwroot\js\Product\jquery.flexisel.js" />
-    <Content Include="wwwroot\js\Product\jquery.flexslider.js" />
     <Content Include="wwwroot\js\Product\Product.js" />
-    <Content Include="wwwroot\js\Product\responsiveslides.min.js" />
     <Content Include="wwwroot\js\template.js" />
   </ItemGroup>
   <ItemGroup>
