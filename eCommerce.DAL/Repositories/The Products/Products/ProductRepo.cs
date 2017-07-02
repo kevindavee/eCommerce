@@ -20,11 +20,18 @@ namespace eCommerce.DAL.Repositories.The_Products.Products
 
         public Product GetByIdIncludeCat(long id)
         {
-            return dbSet.Where(i => i.Id == id).Include(i => i.Category).FirstOrDefault();
+            return dbSet.Where(i => i.Id == id).Include(i => i.Category).Include(i => i.ProductInstance).FirstOrDefault();
         }
         public List<Product> GetByCategoryIncludeImage(long CategoryId)
         {
             return dbSet.Where(j => CategoryId == 0 ? true : j.CategoryId == CategoryId).Include(i => i.ProductImage).ToList();
+        }
+
+        public void IncrementProductViewer(long Id)
+        {
+            var product = GetById(Id);
+            product.Seen++;
+            Save(product);
         }
     }
 }

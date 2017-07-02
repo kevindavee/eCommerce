@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170628161305_new-field-1")]
+    partial class newfield1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -351,8 +352,6 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<long>("RatingCount");
 
-                    b.Property<int>("Seen");
-
                     b.Property<bool>("SizeOption");
 
                     b.Property<string>("UpdatedBy");
@@ -379,7 +378,7 @@ namespace eCommerce.DAL.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<decimal>("Price");
+                    b.Property<int>("Price");
 
                     b.Property<long>("ProductId");
 

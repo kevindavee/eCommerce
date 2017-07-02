@@ -13,6 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\BuktiTransfer\Principle of Microservices.jpg" />
     <Content Include="wwwroot\css\admin\bootstrap-progressbar-3.3.4.css" />
     <Content Include="wwwroot\css\admin\bootstrap-progressbar-3.3.4.min.css" />
     <Content Include="wwwroot\css\admin\bootstrap-theme.css" />
@@ -172,7 +173,7 @@
     <Folder Include="Views\AdminTransaction\Components\ShippingList\" />
     <Folder Include="Views\AdminTransaction\Components\PaymentList\" />
     <Folder Include="Views\Shared\Components\CategoryList\" />
-    <Folder Include="wwwroot\BuktiTransfer\" />
+    <Folder Include="wwwroot\HomeImageSlider\" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="1.0.0-msbuild3-final" />

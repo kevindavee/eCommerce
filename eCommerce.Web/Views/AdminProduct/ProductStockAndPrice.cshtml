@@ -1,0 +1,39 @@
+@using eCommerce.Web.Models.AdminProduct
+
+@model ProductStockPriceViewModel
+
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>@Model.Product.Nama</h2>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_title">
+            <h2>Product Instance List</h2>
+            <div class="clearfix"></div>
+            <input type="button" class="btn btn-primary" value="Save" onclick="" />
+            <input type="button" class="btn btn-primary" value="Refresh" onclick="" />
+        </div>
+        <div class="x_content">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Options</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ListProductInt)
+                    {
+                        <tr>
+                            <td>@item.Nama</td>
+                            <td>@Html.TextBoxFor(Model => item.ProductInstance.Price, new { @class="number form-control"})</td>
+                            <td>@Html.TextBoxFor(Model => item.Stock.Quantity, new { @class="number form-control"})</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

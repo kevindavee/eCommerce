@@ -77,7 +77,7 @@ namespace eCommerce.Web.Controllers
         }
 
         public PartialViewResult ProductIndex(long CategoryId = 0, string sort = "", decimal MinHarga = 0, decimal MaxHarga = 10000000000, long brandId = 0,
-                                              int PageIndex = 0, int TotalPage = 0, int PageSize = 16)
+                                              int PageIndex = 0, int PageSize = 16)
         {
             ProductPartialPagingViewModel model = new ProductPartialPagingViewModel();
             //Partial view untuk refresh list of product
@@ -90,7 +90,7 @@ namespace eCommerce.Web.Controllers
             model.TotalPage = (int)Math.Ceiling(totalPage);
             model.ProductList = list.Skip(PageIndex * PageSize).Take(PageSize).ToList();
 
-            return PartialView(list);
+            return PartialView(model);
         }
 
         public ActionResult Detail(long ProductId)
@@ -113,7 +113,7 @@ namespace eCommerce.Web.Controllers
                 {
                     Product = item,
                     Price = productInstanceRepo.GetPriceForProductList(item.Id),
-                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/images/product6.jpg")
+                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/no-image.png")
                 });
             }
 
@@ -171,6 +171,7 @@ namespace eCommerce.Web.Controllers
             model.PathProductImageList = productImagePathList;
             //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
 
+            productRepo.IncrementProductViewer(ProductId);
 
             return View(model);
         }

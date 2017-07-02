@@ -1,0 +1,94 @@
+@model eCommerce.Web.Models.AdminProduct.BrandCategoryViewModel
+
+@{
+    ViewData["Title"] = "BrandDetail";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+@if (ViewData["Message"] != null)
+{
+    <script type="text/javascript">
+        alert(@ViewData["Message"]);
+    </script>
+}
+
+<div class="right_col" role="main">
+    <div class="">
+        <div class="">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2><i class="fa fa-bars"></i> Brand Details - @Model.Brand.Nama</h2>
+                        <div class="clearfix"></div>
+                        <a href="@Url.Action("ManageBrand", "AdminProduct")"><i class="fa fa-caret-left"></i> Back</a>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="x_content">
+                        @using (Html.BeginForm("AddBrandCategory", "AdminProduct", new { BrandId = Model.Brand.Id }, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
+                        {
+                            <div class="form-group">
+                                <label class="col-md-4 pull-left">Add new category for this brand</label>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <label class="control-label">Category</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="dropdown-parent" class="form-control"
+                                            asp-items="@(new SelectList(ViewBag.Parent, "Id", "Nama"))" onchange="GetSubCategory('#dropdown-parent', '#dropdown-child')"></select>
+                                </div>
+                                <div class="col-md-3">
+                                    <select id="dropdown-child" class="form-control">
+                                        <option value="">Choose parent first</option>
+                                    </select>
+                                </div>
+                                @Html.Hidden("CategoryId")
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-primary" id="btn-submit-brand-category" disabled="disabled">Submit</button>
+                                </div>
+                            
+                            </div>
+                        }
+                        <hr />
+                        @if (Model.Categories == null || Model.Categories.Count == 0)
+	                    {
+		                     <p>No categories for this brand</p>
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-responsive table-bordered text-center" id="myTable">
+                                        <thead>
+                                            <tr>
+                                                <td>Category Name</td>
+                                                <td></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Categories)
+                                            {
+                                                <tr>
+                                                    <td>@item.Nama</td>
+                                                    <td>
+                                                        @using (Html.BeginForm("DeleteBrandCategory", "AdminProduct", new { BrandId = Model.Brand.Id, CategoryId = item.Id }, FormMethod.Post, true, htmlAttributes: new { @class = "form-horizontal" }))
+                                                        {
+                                                            <button type="submit" class="btn btn-danger btn-delete-brand-category">Delete</button>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/js/AdminProduct/AdminProduct.js"></script>

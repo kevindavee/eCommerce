@@ -26,25 +26,33 @@
                     <div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
                         <!-- Wrapper for slides -->
                         <div class="carousel-inner">
-                            @{
-                                var counter = 1;
-                            }
-                            @foreach (var item in Model.PathProductImageList)
+                            @if (Model.PathProductImageList.Count == 0)
                             {
-                                if (counter == 1)
-                                {
-                                    <div class="item active">
-                                        <img src="@Url.Content(item)" alt="image" style="width:700px;height:350px;">
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="item">
-                                        <img src="@Url.Content(item)" alt="image" style="width:700px;height:350px;">
-                                    </div>
-                                }
-                                counter++;
+                                <div class="item active">
+                                    <img src="~/no-image.png" alt="image" style="width:700px;height:350px;">
+                                </div>
                             }
+                            else
+                            {
+                                var counter = 1;
+                                foreach (var item in Model.PathProductImageList)
+                                {
+                                    if (counter == 1)
+                                    {
+                                        <div class="item active">
+                                            <img src="@Url.Content(item)" alt="image" style="width:700px;height:350px;">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="item">
+                                            <img src="@Url.Content(item)" alt="image" style="width:700px;height:350px;">
+                                        </div>
+                                    }
+                                    counter++;
+                                }
+                                }
+                            
                         </div>
 
                         <!-- Left and right controls -->
