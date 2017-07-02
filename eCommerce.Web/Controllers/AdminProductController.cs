@@ -14,6 +14,8 @@ using eCommerce.Core.CommerceClasses.The_Products.Products;
 using Microsoft.AspNetCore.Http;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
 using eCommerce.Core.CommerceClasses.BrandsAndCategories;
+using eCommerce.DAL.Repositories.Stocks;
+using eCommerce.Core.CommerceClasses.Stocks;
 
 namespace eCommerce.Web.Controllers
 {
@@ -23,6 +25,7 @@ namespace eCommerce.Web.Controllers
         private BrandRepo brandRepo;
         private BrandAndCategoryRepo brAndCatRepo;
         private CategoryRepo categoryRepo;
+        private StockRepo stockRepo;
         private ProductRepo productRepo;
         private OptionsRepo optionRepo;
         private OptionValueRepo optionValueRepo;
@@ -33,7 +36,7 @@ namespace eCommerce.Web.Controllers
         private string UserName = "";
 
         public AdminProductController(BrandRepo _brandRepo, CategoryRepo _categoryRepo, ProductRepo _productRepo, ProductInstanceRepo _productInstanceRepo, ProductInstanceOptionsRepo _productInstanceOptionsRepo
-                                       , OptionsRepo _optionRepo, OptionValueRepo _optionValueRepo, BrandAndCategoryRepo _brAndCatRepo, IHttpContextAccessor _context)
+                                       , OptionsRepo _optionRepo, OptionValueRepo _optionValueRepo, BrandAndCategoryRepo _brAndCatRepo, StockRepo _stockRepo, IHttpContextAccessor _context)
         {
             brandRepo = _brandRepo;
             this.productRepo = _productRepo;
@@ -43,6 +46,7 @@ namespace eCommerce.Web.Controllers
             optionRepo = _optionRepo;
             optionValueRepo = _optionValueRepo;
             brAndCatRepo = _brAndCatRepo;
+            stockRepo = _stockRepo;
             context = _context;
             UserName = context.HttpContext.User.Identity.Name;
         }
@@ -228,6 +232,18 @@ namespace eCommerce.Web.Controllers
 
                                     productInstanceRepo.Save(productInstance);
 
+                                    var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                                    if(stock == null)
+                                    {
+                                        stock = new Stock();
+                                        stock.CreatedBy = UserName;
+                                    }
+                                    stock.ProductInstanceId = productInstance.Id;
+                                    stock.UpdatedBy = UserName;
+                                    stock.UpdatedDate = DateTime.Now;
+
+                                    stockRepo.Save(stock);
+
                                     var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
                                     if (optionValue == null)
                                     {
@@ -284,6 +300,18 @@ namespace eCommerce.Web.Controllers
 
                             productInstanceRepo.Save(productInstance);
 
+                            var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                            if (stock == null)
+                            {
+                                stock = new Stock();
+                                stock.CreatedBy = UserName;
+                            }
+                            stock.ProductInstanceId = productInstance.Id;
+                            stock.UpdatedBy = UserName;
+                            stock.UpdatedDate = DateTime.Now;
+
+                            stockRepo.Save(stock);
+
                             var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
                             if (optionValue == null)
                             {
@@ -311,6 +339,18 @@ namespace eCommerce.Web.Controllers
                     productInstance.UpdatedBy = UserName;
 
                     productInstanceRepo.Save(productInstance);
+
+                    var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                    if (stock == null)
+                    {
+                        stock = new Stock();
+                        stock.CreatedBy = UserName;
+                    }
+                    stock.ProductInstanceId = productInstance.Id;
+                    stock.UpdatedBy = UserName;
+                    stock.UpdatedDate = DateTime.Now;
+
+                    stockRepo.Save(stock);
 
                     var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == warna.ToLower().Trim()).FirstOrDefault();
                     if(optionValue == null)
@@ -398,6 +438,18 @@ namespace eCommerce.Web.Controllers
 
                                     productInstanceRepo.Save(productInstance);
 
+                                    var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                                    if (stock == null)
+                                    {
+                                        stock = new Stock();
+                                        stock.CreatedBy = UserName;
+                                    }
+                                    stock.ProductInstanceId = productInstance.Id;
+                                    stock.UpdatedBy = UserName;
+                                    stock.UpdatedDate = DateTime.Now;
+
+                                    stockRepo.Save(stock);
+
                                     var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
                                     if (optionValue == null)
                                     {
@@ -454,6 +506,18 @@ namespace eCommerce.Web.Controllers
 
                             productInstanceRepo.Save(productInstance);
 
+                            var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                            if (stock == null)
+                            {
+                                stock = new Stock();
+                                stock.CreatedBy = UserName;
+                            }
+                            stock.ProductInstanceId = productInstance.Id;
+                            stock.UpdatedBy = UserName;
+                            stock.UpdatedDate = DateTime.Now;
+
+                            stockRepo.Save(stock);
+
                             var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
                             if (optionValue == null)
                             {
@@ -481,6 +545,18 @@ namespace eCommerce.Web.Controllers
                     productInstance.UpdatedBy = UserName;
 
                     productInstanceRepo.Save(productInstance);
+
+                    var stock = stockRepo.GetByProductInstanceId(productInstance.Id);
+                    if (stock == null)
+                    {
+                        stock = new Stock();
+                        stock.CreatedBy = UserName;
+                    }
+                    stock.ProductInstanceId = productInstance.Id;
+                    stock.UpdatedBy = UserName;
+                    stock.UpdatedDate = DateTime.Now;
+
+                    stockRepo.Save(stock);
 
                     var optionValue = optionValueRepo.GetAll().Where(i => i.OptionsId == option.Id && i.Value.ToLower().Trim() == size.ToLower().Trim()).FirstOrDefault();
                     if (optionValue == null)
@@ -615,6 +691,26 @@ namespace eCommerce.Web.Controllers
             var result = new { brandList = brandList };
 
             return Json(result);
+        }
+
+        public PartialViewResult ProductStockAndPrice(long id = 0)
+        {
+            var product = productRepo.GetByIdIncludeCat(id);
+            var viewModel = new ProductStockPriceViewModel();
+            viewModel.Product = product;
+            foreach (var item in product.ProductInstance)
+            {
+                var productInstance = productInstanceRepo.GetByIdIncludeOptions(item.Id);
+                var stock = stockRepo.GetByProductInstanceId(item.Id);
+                string nama = "";
+                foreach (var item1 in productInstance.ProductInstanceOptions)
+                {
+                    var optionValue = optionValueRepo.GetById(item1.OptionValueId);
+                    nama = nama + optionValue.Value + ", ";
+                }
+                viewModel.ListProductInt.Add(new StockPriceModel { Stock = stock, ProductInstance = item, Nama = nama });
+            }
+            return PartialView(viewModel);
         }
 
         public PartialViewResult ProductList()

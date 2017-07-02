@@ -81,6 +81,9 @@ function DetailsProductClick(Id) {
             {
                 $("#sizeHidden").removeClass("hide");
             }
+            $.get(url + "ProductStockAndPrice?id=" + Id, function (data) {
+                $('#tabProductStockPrice').html(data);
+            })
         })
         $('#details-tab').tab('show');
     })
@@ -113,6 +116,7 @@ function DeleteProduct(Id) {
 }
 
 function ChangeOptions(productId, Id, OptionNama) {
+    var safe = document.getElementById(Id).checked;
     if (confirm("Are you sure?")) {
         $.post(url + "ChangeOptions?productId=" + productId + "&id=" + Id + "&check=" + document.getElementById(Id).checked, function (data) {
             $('#tabProductDetails').html(data);
@@ -127,6 +131,10 @@ function ChangeOptions(productId, Id, OptionNama) {
             })
             $('#details-tab').tab('show');
         })
+    }
+    else
+    {
+        document.getElementById(Id).checked = safe;
     }
 }
 

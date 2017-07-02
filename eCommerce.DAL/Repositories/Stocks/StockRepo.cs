@@ -12,6 +12,11 @@ namespace eCommerce.DAL.Repositories.Stocks
         {
         }
 
+        public Stock GetByProductInstanceId(long id)
+        {
+            return dbSet.Where(i => i.ProductInstanceId == id).FirstOrDefault();
+        }
+
         /// <summary>
         /// Toggle quantity movement between cart and stock
         /// </summary>

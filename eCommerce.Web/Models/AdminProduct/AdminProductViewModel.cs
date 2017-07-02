@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.CommerceClasses.Brands;
+using eCommerce.Core.CommerceClasses.Stocks;
 using eCommerce.Core.CommerceClasses.The_Products.Categories;
 using eCommerce.Core.CommerceClasses.The_Products.Products;
 using System;
@@ -15,6 +16,7 @@ namespace eCommerce.Web.Models.AdminProduct
     {
         public List<Product> listProduct { get; set; }
         public DetailsProductViewModel DetailsProduct { get; set; } = new DetailsProductViewModel();
+        public ProductStockPriceViewModel StockPriceProduct { get; set; } = new ProductStockPriceViewModel();
     }
 
     public class DetailsProductViewModel
@@ -38,5 +40,17 @@ namespace eCommerce.Web.Models.AdminProduct
     {
         public Options Options { get; set; } = new Options();
         public bool Selected { get; set; } = false;
+    }
+
+    public class ProductStockPriceViewModel
+    {
+        public Product Product { get; set; } = new Product();
+        public List<StockPriceModel> ListProductInt { get; set; } = new List<StockPriceModel>();
+    }
+    public class StockPriceModel
+    {
+        public string Nama { get; set; } = "";
+        public Stock Stock { get; set; } = new Stock();
+        public ProductInstance ProductInstance { get; set; } = new ProductInstance();
     }
 }

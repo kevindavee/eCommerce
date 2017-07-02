@@ -27,7 +27,7 @@
                             <td>@item.Nama</td>
                             <td>@item.Category.Nama</td>
                             <td>@item.Brand.Nama</td>
-                            <td>@item.DefaultPrice</td>
+                            <td>Rp. @Html.DisplayFor(modelItem => item.DefaultPrice)</td>
                             <td>
                                 @if(item.IsAvailable == true)
                                 {

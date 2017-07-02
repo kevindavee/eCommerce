@@ -93,7 +93,7 @@
                         @for (var i = 0; i < Model.listOptions.Count; i++)
                         {
                             <div class="col-md-1">
-                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @id="" + Model.listOptions[i].Options.Id + "", @class = "", @onchange="ChangeOptions(" + Model.Product.Id +"," + Model.listOptions[i].Options.Id + ", '" + Model.listOptions[i].Options.OptionName + "')" })
+                                @Html.CheckBoxFor(e => e.listOptions[i].Selected, new { @id="" + Model.listOptions[i].Options.Id + "", @class = "", @onclick="ChangeOptions(" + Model.Product.Id +"," + Model.listOptions[i].Options.Id + ", '" + Model.listOptions[i].Options.OptionName + "')" })
                             </div>
                             <div class="col-md-2">
                                 @Model.listOptions[i].Options.OptionName
