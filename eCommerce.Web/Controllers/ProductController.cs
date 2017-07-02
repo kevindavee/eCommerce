@@ -113,7 +113,7 @@ namespace eCommerce.Web.Controllers
                 {
                     Product = item,
                     Price = productInstanceRepo.GetPriceForProductList(item.Id),
-                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/images/product6.jpg")
+                    PictureLocation = (item.ProductImage.Count > 0? item.ProductImage.FirstOrDefault().Path : "~/no-image.png")
                 });
             }
 
@@ -171,6 +171,7 @@ namespace eCommerce.Web.Controllers
             model.PathProductImageList = productImagePathList;
             //model.ProductPrice = productInstanceRepo.GetById(productInstanceOptionsRepo.GetPriceByFilter(ProductId, colorList.FirstOrDefault(), ukuranList.FirstOrDefault())).Price;
 
+            productRepo.IncrementProductViewer(ProductId);
 
             return View(model);
         }
