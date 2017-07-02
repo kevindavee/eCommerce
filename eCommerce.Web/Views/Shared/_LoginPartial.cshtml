@@ -16,7 +16,18 @@
             </li>
             }
             <li>
-                <a href="@Url.Action("Profile", "Customer")">@UserManager.GetUserName(User)!</a>
+                @if (User.IsInRole("Customer"))
+                {
+                    <a href="@Url.Action("Profile", "Customer")">@UserManager.GetUserName(User)!</a>
+                }
+                else if (User.IsInRole("FinanceAdmin"))
+                {
+                    <a href="@Url.Action("ManagePayment", "AdminTransaction")">@UserManager.GetUserName(User)!</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "AdminProduct")">@UserManager.GetUserName(User)!</a>
+                }
             </li>
             <li>
                 <button type="submit" class="btn btn-info navbar-btn">Log out</button>
