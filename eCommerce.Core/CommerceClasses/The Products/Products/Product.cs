@@ -5,6 +5,7 @@ using eCommerce.Core.CommerceClasses.The_Products.Product_Images;
 using eCommerce.Core.CommerceClasses.The_Products.Reviews;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace eCommerce.Core.CommerceClasses.The_Products.Products
@@ -15,7 +16,10 @@ namespace eCommerce.Core.CommerceClasses.The_Products.Products
         public string Nama { get; set; } = "";
         public string Deskripsi { get; set; } = "";
         public long BrandId { get; set; } = 0;
+
+        [DisplayFormat(DataFormatString = "{0:#,##0.##}")]
         public decimal DefaultPrice { get; set; } = 0;
+
         public bool WarnaOption { get; set; } = false;
         public bool SizeOption { get; set; } = false;
         public float Rating { get; set; } = 0;

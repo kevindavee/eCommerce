@@ -19,7 +19,7 @@ using eCommerce.Core.CommerceClasses.Stocks;
 
 namespace eCommerce.Web.Controllers
 {
-    [Authorize(Roles = "SuperAdmin")]
+    [Authorize(Roles = "SuperAdmin, ProductAdmin")]
     public class AdminProductController : Controller
     {
         private BrandRepo brandRepo;

@@ -1,7 +1,28 @@
+@model IEnumerable<eCommerce.Core.CommerceClasses.Banks.Bank>
 
 @{
     ViewData["Title"] = "TransactionSubmitted";
 }
 
-<h2>TransactionSubmitted</h2>
+<div class="section section-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Transaction Submitted !</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <br />
+        <h1>Please transfer to one of these following bank account</h1>
+        <br />
+        @foreach (var item in Model)
+        {
+            <h4><b>@item.Nama</b></h4>
+            <p><b>@item.AccountNumber</b> a/n @item.AccountHolder</p>
+        }
+    </div>
+</div>
 

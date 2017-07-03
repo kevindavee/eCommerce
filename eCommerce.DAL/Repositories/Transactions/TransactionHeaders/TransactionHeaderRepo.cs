@@ -68,15 +68,19 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         }
 
         /// <summary>
-        /// Check if the transaction is waiting for payment confirmation. Return true if the state is waiting for payment confirmation
+        /// Check if the transaction is waiting for payment confirmation, and check if this transaction belongs to the right customer. Return true if the state is waiting for payment confirmation
         /// </summary>
         /// <param name="TransactionId"></param>
         /// <returns></returns>
-        public bool IsWaitingForConfirmation(long TransactionId)
+        public bool IsWaitingForConfirmation(long TransactionId, long CustomerId)
         {
             var result = GetById(TransactionId);
             if (result != null)
             {
+                if (result.CustomerId != CustomerId)
+                {
+                    return false;
+                }
                 if (result.CurrentStatus == (TransactionStatus.PaymentConfirmation))
                 {
                     return true;

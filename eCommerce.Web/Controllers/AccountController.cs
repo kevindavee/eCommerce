@@ -83,11 +83,18 @@ namespace eCommerce.Web.Controllers
                     _logger.LogInformation(1, "User logged in.");
                     var user = await _userManager.FindByNameAsync(model.Username);
                     var role = await _userManager.GetRolesAsync(user);
-                    if(role.FirstOrDefault() == "Customer")
+                    if(role.FirstOrDefault() == "SuperAdmin" || role.FirstOrDefault() == "ProductAdmin")
+                    {
+                        return RedirectToAction("Index", "AdminProduct");
+                    }
+                    else if(role.FirstOrDefault() == "FinanceAdmin")
+                    {
+                        return RedirectToAction("ManagePayment", "AdminFinance");
+                    }
+                    else
                     {
                         return RedirectToLocal(returnUrl);
                     }
-                    return RedirectToAction("Index", "AdminProduct");
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -7,43 +7,47 @@
 @Html.Hidden("TotalPage", Model.TotalPage)
 @foreach (var item in Model.ProductList)
 {
-    <div class="col-md-3 col-sm-6">
-        <!-- Product -->
-        <div class="shop-item">
-            <!-- Product Image -->
-            <div class="shop-item-image">
-                <a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">
-                    @if (string.IsNullOrEmpty(item.PictureLocation))
+    @if (item.Price > 0)
+    {
+        <div class="col-md-3 col-sm-6">
+            <!-- Product -->
+            <div class="shop-item">
+                <!-- Product Image -->
+                <div class="shop-item-image">
+                    <a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">
+                        @if (string.IsNullOrEmpty(item.PictureLocation))
                     {
-                        <img src="~/no-image.png" alt="IMAGES" style="height:150px;" class="img-responsive" />
-                    }
-                    else
-                    {
-                        <img src="@Url.Content(item.PictureLocation)" alt="IMAGES" style="height:150px;" class="img-responsive" />
-                    }
-                </a>
+                            <img src="~/no-image.png" alt="IMAGES" style="height:150px;" class="img-responsive" />
+                        }
+                        else
+                        {
+                            <img src="@Url.Content(item.PictureLocation)" alt="IMAGES" style="height:150px;" class="img-responsive" />
+                        }
+                    </a>
+                </div>
+                <!-- Product Title -->
+                <div class="title">
+                    <h3><a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">@item.Product.Nama</a></h3>
+                </div>
+                <!-- Product Available Colors-->
+                @*<div class="colors">
+                        <span class="color-white"></span>
+                        <span class="color-black"></span>
+                        <span class="color-blue"></span>
+                        <span class="color-orange"></span>
+                        <span class="color-green"></span>
+                    </div>*@
+                <!-- Product Price-->
+                <div class="price">
+                    from Rp. @Html.DisplayFor(model => item.Price)
+                </div>
+                <!-- Add to Cart Button -->
+                <!--<div class="actions">
+                    <a href="page-product-details.html" class="btn btn-small"><i class="icon-shopping-cart icon-white"></i> Add to Cart</a>
+                </div>-->
             </div>
-            <!-- Product Title -->
-            <div class="title">
-                <h3><a href="@Url.Action("DetailsProduct", new { ProductId = item.Product.Id })">@item.Product.Nama</a></h3>
-            </div>
-            <!-- Product Available Colors-->
-            @*<div class="colors">
-                    <span class="color-white"></span>
-                    <span class="color-black"></span>
-                    <span class="color-blue"></span>
-                    <span class="color-orange"></span>
-                    <span class="color-green"></span>
-                </div>*@
-            <!-- Product Price-->
-            <div class="price">
-                from Rp. @Html.DisplayFor(model => item.Price)
-            </div>
-            <!-- Add to Cart Button -->
-            <!--<div class="actions">
-                <a href="page-product-details.html" class="btn btn-small"><i class="icon-shopping-cart icon-white"></i> Add to Cart</a>
-            </div>-->
+            <!-- End Product -->
         </div>
-        <!-- End Product -->
-    </div>
+
+    }
 }
