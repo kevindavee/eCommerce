@@ -122,7 +122,10 @@ namespace eCommerce.Web.Controllers
                 }
                 viewModel.listOptions.Add(new OptionListViewModel { Options = item, Selected = check });
             }
-
+            if(product.ProductInstance == null)
+            {
+                product.ProductInstance = new List<ProductInstance>();
+            }
             foreach (var item in product.ProductInstance)
             {
                 var productInstance = productInstanceRepo.GetByIdIncludeOptions(item.Id);
@@ -711,6 +714,32 @@ namespace eCommerce.Web.Controllers
                 viewModel.ListProductInt.Add(new StockPriceModel { Stock = stock, ProductInstance = item, Nama = nama });
             }
             return PartialView(viewModel);
+        }
+
+        public ActionResult SaveProductStockAndPrice(ProductStockPriceViewModel model)
+        {
+            //Page untuk melihat list of product
+            var product = productRepo.GetByIdIncludeCat(model.Product.Id);
+            if (product == null)
+            {
+                product = new Product();
+            }
+            foreach (var item in model.ListProductInt)
+            {
+                var productInstance = productInstanceRepo.GetById(item.ProductInstance.Id);
+                productInstance.Price = item.ProductInstance.Price;
+                productInstance.UpdatedBy = UserName;
+                productInstance.UpdatedDate = DateTime.Now;
+                productInstanceRepo.Save(productInstance);
+
+                var stock = stockRepo.GetById(item.Stock.Id);
+                stock.Quantity = item.Stock.Quantity;
+                stock.UpdatedBy = UserName;
+                stock.UpdatedDate = DateTime.Now;
+                stockRepo.Save(stock);
+            }
+
+            return RedirectToAction("ProductStockAndPrice", new { id = product.Id });
         }
 
         public PartialViewResult ProductList()

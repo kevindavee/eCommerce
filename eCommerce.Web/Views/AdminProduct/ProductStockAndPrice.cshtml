@@ -11,29 +11,36 @@
         <div class="x_title">
             <h2>Product Instance List</h2>
             <div class="clearfix"></div>
-            <input type="button" class="btn btn-primary" value="Save" onclick="" />
-            <input type="button" class="btn btn-primary" value="Refresh" onclick="" />
+            <input type="button" class="btn btn-primary" value="Save" onclick="SaveProductStockAndPrice(@Model.Product.Id)" />
+            <input type="button" class="btn btn-primary" value="Refresh" onclick="RefreshProductStockAndPrice(@Model.Product.Id)" />
         </div>
         <div class="x_content">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Options</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.ListProductInt)
-                    {
+            <form id="frmStockAndPrice">
+                @Html.HiddenFor(model => model.Product.Id)
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td>@item.Nama</td>
-                            <td>@Html.TextBoxFor(Model => item.ProductInstance.Price, new { @class="number form-control"})</td>
-                            <td>@Html.TextBoxFor(Model => item.Stock.Quantity, new { @class="number form-control"})</td>
+                            <th>Options</th>
+                            <th>Price</th>
+                            <th>Stock</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.ListProductInt.Count(); i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.ListProductInt[i].Nama
+                                    @Html.HiddenFor(Model => Model.ListProductInt[i].ProductInstance.Id)
+                                    @Html.HiddenFor(Model => Model.ListProductInt[i].Stock.Id)
+                                </td>
+                                <td>@Html.TextBoxFor(Model => Model.ListProductInt[i].ProductInstance.Price, new { @class = "number form-control" })</td>
+                                <td>@Html.TextBoxFor(Model => Model.ListProductInt[i].Stock.Quantity, new { @class = "number form-control" })</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </form>
         </div>
     </div>
 </div>

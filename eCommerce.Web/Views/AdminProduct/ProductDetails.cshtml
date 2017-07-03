@@ -103,7 +103,7 @@
                 </div>
                 <!--brand end-->
                 <!--gambar-->
-                <div class="form-group">
+                @*<div class="form-group">
                     <label class="control-label col-md-2 col-sm-2 col-xs-12">
                         Gambar
                     </label>
@@ -115,7 +115,7 @@
                             <div id="image-holder" style="display:block"></div>
                         </div>
                     </div>
-                </div>
+                </div>*@
                 <!--gambar end-->
                 <!--harga-->
                 <div class="form-group">
@@ -197,9 +197,9 @@
                 <!--deskripsi end-->
                 <div class="form-group">
                     <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                        <button class="btn btn-primary" type="button">Cancel</button>
-                        <button class="btn btn-primary" onclick="DetailsProductClick(0)" type="reset">Reset</button>
-                        <button type="submit" class="btn btn-success" onclick="SubmitProduct()">Submit</button>
+                        @*<button class="btn btn-primary" type="button">Cancel</button>*@
+                        <input class="btn btn-primary" value="Reset" onclick="DetailsProductClick(0)" type="button"/>
+                        <input type="button" class="btn btn-success" value="Submit" onclick="SubmitProduct()"/>
                     </div>
                 </div>
 

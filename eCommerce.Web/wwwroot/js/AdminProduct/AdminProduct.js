@@ -68,6 +68,22 @@ function AddOptionSize(tbId, productId) {
     }
 }
 
+function RefreshProductStockAndPrice(Id)
+{
+    $.get(url + "ProductStockAndPrice?id=" + Id, function (data) {
+        $('#tabProductStockPrice').html(data);
+    })
+}
+
+function SaveProductStockAndPrice(id)
+{
+    if (confirm("Are you sure?")) {
+        $.post(url + "SaveProductStockAndPrice", $('#frmStockAndPrice').serialize(), function (data) {
+            $('#tabProductStockPrice').html(data);
+        })
+    }
+}
+
 function DetailsProductClick(Id) {
     $.get(url + "ProductDetails?id=" + Id, function (data) {
         $('#tabProductDetails').html(data);
