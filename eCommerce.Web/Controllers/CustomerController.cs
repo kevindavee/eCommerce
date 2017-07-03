@@ -209,10 +209,10 @@ namespace eCommerce.Web.Controllers
         #region Transaction History
         public ActionResult Transaction()
         {
-            var TransactionList = transactionHeaderRepo.GetTransactionsHistory(CustomerId);
+            //var TransactionList = transactionHeaderRepo.GetTransactionsHistory(CustomerId);
 
             var model = new TransactionHistoryViewModel();
-            model.ListTransaction = TransactionList;
+            //model.ListTransaction = TransactionList;
 
             //Page untuk list transaksi yang sudah selesai, transaksi yang sedang berjalan, dan transaksi yang di reject
             return View(model);
