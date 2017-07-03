@@ -83,11 +83,18 @@ namespace eCommerce.Web.Controllers
                     _logger.LogInformation(1, "User logged in.");
                     var user = await _userManager.FindByNameAsync(model.Username);
                     var role = await _userManager.GetRolesAsync(user);
-                    if(role.FirstOrDefault() == "Customer")
+                    if(role.FirstOrDefault() == "SuperAdmin" || role.FirstOrDefault() == "ProductAdmin")
+                    {
+                        return RedirectToAction("Index", "AdminProduct");
+                    }
+                    else if(role.FirstOrDefault() == "FinanceAdmin")
+                    {
+                        return RedirectToAction("ManagePayment", "AdminTransaction");
+                    }
+                    else
                     {
                         return RedirectToLocal(returnUrl);
                     }
-                    return RedirectToAction("Index", "AdminProduct");
                 }
                 if (result.RequiresTwoFactor)
                 {
@@ -150,6 +157,54 @@ namespace eCommerce.Web.Controllers
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(3, "User created a new account with password.");
                         return RedirectToLocal(returnUrl);
+                    }
+                }
+                AddErrors(result);
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "SuperAdmin")]
+        public IActionResult RegisterAdmin()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "SuperAdmin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterAdmin(RegisterAdminViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new UserLogin { UserName = model.Username, Email = model.Email, ObjectId = 0 };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+                    // Send an email with this link
+                    //var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    //var callbackUrl = Url.Action(nameof(ConfirmEmail), "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                    //await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                    //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
+                    switch (model.AdminRole)
+                    {
+                        case 1:
+                            result = await _userManager.AddToRoleAsync(user, UserRoles.ProductAdmin);
+                            break;
+                        case 2:
+                            result = await _userManager.AddToRoleAsync(user, UserRoles.FinanceAdmin);
+                            break;
+                        default:
+                            result = await _userManager.AddToRoleAsync(user, UserRoles.Customer);
+                            break;
+                    }
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("Index", "AdminProduct");
                     }
                 }
                 AddErrors(result);

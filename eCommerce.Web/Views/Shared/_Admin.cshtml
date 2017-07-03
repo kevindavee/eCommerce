@@ -47,40 +47,61 @@
                     <!-- /menu profile quick info -->
                     <br />
                     <!-- sidebar menu -->
+                    
+                    
                     <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                        <div class="menu_section">
-                            <h3>Product</h3>
-                            <ul class="nav side-menu">
-                                <li>
-                                    <a href="@Url.Action("Index", "AdminProduct")">Manage Product</a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("ManageBrand", "AdminProduct")">Manage Brand</a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("ManageCategory", "AdminProduct")">Manage Category</a>
-                                </li>
-                            </ul>
-                        </div>
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("ProductAdmin"))
+                        {
+                            <div class="menu_section">
+                                <h3>Product</h3>
+                                <ul class="nav side-menu">
+                                    <li>
+                                        <a href="@Url.Action("Index", "AdminProduct")">Manage Product</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ManageBrand", "AdminProduct")">Manage Brand</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ManageCategory", "AdminProduct")">Manage Category</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        @if (User.IsInRole("SuperAdmin") || User.IsInRole("FinanceAdmin"))
+                        {
+                            <div class="menu_section">
+                                <h3>Transaction</h3>
+                                <ul class="nav side-menu">
+                                    <li>
+                                        <a href="@Url.Action("ManagePayment", "AdminTransaction")">Payment Confirmations</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ManageShipment", "AdminTransaction")">Order Shipments</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ManageBank", "AdminTransaction")">Manage Bank</a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("ManageShipper", "AdminTransaction")">Manage Shipper</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                        }
+                        @if (User.IsInRole("SuperAdmin"))
+                        {
+                            <div class="menu_section">
+                                <h3>Accounts</h3>
+                                <ul class="nav side-menu">
+                                    <li>
+                                        <a href="@Url.Action("RegisterAdmin", "Account")">Register Admin</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        <!-- /sidebar menu -->
+                        }
+                        
                     </div>
-                    <div class="menu_section">
-                        <h3>Transaction</h3>
-                        <ul class="nav side-menu">
-                            <li>
-                                <a href="@Url.Action("ManagePayment", "AdminTransaction")">Payment Confirmations</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("ManageShipment", "AdminTransaction")">Order Shipments</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("ManageBank", "AdminTransaction")">Manage Bank</a>
-                            </li>
-                            <li>
-                                <a href="@Url.Action("ManageShipper", "AdminTransaction")">Manage Shipper</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- /sidebar menu -->
                 </div>
             </div>
             <!-- top navigation -->

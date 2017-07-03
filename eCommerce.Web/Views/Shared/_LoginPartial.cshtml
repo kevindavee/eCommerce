@@ -10,13 +10,24 @@
     <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm" class="navbar-right">
         <ul class="nav navbar-nav navbar-right">
             @if(User.IsInRole("Customer"))
-                {
-            <li>
-                <a href="@Url.Action("Cart", "Transaction")"><i class="glyphicon glyphicon-shopping-cart icon-white"></i><b>Cart</b></a>
-            </li>
+            {
+                <li>
+                    <a href="@Url.Action("Cart", "Transaction")"><i class="glyphicon glyphicon-shopping-cart icon-white"></i><b>Cart</b></a>
+                </li>
             }
             <li>
-                <a href="@Url.Action("Profile", "Customer")">@UserManager.GetUserName(User)!</a>
+                @if (User.IsInRole("Customer"))
+                {
+                    <a href="@Url.Action("Profile", "Customer")">@UserManager.GetUserName(User)!</a>
+                }
+                else if (User.IsInRole("FinanceAdmin"))
+                {
+                    <a href="@Url.Action("ManagePayment", "AdminTransaction")">@UserManager.GetUserName(User)!</a>
+                }
+                else
+                {
+                    <a href="@Url.Action("Index", "AdminProduct")">@UserManager.GetUserName(User)!</a>
+                }
             </li>
             <li>
                 <button type="submit" class="btn btn-info navbar-btn">Log out</button>

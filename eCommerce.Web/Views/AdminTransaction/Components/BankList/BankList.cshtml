@@ -4,7 +4,9 @@
     <thead>
         <tr>
             <td class="col-md-2"></td>
-            <td class="col-md-10">Bank Name</td>
+            <td class="col-md-3">Bank Name</td>
+            <td class="col-md-2">Account No.</td>
+            <td class="col-md-2">Account Holder</td>
         </tr>
     </thead>
     <tbody>
@@ -14,7 +16,9 @@
                 <td class="col-md-2">
                     <a href="@Url.Action("AddBank", new { BankId = item.Id})" class="btn btn-primary">Edit</a>
                 </td>
-                <td class="col-md-10">@Html.DisplayFor(modelItem => item.Nama)</td>
+                <td class="col-md-3">@Html.DisplayFor(modelItem => item.Nama)</td>
+                <td class="col-md-2">@Html.DisplayFor(modelItem => item.AccountNumber)</td>
+                <td class="col-md-2">@Html.DisplayFor(modelItem => item.AccountHolder)</td>
             </tr>
         }
     </tbody>

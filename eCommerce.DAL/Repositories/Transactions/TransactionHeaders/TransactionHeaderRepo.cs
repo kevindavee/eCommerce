@@ -22,7 +22,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         public TransactionHeader GetActiveCart(long CustomerId)
         {
             var cart = dbSet.Where(s => s.CurrentStatus == TransactionStatus.OnCart &&
-                                         (s.LastStatus == TransactionStatus.OnCart || s.LastStatus == TransactionStatus.CheckedOut)  &&
+                                         (s.LastStatus == TransactionStatus.OnCart || s.LastStatus == TransactionStatus.CheckedOut) &&
                                          s.CustomerId == CustomerId)
                              .Include(i => i.TransactionDetails)
                              .FirstOrDefault();
@@ -68,21 +68,25 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
         }
 
         /// <summary>
-        /// Check if the transaction is waiting for payment confirmation. Return true if the state is waiting for payment confirmation
+        /// Check if the transaction is waiting for payment confirmation, and check if this transaction belongs to the right customer. Return true if the state is waiting for payment confirmation
         /// </summary>
         /// <param name="TransactionId"></param>
         /// <returns></returns>
-        public bool IsWaitingForConfirmation(long TransactionId)
+        public bool IsWaitingForConfirmation(long TransactionId, long CustomerId)
         {
             var result = GetById(TransactionId);
             if (result != null)
             {
+                if (result.CustomerId != CustomerId)
+                {
+                    return false;
+                }
                 if (result.CurrentStatus == (TransactionStatus.PaymentConfirmation))
                 {
                     return true;
                 }
             }
-            
+
             return false;
         }
 
@@ -96,7 +100,7 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
             var result = dbSet.Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
                               .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
                               .FirstOrDefault(f => f.Id == TransactionHeaderId);
-                              
+
 
             return result;
         }
@@ -128,9 +132,32 @@ namespace eCommerce.DAL.Repositories.Transactions.TransactionHeaders
             return code;
         }
 
-        public List<TransactionHeader> GetTransactionsHistory(long CustomerId)
+        public List<TransactionHeader> GetCurrentTransactionsHistory(long CustomerId)
         {
-            var result = dbSet.Where(j => j.CustomerId == CustomerId)
+            var result = dbSet.Where(j => (j.CurrentStatus == TransactionStatus.PaymentConfirmation)
+                                        && j.CustomerId == CustomerId)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
+                              .Include(i => i.ShippingDetails)
+                              .ToList();
+
+            return result;
+        }
+        public List<TransactionHeader> GetCompletedTransactionsHistory(long CustomerId)
+        {
+            var result = dbSet.Where(j => (j.CurrentStatus == TransactionStatus.Finished)
+                                        && j.CustomerId == CustomerId)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
+                              .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
+                              .Include(i => i.ShippingDetails)
+                              .ToList();
+
+            return result;
+        }
+        public List<TransactionHeader> GetCancelledTransactionsHistory(long CustomerId)
+        {
+            var result = dbSet.Where(j => (j.CurrentStatus == TransactionStatus.Expired)
+                                        && j.CustomerId == CustomerId)
                               .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.Product)
                               .Include(i => i.TransactionDetails).ThenInclude(j => j.ProductInstance.ProductInstanceOptions).ThenInclude(k => k.OptionValue.Options)
                               .Include(i => i.ShippingDetails)

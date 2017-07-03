@@ -1,0 +1,34 @@
+@model eCommerce.Web.Models.CustomerViewModels.TransactionHistoryViewModel
+
+<!-- Table row -->
+<div class="row">
+    <div class="col-md-12 col-xs-12 table">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Transaction Date</th>
+                    <th>Total Price</th>
+                    <th>Receiver Address</th>
+                    <th>Transaction Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ListTransaction)
+                {
+                    <tr>
+                        <td>@item.Code</td>
+                        <td>@item.TglTransaksi.ToString("dd-MMM-yyyy")</td>
+                        <td>Rp. @item.TotalPrice</td>
+                        <td>@(item.ShippingDetails.Provinsi + "," + item.ShippingDetails.Kota + "," + item.ShippingDetails.KodePos + "," + item.ShippingDetails.AlamatPengiriman)</td>
+                        <td>@item.CurrentStatus</td>
+                        <td><a class="btn btn-info" href="~/Customer/TransactionDetails?TransactionId=@item.Id">Details</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->

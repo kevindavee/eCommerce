@@ -16,9 +16,11 @@ using eCommerce.Web.Models.AdminTransaction;
 using eCommerce.Commons;
 using Microsoft.AspNetCore.Http;
 using eCommerce.Logic.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace eCommerce.Web.Controllers
 {
+    [Authorize(Roles = "SuperAdmin, FinanceAdmin")]
     public class AdminTransactionController : Controller
     {
         private BankRepo bankRepo;

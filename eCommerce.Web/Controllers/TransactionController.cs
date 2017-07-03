@@ -284,7 +284,8 @@ namespace eCommerce.Web.Controllers
         public ActionResult TransactionSubmitted(long TransactionId)
         {
             //Page untuk menampilkan bahwa transaksi sudah berhasil. Menampilkan nomor rekening untuk customer bisa transfer
-            return View();
+            var model = bankRepo.GetAll();
+            return View(model);
         }
 
         [Authorize]
@@ -328,7 +329,7 @@ namespace eCommerce.Web.Controllers
 
             if (TransactionHeaderId > 0)
             {
-                var isWaiting = transactionHeaderRepo.IsWaitingForConfirmation(TransactionHeaderId);
+                var isWaiting = transactionHeaderRepo.IsWaitingForConfirmation(TransactionHeaderId, CustomerId);
                 if (isWaiting == false)
                 {
                     ViewData["Message"] = "Your already confirmed your order !";

@@ -8,9 +8,10 @@ using eCommerce.DAL;
 namespace eCommerce.DAL.Migrations
 {
     [DbContext(typeof(CommerceContext))]
-    partial class CommerceContextModelSnapshot : ModelSnapshot
+    [Migration("20170629140129_price-decimal")]
+    partial class pricedecimal
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")
@@ -54,10 +55,6 @@ namespace eCommerce.DAL.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AccountHolder");
-
-                    b.Property<long>("AccountNumber");
 
                     b.Property<string>("CreatedBy");
 

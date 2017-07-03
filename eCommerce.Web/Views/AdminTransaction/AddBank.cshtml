@@ -28,6 +28,26 @@
                                     @Html.TextBoxFor(model => model.Nama, htmlAttributes: new { @class = "form-control bank-field"})
                                 </div>
                                 <div class="col-md-2">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <label class="control-label">Account No.</label>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.AccountNumber, htmlAttributes: new { @class = "form-control bank-field", type="number", min = "0"})
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-2">
+                                    <label class="control-label">Account Holder</label>
+                                </div>
+                                <div class="col-md-6">
+                                    @Html.TextBoxFor(model => model.AccountHolder, htmlAttributes: new { @class = "form-control bank-field" })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-2">
                                     <button type="submit" class="btn btn-primary" id="btn-submit-bank">Submit</button>
                                 </div>
                             </div>
